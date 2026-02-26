@@ -264,51 +264,17 @@
       const [activeHeaderMenu, setActiveHeaderMenu] = useState(null); // 'products' | 'applications' | 'resources'
       const headerMenuRef = useRef(null);
       const nextStepTitleRef = useRef(null);
-      const mainVideoRef = useRef(null);
-      const fullscreenVideoRef = useRef(null);
       const isHeaderMenuOpen = Boolean(activeHeaderMenu);
       const [showNextStepTitle, setShowNextStepTitle] = useState(false);
       const isMobilePreviewFrame = new URLSearchParams(window.location.search).get('mobile_preview') === '1';
       const [showMobilePreview, setShowMobilePreview] = useState(false);
       const [aiPrompt, setAiPrompt] = useState('');
-      const [videoLoadError, setVideoLoadError] = useState(false);
       const mobilePreviewUrl = (() => {
         const previewUrl = new URL(window.location.href);
         previewUrl.searchParams.set('mobile_preview', '1');
         return previewUrl.toString();
       })();
       const reportPdfPath = "arquivos/relatorio_MG_000105467.pdf";
-      const farmVideoPath = "/imagens/nuclebras/video-drone.mp4";
-      const playVideoSafely = (videoElement) => {
-        if (!videoElement) return;
-        videoElement.muted = true;
-        const playPromise = videoElement.play();
-        if (playPromise && typeof playPromise.catch === 'function') {
-          playPromise.catch(() => {});
-        }
-      };
-      const renderFarmVideo = (videoRef) => (
-        h('video', {
-          ref: videoRef,
-          src: farmVideoPath,
-          className: "w-full h-full object-cover",
-          controls: true,
-          autoPlay: true,
-          loop: true,
-          muted: true,
-          defaultMuted: true,
-          playsInline: true,
-          preload: "metadata",
-          poster: "/imagens/nuclebras/farm_page1.jpeg",
-          onLoadedData: (e) => {
-            setVideoLoadError(false);
-            playVideoSafely(e.target);
-          },
-          onError: () => {
-            setVideoLoadError(true);
-          }
-        })
-      );
       const submitFarmLead = async ({ formType, nome, telefone, cidade, estado }) => {
         const response = await fetch('/api/farm-lead', {
           method: 'POST',
@@ -399,23 +365,6 @@
 
         return () => observer.disconnect();
       }, []);
-
-      useEffect(() => {
-        if (viewMode !== 'video') {
-          mainVideoRef.current?.pause();
-          fullscreenVideoRef.current?.pause();
-          return;
-        }
-
-        if (fullscreen) {
-          mainVideoRef.current?.pause();
-          playVideoSafely(fullscreenVideoRef.current);
-          return;
-        }
-
-        fullscreenVideoRef.current?.pause();
-        playVideoSafely(mainVideoRef.current);
-      }, [fullscreen, viewMode]);
 
       const aptidoes = {
         gado: { label: "Gado", score: 88, color: "text-amber-600" },
@@ -737,17 +686,23 @@
                   alt: "Mapa",
                   className: "w-full h-full object-cover"
                 }) : viewMode === 'video' ? h('div', { className: "w-full h-full bg-black" },
-                  videoLoadError
-                    ? h('div', { className: "h-full w-full flex flex-col items-center justify-center gap-3 px-6 text-center text-white bg-slate-900" },
-                        h('p', { className: "text-sm sm:text-base font-semibold" }, "Nao foi possivel carregar o video da fazenda."),
-                        h('a', {
-                          href: farmVideoPath,
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                          className: "inline-flex items-center rounded-xl border border-white/40 px-4 py-2 text-xs font-black uppercase tracking-wider hover:bg-white/10 transition-colors"
-                        }, "Abrir video em nova aba")
-                      )
-                    : renderFarmVideo(mainVideoRef)
+                  h('video', {
+                    src: "imagens/nuclebras/video-drone.mp4",
+                    className: "w-full h-full object-cover",
+                    controls: true,
+                    autoPlay: true,
+                    loop: true,
+                    muted: true,
+                    defaultMuted: true,
+                    playsInline: true,
+                    preload: "auto",
+                    onLoadedData: (e) => {
+                      const playPromise = e.target.play();
+                      if (playPromise && typeof playPromise.catch === 'function') {
+                        playPromise.catch(() => {});
+                      }
+                    }
+                  })
                 ) : h('div', { className: "w-full h-full p-4 bg-slate-900/95" },
                   h('div', { className: "grid h-full grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2 gap-3" },
                     photoGallery.map((photo, idx) =>
@@ -1544,21 +1499,23 @@
               src: layers[activeLayer].img,
               alt: "Mapa",
               className: "max-w-full max-h-full object-contain"
-            }) : viewMode === 'video'
-              ? (
-                  videoLoadError
-                    ? h('div', { className: "h-full w-full flex flex-col items-center justify-center gap-3 px-6 text-center text-white bg-slate-900" },
-                        h('p', { className: "text-sm sm:text-base font-semibold" }, "Nao foi possivel carregar o video da fazenda."),
-                        h('a', {
-                          href: farmVideoPath,
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                          className: "inline-flex items-center rounded-xl border border-white/40 px-4 py-2 text-xs font-black uppercase tracking-wider hover:bg-white/10 transition-colors"
-                        }, "Abrir video em nova aba")
-                      )
-                    : renderFarmVideo(fullscreenVideoRef)
-                )
-              : h('div', { className: "w-full h-full p-6 overflow-y-auto" },
+            }) : viewMode === 'video' ? h('video', {
+              src: "imagens/nuclebras/video-drone.mp4",
+              className: "w-full h-full object-cover",
+              controls: true,
+              autoPlay: true,
+              loop: true,
+              muted: true,
+              defaultMuted: true,
+              playsInline: true,
+              preload: "auto",
+              onLoadedData: (e) => {
+                const playPromise = e.target.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                  playPromise.catch(() => {});
+                }
+              }
+            }) : h('div', { className: "w-full h-full p-6 overflow-y-auto" },
               h('div', { className: "grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-7xl mx-auto" },
                 photoGallery.map((photo, idx) =>
                   h('button', {
