@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/farm_page.html" },
+    { "source": "/farm_page", "destination": "/farm_page.html" }
+  ]
+}

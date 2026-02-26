@@ -1,0 +1,1751 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="imagens/logo5.png">
+    <title>Talhão.ai | Inteligência no seu talhão </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            }
+          },
+          fontFamily: {
+            sans: ['Space Grotesk', 'Inter', 'ui-sans-serif', 'system-ui']
+          },
+          boxShadow: {
+            soft: '0 20px 60px rgba(15, 23, 42, 0.06)'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      --brand-50: #f0fdf4;
+      --brand-100: #dcfce7;
+      --brand-200: #bbf7d0;
+      --brand-400: #4ade80;
+      --brand-500: #22c55e;
+      --brand-600: #16a34a;
+      --brand-700: #15803d;
+      --brand-800: #166534;
+      --brand-900: #14532d;
+      --ink-900: #0f172a;
+      --surface: #ffffff;
+      --surface-2: #f7f9fb;
+      --border: #e6ecf3;
+      --shadow-soft: 0 20px 60px rgba(15, 23, 42, 0.06);
+    }
+
+    html, body, #root {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      background: radial-gradient(circle at 12% 18%, rgba(22, 101, 52, 0.06), transparent 32%),
+                  radial-gradient(circle at 82% -4%, rgba(22, 101, 52, 0.08), transparent 30%),
+                  var(--surface-2);
+      color: var(--ink-900);
+      letter-spacing: -0.01em;
+    }
+
+    .font-mono {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+    }
+
+    ::selection { background: var(--brand-100); }
+
+    .glass-header {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.05);
+    }
+
+    .card-surface {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    input, select, textarea {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #f9fbff;
+      transition: all 0.15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand-700);
+      box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.12);
+      background: #ffffff;
+      outline: none;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--brand-600);
+      outline-offset: 2px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-bounce {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const { createElement: h, Fragment } = React;
+
+    // Helper para criar ícones SVG
+    const Icon = ({ children, className = "", size = 24, fill = "none", strokeWidth = 2, ...props }) => 
+      h('svg', {
+        className,
+        width: size,
+        height: size,
+        viewBox: "0 0 24 24",
+        fill,
+        stroke: "currentColor",
+        strokeWidth,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        ...props
+      }, children);
+
+    // Ícones SVG com paths
+    const MapIcon = (props) => h(Icon, props, h('path', { d: "M3 6l6-3 6 3 6-3v12l-6 3-6-3-6 3z" }), h('path', { d: "M9 3v12" }), h('path', { d: "M15 6v12" }));
+    const CheckCircle2 = (props) => h(Icon, props, h('circle', { cx: "12", cy: "12", r: "10" }), h('path', { d: "m9 12 2 2 4-4" }));
+    const Info = (props) => h(Icon, props, h('circle', { cx: "12", cy: "12", r: "10" }), h('path', { d: "M12 16v-4" }), h('path', { d: "M12 8h.01" }));
+    const Layers = (props) => h(Icon, props, h('path', { d: "m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" }), h('path', { d: "m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" }), h('path', { d: "m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" }));
+    const Droplets = (props) => h(Icon, props, h('path', { d: "M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.47-1.03-3.24a.48.48 0 0 0-.85 0c-.46.77-1.03 2.08-1.03 3.24 0 2.22 1.8 4.05 4 4.05z" }), h('path', { d: "M12 19.3c2.2 0 4-1.83 4-4.05 0-.99-.45-1.99-1.01-2.76a.48.48 0 0 0-.85 0c-.56.77-1.01 1.77-1.01 2.76 0 2.22 1.8 4.05 4 4.05z" }), h('path', { d: "M17 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.47-1.03-3.24a.48.48 0 0 0-.85 0c-.46.77-1.03 2.08-1.03 3.24 0 2.22 1.8 4.05 4 4.05z" }));
+    const Trees = (props) => h(Icon, props, h('path', { d: "M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z" }), h('path', { d: "M7 16v6" }), h('path', { d: "M13 19v3" }), h('path', { d: "M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5" }));
+    const Landmark = (props) => h(Icon, props, h('line', { x1: "3", y1: "22", x2: "21", y2: "22" }), h('line', { x1: "6", y1: "18", x2: "6", y2: "11" }), h('line', { x1: "10", y1: "18", x2: "10", y2: "11" }), h('line', { x1: "14", y1: "18", x2: "14", y2: "11" }), h('line', { x1: "18", y1: "18", x2: "18", y2: "11" }), h('polygon', { points: "12 2 20 7 4 7" }));
+    const Scaling = (props) => h(Icon, props, h('path', { d: "M21 3 9 15" }), h('path', { d: "M12 3H3v9" }), h('path', { d: "M16 16h5v-5" }), h('path', { d: "M21 3 13 11" }));
+    const ChevronRight = (props) => h(Icon, props, h('path', { d: "m9 18 6-6-6-6" }));
+    const ChevronLeft = (props) => h(Icon, props, h('path', { d: "m15 18-6-6 6-6" }));
+    const ChevronDown = (props) => h(Icon, props, h('path', { d: "m6 9 6 6 6-6" }));
+    const Maximize2 = (props) => h(Icon, props, h('polyline', { points: "15 3 21 3 21 9" }), h('polyline', { points: "9 21 3 21 3 15" }), h('line', { x1: "21", y1: "3", x2: "14", y2: "10" }), h('line', { x1: "3", y1: "21", x2: "10", y2: "14" }));
+    const Calendar = (props) => h(Icon, props, h('path', { d: "M8 2v4" }), h('path', { d: "M16 2v4" }), h('rect', { width: "18", height: "18", x: "3", y: "4", rx: "2" }), h('path', { d: "M3 10h18" }));
+    const ShieldCheck = (props) => h(Icon, props, h('path', { d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" }), h('path', { d: "m9 12 2 2 4-4" }));
+    const Search = (props) => h(Icon, props, h('circle', { cx: "11", cy: "11", r: "8" }), h('path', { d: "m21 21-4.3-4.3" }));
+    const X = (props) => h(Icon, props, h('path', { d: "M18 6 6 18" }), h('path', { d: "m6 6 12 12" }));
+    const Phone = (props) => h(Icon, { ...props, fill: "currentColor" }, h('path', { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" }));
+    const Play = (props) => h(Icon, { ...props, fill: "currentColor" }, h('polygon', { points: "5 3 19 12 5 21 5 3" }));
+    const ImageIcon = (props) => h(Icon, props, h('rect', { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2" }), h('circle', { cx: "9", cy: "9", r: "2" }), h('path', { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" }));
+    const Lock = (props) => h(Icon, props, h('rect', { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2" }), h('path', { d: "M7 11V7a5 5 0 0 1 10 0v4" }));
+    const Sparkles = (props) => h(Icon, props, h('path', { d: "m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" }), h('path', { d: "M5 3v4" }), h('path', { d: "M19 17v4" }), h('path', { d: "M3 5h4" }), h('path', { d: "M17 19h4" }));
+    const Send = (props) => h(Icon, props, h('path', { d: "m22 2-7 20-4-9-9-4Z" }), h('path', { d: "M22 2 11 13" }));
+    const InstagramIcon = (props) => h(Icon, props, h('rect', { x: "3", y: "3", width: "18", height: "18", rx: "5", ry: "5" }), h('circle', { cx: "12", cy: "12", r: "4" }), h('circle', { cx: "17", cy: "7", r: "1.2", fill: "currentColor", stroke: "none" }));
+    const TikTokIcon = (props) => h(Icon, props, h('path', { d: "M14 4v8.5a3.5 3.5 0 1 1-3-3.46" }), h('path', { d: "M14 7a5 5 0 0 0 5 5" }));
+    const LinkedInIcon = (props) => h(Icon, props, h('path', { d: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" }), h('rect', { x: "2", y: "9", width: "4", height: "12" }), h('circle', { cx: "4", cy: "4", r: "2" }));
+    const YouTubeIcon = (props) => h(Icon, props, h('rect', { x: "2", y: "6", width: "20", height: "12", rx: "3", ry: "3" }), h('polygon', { points: "10 9 16 12 10 15 10 9", fill: "currentColor", stroke: "none" }));
+    const MailIcon = (props) => h(Icon, props, h('rect', { x: "3", y: "5", width: "18", height: "14", rx: "2" }), h('path', { d: "m3 7 9 6 9-6" }));
+    const ExternalLink = (props) => h(Icon, props, h('path', { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }), h('polyline', { points: "15 3 21 3 21 9" }), h('line', { x1: "10", y1: "14", x2: "21", y2: "3" }));
+
+    // Componentes Atômicos
+    const StatCard = ({ label, value, subtext }) => (
+      h('div', { className: "group card-surface p-6 rounded-2xl hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
+        h('p', { className: "text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1" }, label),
+        h('p', { className: "text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-brand-800" }, value),
+        subtext && h('p', { className: "text-xs text-slate-400 mt-1" }, subtext)
+      )
+    );
+
+    const Badge = ({ status, text }) => {
+      const styles = {
+        green: "bg-brand-50 text-brand-700 border-brand-100",
+        yellow: "bg-amber-50 text-amber-700 border-amber-100",
+        red: "bg-rose-50 text-rose-700 border-rose-100",
+        neutral: "bg-slate-50 text-slate-600 border-slate-200"
+      };
+      return h('span', {
+        className: `px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-tight ${styles[status] || styles.neutral}`
+      }, text);
+    };
+
+    const MissionCard = ({ icon: Icon, title, kpis, badge, status, onClick }) => (
+      h('div', {
+        onClick: onClick,
+        className: "group card-surface p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden hover:-translate-y-1"
+      },
+        h('div', { className: "flex justify-between items-start mb-4" },
+          h('div', { className: "p-3 bg-slate-50 rounded-lg group-hover:bg-brand-50 transition-colors" },
+            h(Icon, { className: "w-6 h-6 text-slate-600 group-hover:text-brand-600" })
+          ),
+          h(Badge, { status, text: badge })
+        ),
+        h('h3', { className: "text-lg font-bold text-slate-900 mb-3 group-hover:text-brand-700" }, title),
+        h('ul', { className: "space-y-2" },
+          kpis.map((kpi, idx) =>
+            h('li', { key: idx, className: "text-sm text-slate-500 flex items-center gap-2" },
+              h('div', { className: "w-1 h-1 bg-slate-300 rounded-full" }),
+              kpi
+            )
+          )
+        ),
+        h('div', { className: "mt-4 flex items-center text-xs font-bold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity" },
+          "VER DETALHES ",
+          h(ChevronRight, { className: "w-3 h-3 ml-1" })
+        )
+      )
+    );
+
+    const ComplianceCard = ({ title, description, status, icon: Icon }) => (
+      h('div', { className: "card-surface flex items-start gap-4 p-5 rounded-xl" },
+        h('div', { className: `p-2 rounded-lg ${status === 'green' ? 'bg-brand-50' : 'bg-amber-50'}` },
+          h(Icon, { className: `w-5 h-5 ${status === 'green' ? 'text-brand-600' : 'text-amber-600'}` })
+        ),
+        h('div', { className: "flex-1" },
+          h('div', { className: "flex justify-between items-center mb-1" },
+            h('h4', { className: "font-bold text-slate-900" }, title),
+            h(Badge, { status, text: status === 'green' ? "Regular" : "Atenção" })
+          ),
+          h('p', { className: "text-sm text-slate-500 leading-relaxed" }, description)
+        )
+      )
+    );
+
+    // Componente Principal
+    function App() {
+      const [activeLayer, setActiveLayer] = useState('perimetro');
+      const [selectedMission, setSelectedMission] = useState(null);
+      const [selectedAptidao, setSelectedAptidao] = useState('lavoura');
+      const [viewMode, setViewMode] = useState('video');
+      const [fullscreen, setFullscreen] = useState(false);
+      const [fullscreenPhotoIndex, setFullscreenPhotoIndex] = useState(null);
+      const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+      const [showDemoModal, setShowDemoModal] = useState(false);
+      const [demoForm, setDemoForm] = useState({ nome: '', telefone: '', cidade: '', estado: '' });
+      const [demoFormError, setDemoFormError] = useState('');
+      const [demoFormSent, setDemoFormSent] = useState(false);
+      const [demoFormSubmitting, setDemoFormSubmitting] = useState(false);
+      const [leadForm, setLeadForm] = useState({ nome: '', whatsapp: '', cidade: '', estado: '' });
+      const [leadFormError, setLeadFormError] = useState('');
+      const [leadDownloadReady, setLeadDownloadReady] = useState(false);
+      const [leadFormSubmitting, setLeadFormSubmitting] = useState(false);
+      const [activeHeaderMenu, setActiveHeaderMenu] = useState(null); // 'products' | 'applications' | 'resources'
+      const headerMenuRef = useRef(null);
+      const nextStepTitleRef = useRef(null);
+      const isHeaderMenuOpen = Boolean(activeHeaderMenu);
+      const [showNextStepTitle, setShowNextStepTitle] = useState(false);
+      const isMobilePreviewFrame = new URLSearchParams(window.location.search).get('mobile_preview') === '1';
+      const [showMobilePreview, setShowMobilePreview] = useState(false);
+      const [aiPrompt, setAiPrompt] = useState('');
+      const mobilePreviewUrl = (() => {
+        const previewUrl = new URL(window.location.href);
+        previewUrl.searchParams.set('mobile_preview', '1');
+        return previewUrl.toString();
+      })();
+      const reportPdfPath = "arquivos/relatorio_MG_000105467.pdf";
+      const submitFarmLead = async ({ formType, nome, telefone, cidade, estado }) => {
+        const response = await fetch('/api/farm-lead', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            form_type: formType,
+            nome,
+            telefone,
+            cidade,
+            estado
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data && data.error ? data.error : 'Não foi possível enviar seus dados. Tente novamente.');
+        }
+      };
+      const openDemoVersionModal = () => {
+        setDemoForm({ nome: '', telefone: '', cidade: '', estado: '' });
+        setDemoFormError('');
+        setDemoFormSent(false);
+        setDemoFormSubmitting(false);
+        setShowDemoModal(true);
+      };
+      const closeDemoVersionModal = () => {
+        setShowDemoModal(false);
+        setDemoFormError('');
+        setDemoFormSent(false);
+        setDemoFormSubmitting(false);
+      };
+      const openLeadCaptureModal = () => {
+        setLeadFormError('');
+        setLeadDownloadReady(false);
+        setLeadFormSubmitting(false);
+        setLeadForm({ nome: '', whatsapp: '', cidade: '', estado: '' });
+        setShowUpgradeModal(true);
+      };
+      const closeLeadCaptureModal = () => {
+        setShowUpgradeModal(false);
+        setLeadFormError('');
+        setLeadDownloadReady(false);
+        setLeadFormSubmitting(false);
+        setLeadForm({ nome: '', whatsapp: '', cidade: '', estado: '' });
+      };
+
+      useEffect(() => {
+        if (!isHeaderMenuOpen) return;
+
+        const handleOutsideClick = (event) => {
+          if (headerMenuRef.current && !headerMenuRef.current.contains(event.target)) {
+            setActiveHeaderMenu(null);
+          }
+        };
+
+        const handleEscape = (event) => {
+          if (event.key === 'Escape') {
+            setActiveHeaderMenu(null);
+          }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+          document.removeEventListener('mousedown', handleOutsideClick);
+          document.removeEventListener('keydown', handleEscape);
+        };
+      }, [isHeaderMenuOpen]);
+
+      useEffect(() => {
+        const titleElement = nextStepTitleRef.current;
+        if (!titleElement) return;
+
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              setShowNextStepTitle(true);
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.3 }
+        );
+
+        observer.observe(titleElement);
+
+        return () => observer.disconnect();
+      }, []);
+
+      const aptidoes = {
+        gado: { label: "Gado", score: 88, color: "text-amber-600" },
+        lavoura: { label: "Lavoura", score: 94, color: "text-brand-600" },
+        dupla: { label: "Dupla Aptidão", score: 87, color: "text-blue-600" },
+        real_estate: { label: "Real Estate", score: 65, color: "text-purple-600" },
+        culturas: { label: "Culturas Perenes", score: 93, color: "text-rose-600" },
+        silvicultura: { label: "Silvicultura", score: 79, color: "text-green-800" },
+        outras: { label: "Outras", score: 50, color: "text-slate-500" },
+      };
+
+      const layers = {
+        perimetro: { title: "Perímetro e Limites", img: "imagens/nuclebras/perimetro.jpg" },
+        altitude: { title: "Modelo Digital de Elevação", img: "imagens/nuclebras/altitude.jpg" },
+        declividade: { title: "Análise de Declividade", img: "imagens/nuclebras/declividade.jpg" },
+        ndvi: { title: "Índice de Vegetação (NDVI)", img: "imagens/nuclebras/ndvi_20.jpg" },
+      };
+
+      const productOptions = [
+        { title: "Buscar/Anunciar propriedades", description: "Encontre imóveis rurais ou publique sua fazenda em minutos", icon: Search },
+        { title: "Download de polígono", description: "Baixe os limites georreferenciados da área para uso técnico", icon: MapIcon },
+        { title: "Acessar dados do imóvel", description: "Consulte dados fundiários, ambientais e produtivos em um só lugar", icon: Landmark },
+        { title: "Histórico de uso e ocupação", description: "Veja a evolução do uso da terra ao longo dos anos", icon: Layers },
+        { title: "Relatório técnico personalizado", description: "Gere análises sob medida conforme seu objetivo de compra ou venda", icon: Sparkles },
+        { title: "Nível de aptidão para diferentes culturas", description: "Compare a vocação da área para cada tipo de cultura", icon: Trees },
+      ];
+
+      const applicationOptions = [
+        { title: "Compra de fazendas", description: "Fluxo guiado para aquisição segura", icon: MapIcon },
+        { title: "Venda assistida", description: "Estratégia comercial para ativos rurais", icon: Landmark },
+        { title: "Due diligence", description: "Checklist técnico-jurídico integrado", icon: ShieldCheck },
+        { title: "Precificação", description: "Benchmark por região e tipo de solo", icon: Scaling },
+        { title: "Monitoramento", description: "Acompanhe desempenho e risco do ativo", icon: Search },
+        { title: "Inteligência de mercado", description: "Sinais e tendências para decisão", icon: Sparkles },
+      ];
+
+      const resourceOptions = [
+        { title: "Relatórios técnicos", description: "Laudos com métricas auditáveis", icon: Search },
+        { title: "Mapas multicamadas", description: "Visualização geoespacial avançada", icon: Layers },
+        { title: "Biblioteca jurídica", description: "Documentação e modelos de referência", icon: ShieldCheck },
+        { title: "Central de ajuda", description: "Guias e boas práticas de operação", icon: Info },
+        { title: "API e integrações", description: "Conecte com sistemas internos", icon: Send },
+        { title: "Treinamentos", description: "Capacitação para times comerciais", icon: Calendar },
+      ];
+
+      const headerMenuItems = [
+        { key: 'products', label: "Produtos" },
+        { key: 'applications', label: "Aplicações" },
+        { key: 'resources', label: "Recursos" },
+      ];
+
+      const headerMenus = {
+        products: { title: "Produtos", options: productOptions },
+        applications: { title: "Aplicações", options: applicationOptions },
+        resources: { title: "Recursos", options: resourceOptions },
+      };
+
+      const activeMenuConfig = activeHeaderMenu ? headerMenus[activeHeaderMenu] : null;
+
+      const photoGallery = [
+        { src: "imagens/nuclebras/farm_page1.jpeg", label: "Foto da fazenda 1" },
+        { src: "imagens/nuclebras/farm_page2.jpeg", label: "Foto da fazenda 2" },
+        { src: "imagens/nuclebras/farm_page3.jpeg", label: "Foto da fazenda 3" },
+        { src: "imagens/nuclebras/farm_page4.jpeg", label: "Foto da fazenda 4" },
+        { src: "imagens/nuclebras/farm_page5.jpeg", label: "Foto da fazenda 5" },
+        { src: "imagens/nuclebras/farm_page6.jpeg", label: "Foto da fazenda 6" },
+      ];
+
+      const missions = [
+        {
+          title: "Terreno & Mecanização",
+          icon: Scaling,
+          badge: "85% Mecanizável",
+          status: "green",
+          kpis: ["Declividade média: 4%", "Ausência de afloramentos", "Solo Latossolo Vermelho"],
+          description: "A topografia da área permite a utilização de maquinário de grande porte em quase toda a extensão produtiva."
+        },
+        {
+          title: "Vigor Vegetativo (NDVI)",
+          icon: Trees,
+          badge: "Estável",
+          status: "green",
+          kpis: ["Média de NDVI: 0,72", "Histórico de 5 anos: consistente", "Sem estresse hídrico severo"],
+          description: "Análise multitemporal demonstra que a fazenda mantém biomassa saudável mesmo em períodos de transição climática."
+        },
+        {
+          title: "Fundiário & Legal",
+          icon: Landmark,
+          badge: "100% OK",
+          status: "green",
+          kpis: ["Matrícula Georreferenciada", "Sem sobreposição", "CCIR atualizado"],
+          description: "Documentação completa e validada nos sistemas oficiais, garantindo segurança jurídica."
+        },
+        {
+          title: "Clima & Recursos Hídricos",
+          icon: Droplets,
+          badge: "Rico em água",
+          status: "green",
+          kpis: ["Precipitação: 1.600 mm/ano", "2 nascentes internas", "Outorga disponível"],
+          description: "Localização privilegiada com regime de chuvas estável e pontos de captação de água identificados."
+        }
+      ];
+
+      const complianceMissions = [
+        {
+          title: "CAR",
+          icon: ShieldCheck,
+          badge: "Regular",
+          status: "green",
+          kpis: ["Cadastro sincronizado", "Reserva legal averbada", "Sem passivo ambiental crítico"],
+          description: "Cadastro Ambiental Rural validado com consistência entre perímetro, uso do solo e áreas de preservação."
+        },
+        {
+          title: "SIGEF/INCRA",
+          icon: MapIcon,
+          badge: "Regular",
+          status: "green",
+          kpis: ["Georreferenciamento concluído", "Sem sobreposição relevante", "Base fundiária coerente"],
+          description: "Camada fundiária revisada e aderente aos registros oficiais, reduzindo risco de disputa de limites."
+        },
+        {
+          title: "Histórico Produtivo",
+          icon: Search,
+          badge: "Regular",
+          status: "green",
+          kpis: ["Séries produtivas consistentes", "Rotação de culturas registrada", "Estabilidade operacional"],
+          description: "Histórico agronômico reforça previsibilidade de produtividade e favorece planejamento de médio prazo."
+        },
+        {
+          title: "Direitos Minerários",
+          icon: Info,
+          badge: "Atenção",
+          status: "yellow",
+          kpis: ["Requerimento ativo em 15%", "Sem impedimento imediato", "Necessita monitoramento jurídico"],
+          description: "Existe requerimento de pesquisa minerária incidente em parte da área, demandando acompanhamento técnico-jurídico."
+        }
+      ];
+
+      const marketTapeText = "PREÇO/HECTARE: R$ 45.769 // ALTITUDE: 1.187m ALTA // DECLIVIDADE MÉDIA: 4,7% // MATRÍCULA: Registrada // APROVEITAMENTO DA ÁREA: 68,5% // DISTÂNCIA ATÉ SÃO PAULO: 285km // RISCO DE GEADA: Médio // TIPO DE SOLO: Latossolo vermelho // TEMPERATURA MÉDIA: 18,5°C";
+      const quickFarmQuestions = [
+        "Qual é o preço por hectare e a faixa de negociação?",
+        "Há algum risco jurídico ou ambiental relevante?",
+        "Qual é a aptidão agrícola e potencial de valorização?"
+      ];
+      const socialLinks = [
+        { label: "Instagram", href: "https://www.instagram.com/", icon: InstagramIcon },
+        { label: "TikTok", href: "https://www.tiktok.com/", icon: TikTokIcon },
+        { label: "LinkedIn", href: "https://www.linkedin.com/", icon: LinkedInIcon },
+        { label: "YouTube", href: "https://www.youtube.com/", icon: YouTubeIcon },
+        { label: "Email", href: "mailto:contato@talhao.ai", icon: MailIcon },
+      ];
+
+      return h('div', { className: "min-h-screen bg-white font-sans text-slate-900 selection:bg-brand-100 antialiased relative" },
+        // Header
+            h('header', { className: "sticky top-0 z-40 pt-3 sm:pt-4" },
+          h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] relative", ref: headerMenuRef },
+            h('div', { className: "h-14 xl:h-20 rounded-2xl xl:rounded-full border border-slate-200 bg-slate-100/95 shadow-sm px-3 sm:px-4 xl:px-6 grid grid-cols-[auto_1fr_auto] items-center gap-3 xl:gap-6" },
+              h('div', { className: "flex h-full items-center gap-2" },
+                h('img', {
+                  src: "imagens/logo_anuncio.png",
+                  alt: "Logo Talhão.ai",
+                  className: "block h-10 xl:h-20 w-auto object-contain xl:translate-y-[5px]"
+                })
+              ),
+              h('nav', { className: "hidden lg:flex items-center justify-center gap-8 xl:gap-14" },
+                headerMenuItems.map((menuItem) =>
+                  h('button', {
+                    key: menuItem.key,
+                    onClick: () => setActiveHeaderMenu((prev) => prev === menuItem.key ? null : menuItem.key),
+                    className: `inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-lg font-bold transition-all ${
+                      activeHeaderMenu === menuItem.key
+                        ? 'bg-white border-slate-300 text-slate-900 shadow-sm'
+                        : 'border-transparent text-brand-800 hover:text-brand-700 hover:bg-white/70'
+                    }`
+                  },
+                    menuItem.label,
+                    h(ChevronDown, { className: `w-4 h-4 transition-transform duration-200 ${activeHeaderMenu === menuItem.key ? 'rotate-180' : ''}` })
+                  )
+                )
+              ),
+              h('div', { className: "flex items-center gap-2 sm:gap-6" },
+                h('button', { onClick: openDemoVersionModal, className: "hidden sm:inline-flex text-sm xl:text-lg font-bold text-brand-800 hover:text-brand-700 transition-colors" }, "Criar conta"),
+                h('button', { onClick: openDemoVersionModal, className: "inline-flex items-center justify-center rounded-full bg-brand-800 hover:bg-brand-900 text-white px-4 xl:px-8 h-9 xl:h-12 text-sm xl:text-lg font-black transition-colors" }, "Login")
+              )
+            ),
+
+            h('div', { className: "mt-2 lg:hidden flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" },
+              headerMenuItems.map((menuItem) =>
+                h('button', {
+                  key: `mobile-${menuItem.key}`,
+                  onClick: () => setActiveHeaderMenu((prev) => prev === menuItem.key ? null : menuItem.key),
+                  className: `inline-flex shrink-0 items-center gap-1.5 px-3 py-2 rounded-xl border text-sm font-bold transition-all ${
+                    activeHeaderMenu === menuItem.key
+                      ? 'bg-white border-slate-300 text-slate-900 shadow-sm'
+                      : 'bg-slate-100/80 border-slate-200 text-brand-800'
+                  }`
+                },
+                  menuItem.label,
+                  h(ChevronDown, { className: `w-3.5 h-3.5 transition-transform duration-200 ${activeHeaderMenu === menuItem.key ? 'rotate-180' : ''}` })
+                )
+              )
+            ),
+
+            activeMenuConfig && h('div', { className: "absolute left-1/2 -translate-x-1/2 w-[calc(100%-1rem)] lg:w-2/3 top-[calc(100%+10px)] z-50" },
+              h('div', { className: "bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl overflow-hidden" },
+                h('div', { className: "px-5 sm:px-8 py-4 sm:py-5 border-b border-slate-200" },
+                  h('h3', { className: "text-xl sm:text-2xl font-black text-slate-900" }, activeMenuConfig.title)
+                ),
+                h('div', { className: "p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4" },
+                  activeMenuConfig.options.map((item, idx) =>
+                    h('button', {
+                      key: `${activeHeaderMenu}-option-${idx}`,
+                      onClick: () => {
+                        setActiveHeaderMenu(null);
+                        openDemoVersionModal();
+                      },
+                      className: "w-full flex items-start gap-3 sm:gap-4 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 text-left hover:border-brand-200 hover:bg-brand-50/40 transition-all duration-200"
+                    },
+                      h('div', { className: "w-11 h-11 sm:w-14 sm:h-14 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0" },
+                        h(item.icon, { className: "w-5 h-5 sm:w-6 sm:h-6 text-slate-700" })
+                      ),
+                      h('div', { className: "space-y-0.5 sm:space-y-1" },
+                        h('p', { className: "text-base sm:text-xl font-black text-slate-900 leading-tight" }, item.title),
+                        h('p', { className: "text-sm sm:text-lg text-slate-500 leading-snug" }, item.description)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ),
+
+        // Page Wrapper
+        h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] py-6 xl:py-10" },
+          h('div', { className: "space-y-14 xl:space-y-24" },
+          // Hero Section
+          h('section', { className: "grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-6 xl:gap-8 items-start" },
+            h('div', { className: "space-y-6" },
+              h('div', { className: "flex items-center gap-3" },
+                h(Badge, { status: "neutral", text: "Fazendas disponíveis" }),
+                h('div', { className: "flex items-center gap-1.5 text-slate-400 text-xs font-medium" },
+                  "Janeiro 2026"
+                )
+              ),
+
+              h('div', { className: "flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-8" },
+                h('div', { className: "flex-1 max-w-3xl" },
+                  h('h1', { className: "text-3xl sm:text-4xl xl:text-5xl font-black tracking-tight text-slate-900 mb-4" },
+                    "Fazenda em ",
+                    h('span', { className: "text-brand-600" }, "Caldas (MG)")
+                  ),
+                  h('p', { className: "text-base sm:text-lg xl:text-xl text-slate-500 leading-relaxed font-light" },
+                    "Análise automática com múltiplas camadas geoespaciais e regulatórias para decisão baseada em dados reais."
+                  )
+                ),
+
+                h('div', { className: "group card-surface p-6 rounded-2xl w-full max-w-[320px] lg:shrink-0 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
+                  h('div', { className: "mb-6" },
+                    h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3" }, "Selecione a Aptidão"),
+                    h('select', {
+                      value: selectedAptidao,
+                      onChange: (e) => setSelectedAptidao(e.target.value),
+                      className: "w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-brand-500"
+                    },
+                      Object.entries(aptidoes).map(([id, apt]) =>
+                        h('option', { key: id, value: id }, apt.label)
+                      )
+                    )
+                  ),
+                  h('div', { className: "flex items-center gap-6" },
+                    h('div', { className: "relative flex items-center justify-center" },
+                      h('svg', { className: "w-20 h-20 transform -rotate-90" },
+                        h('circle', {
+                          cx: "40",
+                          cy: "40",
+                          r: "36",
+                          stroke: "currentColor",
+                          strokeWidth: "8",
+                          fill: "transparent",
+                          className: "text-slate-100"
+                        }),
+                        h('circle', {
+                          cx: "40",
+                          cy: "40",
+                          r: "36",
+                          stroke: "currentColor",
+                          strokeWidth: "8",
+                          fill: "transparent",
+                          strokeDasharray: 226,
+                          strokeDashoffset: 226 - (226 * aptidoes[selectedAptidao].score) / 100,
+                          className: `transition-all duration-700 ${aptidoes[selectedAptidao].score > 70 ? 'text-brand-500' : 'text-amber-500'}`
+                        })
+                      ),
+                      h('span', { className: "absolute text-xl font-black" }, aptidoes[selectedAptidao].score)
+                    ),
+                    h('div', {},
+                      h('p', { className: "text-xs font-bold text-slate-400 uppercase" }, "Score Geral"),
+                      h('p', { className: `text-lg font-black transition-colors duration-300 group-hover:text-brand-800 ${aptidoes[selectedAptidao].color}` },
+                        aptidoes[selectedAptidao].score >= 80 ? 'Excelente' : aptidoes[selectedAptidao].score >= 60 ? 'Favorável' : 'Atenção'
+                      )
+                    )
+                  )
+                )
+              ),
+
+              h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
+                h(StatCard, { label: "Área Total", value: "106 ha", subtext: "Área Consolidada" }),
+                h(StatCard, { label: "Município", value: "Caldas / MG", subtext: "Terras raras" }),
+                h(StatCard, { label: "Preço", value: "R$ 4.000.000", subtext: "Oportunidade de investimento" }),
+                h(StatCard, { label: "Preço por hectare", value: "R$ 37.738", subtext: "Aproveitamento de 68,5%" })
+              )
+            ),
+
+            h('div', { className: "bg-white rounded-3xl border border-slate-200 p-2 shadow-xl overflow-hidden" },
+              h('div', { className: "relative h-[420px] sm:h-[500px] xl:h-[560px] rounded-2xl bg-slate-900 overflow-hidden group" },
+                viewMode === 'map' ? h('img', {
+                  src: layers[activeLayer].img,
+                  alt: "Mapa",
+                  className: "w-full h-full object-cover"
+                }) : viewMode === 'video' ? h('div', { className: "w-full h-full bg-black" },
+                  h('video', {
+                    src: "imagens/nuclebras/video-drone.mp4",
+                    className: "w-full h-full object-cover",
+                    controls: true,
+                    autoPlay: true,
+                    loop: true,
+                    muted: true,
+                    defaultMuted: true,
+                    playsInline: true,
+                    preload: "auto",
+                    onLoadedData: (e) => {
+                      const playPromise = e.target.play();
+                      if (playPromise && typeof playPromise.catch === 'function') {
+                        playPromise.catch(() => {});
+                      }
+                    }
+                  })
+                ) : h('div', { className: "w-full h-full p-4 bg-slate-900/95" },
+                  h('div', { className: "grid h-full grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-2 gap-3" },
+                    photoGallery.map((photo, idx) =>
+                      h('button', {
+                        key: `photo-${idx}`,
+                        onClick: () => setFullscreenPhotoIndex(idx),
+                        className: "relative h-full min-h-0 rounded-xl overflow-hidden border border-white/20 group/item text-left"
+                      },
+                        h('img', {
+                          src: photo.src,
+                          alt: photo.label,
+                          className: "w-full h-full object-cover"
+                        }),
+                        h('div', { className: "absolute inset-0 bg-black/25 opacity-0 group-hover/item:opacity-100 transition-opacity pointer-events-none" }),
+                        h('div', { className: "absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-black/65 px-2.5 py-2 text-white" },
+                          h('span', { className: "text-[10px] font-bold uppercase truncate" }, photo.label),
+                          h(Maximize2, { className: "w-4 h-4 shrink-0" })
+                        )
+                      )
+                    )
+                  )
+                ),
+                h('div', { className: "absolute top-4 sm:top-6 left-4 sm:left-6 z-10" },
+                  h('div', { className: "bg-white/95 backdrop-blur px-4 py-2 rounded-lg border border-slate-200 shadow-lg" },
+                    h('p', { className: "text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-tighter" }, "Visualização Ativa"),
+                    h('p', { className: "text-sm font-bold text-slate-800 flex items-center gap-2 uppercase" },
+                      viewMode === 'map' ? h(Fragment, {},
+                        h(Layers, { className: "w-4 h-4 text-brand-500" }),
+                        " ",
+                        layers[activeLayer].title
+                      ) : viewMode === 'video' ? h(Fragment, {},
+                        h(Play, { className: "w-4 h-4 text-brand-500" }),
+                        " ",
+                        "Vídeo da Fazenda"
+                      ) : h(Fragment, {},
+                        h(ImageIcon, { className: "w-4 h-4 text-brand-500" }),
+                        " ",
+                        "Fotos da Fazenda"
+                      )
+                    )
+                  )
+                ),
+                viewMode === 'map' && h('div', {
+                  className: "absolute bottom-16 sm:bottom-20 right-4 sm:right-6 z-10 max-w-[250px] rounded-lg border border-brand-200 bg-brand-700/95 px-3 py-2 shadow-lg backdrop-blur-sm"
+                },
+                  h('p', { className: "text-[10px] sm:text-[11px] font-bold text-white leading-snug" },
+                    "Legendas detalhadas disponíveis apenas no relatório técnico completo."
+                  )
+                ),
+                h('div', { className: "absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 max-w-[calc(100%-1rem)] overflow-x-auto whitespace-nowrap flex items-center gap-1 p-1 bg-slate-900/55 backdrop-blur-md rounded-xl border border-white/20" },
+                  h('button', {
+                    key: 'video',
+                    onClick: () => setViewMode('video'),
+                    className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                      viewMode === 'video' ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                    }`
+                  }, "vídeo"),
+                  h('button', {
+                    key: 'fotos',
+                    onClick: () => setViewMode('photos'),
+                    className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                      viewMode === 'photos' ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                    }`
+                  }, "fotos"),
+                  Object.keys(layers).map((id) =>
+                    h('button', {
+                      key: id,
+                      onClick: () => {
+                        setViewMode('map');
+                        setActiveLayer(id);
+                      },
+                      className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                        viewMode === 'map' && activeLayer === id ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                      }`
+                    }, id)
+                  )
+                ),
+                h('button', {
+                  onClick: () => setFullscreen(true),
+                  className: "absolute top-4 sm:top-6 right-4 sm:right-6 p-3 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full text-white transition-all"
+                },
+                  h(Maximize2, { className: "w-5 h-5" })
+                )
+              )
+            )
+          ),
+
+          // Faixa de Indicadores (copiada da página chat)
+          h('section', {
+            className: "w-screen overflow-hidden border-y border-slate-200 bg-white py-3",
+            style: { marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)" }
+          },
+            h('div', { className: "flex whitespace-nowrap animate-[marquee_20s_linear_infinite] gap-12 text-xs font-mono font-bold text-black" },
+              Array.from({ length: 10 }, (_, idx) =>
+                h('span', { key: `ticker-${idx}` }, marketTapeText)
+              )
+            )
+          ),
+
+          // Precificação PRO + Corretor
+          h('section', { className: "grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch" },
+            h('div', { className: "bg-white rounded-3xl border-2 border-slate-900 p-5 sm:p-6 xl:p-8 flex flex-col justify-between gap-8 relative overflow-hidden shadow-2xl h-full" },
+              h('div', { className: "absolute top-0 right-0 p-4" },
+                h('div', { className: "bg-slate-900 text-white px-3 py-1 rounded-bl-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2" },
+                  h(ShieldCheck, { className: "w-3 h-3" }),
+                  " RELATÓRIO EXCLUSIVO DA TALHÃO"
+                )
+              ),
+              h('div', { className: "space-y-4 pt-12" },
+                h('h2', { className: "text-3xl font-black text-slate-900 leading-tight" }, "Entenda o preço da fazenda"),
+                h('p', { className: "text-slate-500" }, "Avaliação baseada no mercado atual de Caldas (MG)."),
+                h('div', { className: "flex items-end gap-3" },
+                  h('span', { className: "text-4xl font-black text-brand-600 tracking-tighter" }, "R$ 37.738"),
+                  h('span', { className: "text-lg font-bold text-slate-400 pb-1" }, "/ hectare")
+                ),
+              ),
+              h('div', { className: "group bg-gradient-to-br from-brand-900 via-brand-800 to-black p-6 rounded-2xl border border-brand-400/30 text-center space-y-4 w-full shadow-[0_16px_40px_rgba(3,23,15,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-105" },
+                h('div', { className: "w-12 h-12 bg-white/15 border border-white/25 rounded-full flex items-center justify-center mx-auto mb-4" },
+                  h(Lock, { className: "w-6 h-6 text-white" })
+                ),
+                h('h3', { className: "font-black text-white uppercase tracking-tighter" }, "Acesse o relatório técnico"),
+                h('p', { className: "text-xs text-white/85 leading-relaxed" }, "Para entender como esta é uma grande oportunidade de compra, acesse abaixo o relatório completo desta propriedade."),
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "w-full bg-white text-brand-900 py-4 rounded-xl text-sm font-black hover:bg-brand-50 transition-all flex items-center justify-center gap-2 shadow-lg"
+                },
+                  "ACESSAR RELATÓRIO ",
+                  h(ChevronRight, { className: "w-4 h-4" })
+                )
+              ),
+              h('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-3" },
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
+                },
+                  h(MapIcon, { className: "w-4 h-4" }),
+                  "Baixar KML"
+                ),
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
+                },
+                  h(ShieldCheck, { className: "w-4 h-4" }),
+                  "Baixar CAR"
+                ),
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
+                },
+                  h(Send, { className: "w-4 h-4" }),
+                  "Rota até a fazenda"
+                )
+              )
+            ),
+
+            h('div', { className: "card-surface rounded-3xl border border-slate-200 p-5 sm:p-6 xl:p-8 shadow-2xl flex flex-col h-full" },
+              h('div', { className: "flex items-start gap-4 mb-6" },
+                h('div', { className: "w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0" },
+                  h(Search, { className: "w-6 h-6 text-brand-700" })
+                ),
+                h('div', { className: "space-y-1" },
+                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-widest" }, "Relatório Técnico"),
+                  h('h3', { className: "text-2xl font-black text-slate-900 leading-tight" }, "Por que esta fazenda é uma excelente compra"),
+                  h('p', { className: "text-sm text-slate-500" }, "Análise técnica objetiva para reduzir risco e aumentar retorno no investimento.")
+                )
+              ),
+
+              h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" },
+                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Aptidão Agrícola"),
+                  h('p', { className: "text-lg font-black text-brand-700" }, "94 / 100")
+                ),
+                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Mecanização"),
+                  h('p', { className: "text-lg font-black text-slate-900" }, "85% da área")
+                ),
+                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Segurança Jurídica"),
+                  h('p', { className: "text-lg font-black text-slate-900" }, "100% regular")
+                ),
+                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Valorização Estimada"),
+                  h('p', { className: "text-lg font-black text-slate-900" }, "+18% (36 meses)")
+                )
+              ),
+
+              h('div', { className: "space-y-3 text-sm text-slate-600 leading-relaxed" },
+                h('div', { className: "flex items-start gap-2" },
+                  h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                  h('p', {},
+                    h('span', { className: "font-bold text-slate-800" }, "Solo e relevo favoráveis: "),
+                    "declividade média de 4% e alta área mecanizável, reduzindo custo operacional por hectare."
+                  )
+                ),
+                h('div', { className: "flex items-start gap-2" },
+                  h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                  h('p', {},
+                    h('span', { className: "font-bold text-slate-800" }, "Base produtiva consistente: "),
+                    "histórico multianual e indicadores geoespaciais sugerem estabilidade agronômica e potencial de ganho."
+                  )
+                ),
+                h('div', { className: "flex items-start gap-2" },
+                  h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                  h('p', {},
+                    h('span', { className: "font-bold text-slate-800" }, "Risco controlado: "),
+                    "documentação fundiária validada e diligência técnica estruturada para uma decisão de compra segura."
+                  )
+                )
+              ),
+
+              h('div', { className: "mt-6 flex flex-wrap gap-2" },
+                h('span', { className: "px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-100 text-xs font-bold uppercase tracking-wide" }, "Laudo Especialista"),
+                h('span', { className: "px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wide" }, "Métricas Auditáveis"),
+                h('span', { className: "px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wide" }, "Decisão Orientada a Dados")
+              ),
+
+              h('div', { className: "mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" },
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 py-3 text-xs font-black uppercase tracking-widest transition-colors"
+                }, "Ver Prévia do Laudo"),
+                h('button', {
+                  onClick: openLeadCaptureModal,
+                  className: "rounded-xl bg-brand-700 hover:bg-brand-800 text-white py-3 text-xs font-black uppercase tracking-widest transition-colors"
+                }, "Desbloquear Relatório")
+              )
+            ),
+
+            h('div', { className: "p-5 sm:p-6 xl:p-8 flex flex-col h-full justify-between" },
+              h('div', { className: "space-y-6" },
+                h('h3', {
+                  ref: nextStepTitleRef,
+                  className: `text-[2.6rem] sm:text-5xl lg:text-6xl xl:text-[8rem] font-black text-brand-800 leading-[0.95] tracking-tight transition-all duration-700 ease-out ${
+                    showNextStepTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`
+                },
+                  "Qual o seu",
+                  h('br'),
+                  "próximo",
+                  h('br'),
+                  "passo?"
+                ),
+                h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
+                  h('button', {
+                    onClick: openLeadCaptureModal,
+                    className: "w-full rounded-full bg-brand-700 hover:bg-brand-800 text-white py-4 text-lg font-black tracking-wide transition-colors"
+                  }, "Falar com o corretor"),
+                  h('button', {
+                    onClick: openLeadCaptureModal,
+                    className: "w-full rounded-full border border-brand-700 bg-white hover:bg-brand-50 text-brand-800 py-4 text-lg font-black tracking-wide transition-colors"
+                  }, "Agendar visita"),
+                  h('button', {
+                    onClick: openLeadCaptureModal,
+                    className: "w-full rounded-full bg-slate-900 hover:bg-slate-800 text-white py-4 text-lg font-black tracking-wide transition-colors"
+                  }, "Ler relatório técnico"),
+                  h('button', {
+                    onClick: openLeadCaptureModal,
+                    className: "w-full rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-900 py-4 text-lg font-black tracking-wide transition-colors"
+                  }, "Enviar proposta")
+                )
+              ),
+              h('div', { className: "pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between text-base font-bold text-slate-900" },
+                h('a', { href: "#", className: "underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors" }, "Denunciar anúncio"),
+                h('a', { href: "#", className: "underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors" }, "Compartilhar")
+              )
+            )
+          ),
+
+          // Corretor Especialista
+          h('section', { className: "card-surface rounded-[32px] border border-slate-200 p-5 sm:p-7 md:p-10 shadow-2xl space-y-8 relative overflow-hidden" },
+            h('div', { className: "absolute -top-20 -right-24 w-64 h-64 bg-brand-100/70 rounded-full blur-3xl pointer-events-none" }),
+            h('div', { className: "absolute -bottom-24 -left-20 w-64 h-64 bg-slate-200/80 rounded-full blur-3xl pointer-events-none" }),
+
+            h('div', { className: "relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4" },
+              h('div', { className: "space-y-2" },
+                h('p', { className: "text-[10px] font-black uppercase tracking-widest text-brand-700" }, "Corretor Responsável"),
+                h('h2', { className: "text-3xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight" }, "Competência técnica e histórico reputacional em transações de fazendas"),
+                h('p', { className: "text-sm text-slate-500 max-w-3xl" }, "Condução comercial com diligência fundiária, leitura técnica do ativo e negociação estruturada para proteger comprador e vendedor em todas as fases da operação.")
+              )
+            ),
+
+            h('div', { className: "relative grid grid-cols-1 xl:grid-cols-[1.25fr_1fr] gap-6" },
+              h('div', { className: "bg-white rounded-3xl border border-slate-200 p-6 md:p-7 space-y-6 shadow-sm" },
+                h('div', { className: "flex flex-col sm:flex-row sm:items-center gap-5" },
+                  h('img', {
+                    src: "imagens/rodrigo_moura.png",
+                    alt: "Corretor especialista em fazendas",
+                    className: "w-48 h-48 rounded-2xl object-cover border border-slate-200 shadow-sm shrink-0"
+                  }),
+                  h('div', { className: "space-y-4" },
+                    h('h3', { className: "text-2xl font-black text-slate-900 leading-tight" }, "Rodrigo Portinhola"),
+                    h('p', { className: "text-xs font-black uppercase tracking-widest text-brand-700" }, "Corretor especializado em Fazendas"),
+                    h('p', { className: "text-sm text-slate-500" }, "Especialista em compra e venda de propriedades rurais produtivas, com atuação focada em Minas Gerais, Goiás e MATOPIBA."),
+                    h('div', { className: "flex flex-wrap items-center gap-2 pt-1" },
+                      socialLinks.map((item) =>
+                        h('a', {
+                          key: `broker-social-${item.label}`,
+                          href: item.href,
+                          target: item.href.startsWith('mailto:') ? undefined : "_blank",
+                          rel: item.href.startsWith('mailto:') ? undefined : "noopener noreferrer",
+                          title: item.label,
+                          'aria-label': item.label,
+                          className: "group inline-flex h-10 w-10 items-center justify-center rounded-xl border border-brand-200 bg-brand-50 text-brand-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-700 hover:text-white hover:border-brand-700"
+                        },
+                          h(item.icon, { className: "h-4 w-4" })
+                        )
+                      )
+                    )
+                  )
+                ),
+
+                h('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" },
+                  h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Fazendas transacionadas"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "96")
+                  ),
+                  h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Volume negociado"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "R$ 2,4 bi")
+                  ),
+                  h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Clientes recorrentes"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "42")
+                  ),
+                  h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "NPS médio"),
+                    h('p', { className: "text-lg font-black text-brand-700" }, "91")
+                  )
+                ),
+
+                h('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-3 text-sm" },
+                  h('div', { className: "rounded-xl border border-slate-200 p-4 bg-white" },
+                    h('div', { className: "flex items-start gap-2 mb-2" },
+                      h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                      h('p', { className: "font-bold text-slate-800" }, "Triagem técnica pré-negociação")
+                    ),
+                    h('p', { className: "text-slate-500 leading-relaxed" }, "Validação prévia de produtividade, aptidão, passivos e regularidade para reduzir assimetria de informação.")
+                  ),
+                  h('div', { className: "rounded-xl border border-slate-200 p-4 bg-white" },
+                    h('div', { className: "flex items-start gap-2 mb-2" },
+                      h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                      h('p', { className: "font-bold text-slate-800" }, "Negociação orientada por dados")
+                    ),
+                    h('p', { className: "text-slate-500 leading-relaxed" }, "Estratégia de proposta baseada em benchmark regional de preço/hectare, liquidez e histórico da área.")
+                  )
+                ),
+
+                h('div', { className: "rounded-2xl border border-brand-100 bg-brand-50 p-4 flex items-start gap-3" },
+                  h(ShieldCheck, { className: "w-5 h-5 text-brand-700 mt-0.5 shrink-0" }),
+                  h('p', { className: "text-sm text-brand-800 leading-relaxed" },
+                    h('span', { className: "font-black" }, "Histórico reputacional auditável: "),
+                    "processos de intermediação com documentação rastreável, comunicação registrada e acompanhamento da operação até a formalização final."
+                  )
+                )
+              ),
+
+              h('div', { className: "space-y-4" },
+                h('div', { className: "bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-sm" },
+                  h('h4', { className: "text-lg font-black text-slate-900 uppercase tracking-tight" }, "Credenciais e reputação"),
+                  h('div', { className: "space-y-3 text-sm" },
+                    h('div', { className: "flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200" },
+                      h(Calendar, { className: "w-4 h-4 mt-0.5 text-brand-700 shrink-0" }),
+                      h('p', { className: "text-slate-600 leading-relaxed" }, h('span', { className: "font-bold text-slate-800" }, "18 anos de atuação contínua"), " em intermediação de ativos rurais.")
+                    ),
+                    h('div', { className: "flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200" },
+                      h(Landmark, { className: "w-4 h-4 mt-0.5 text-brand-700 shrink-0" }),
+                      h('p', { className: "text-slate-600 leading-relaxed" }, h('span', { className: "font-bold text-slate-800" }, "Experiência em estruturas complexas"), " com matrícula múltipla, due diligence e negociação multilateral.")
+                    ),
+                    h('div', { className: "flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200" },
+                      h(Search, { className: "w-4 h-4 mt-0.5 text-brand-700 shrink-0" }),
+                      h('p', { className: "text-slate-600 leading-relaxed" }, h('span', { className: "font-bold text-slate-800" }, "Histórico de recomendação"), " com taxa elevada de clientes recorrentes e indicações qualificadas.")
+                    )
+                  )
+                ),
+
+                h('div', { className: "bg-slate-900 rounded-3xl p-6 text-white space-y-5 shadow-xl" },
+                  h('div', { className: "space-y-2" },
+                    h('p', { className: "text-[10px] font-black uppercase tracking-widest text-brand-200" }, "Atendimento Premium"),
+                    h('h4', { className: "text-2xl font-black leading-tight" }, "Acompanhamento do início ao fechamento"),
+                    h('p', { className: "text-sm text-slate-300 leading-relaxed" }, "Suporte estratégico em proposta, diligência documental, negociação e alinhamento final entre as partes para uma transação segura.")
+                  ),
+                  h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3" },
+                    h('button', { onClick: openLeadCaptureModal, className: "rounded-xl bg-brand-600 hover:bg-brand-700 text-white py-3 px-4 text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2" },
+                      h(Phone, { className: "w-4 h-4" }),
+                      "Falar com corretor"
+                    ),
+                    h('button', { onClick: openLeadCaptureModal, className: "rounded-xl border border-slate-600 hover:border-slate-400 text-slate-100 py-3 px-4 text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2" },
+                      "Ver histórico completo ",
+                      h(ExternalLink, { className: "w-4 h-4" })
+                    )
+                  )
+                )
+              )
+            )
+          ),
+
+          // Quebra de Página (Fundo Escuro + Chat)
+          h('section', {
+            className: "w-screen overflow-hidden border-y border-[#173327]/60",
+            style: { marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)" }
+          },
+            h('div', { className: "relative min-h-[420px] sm:min-h-[540px] bg-gradient-to-b from-[#03150c] via-[#072418] to-[#000000]" },
+              h('div', { className: "absolute inset-0 bg-[radial-gradient(circle_at_18%_80%,rgba(34,197,94,0.2),transparent_45%),radial-gradient(circle_at_82%_16%,rgba(21,128,61,0.22),transparent_42%)]" }),
+              h('div', { className: "relative h-full w-full flex items-center justify-center px-6 py-16 sm:py-20" },
+                h('div', { className: "w-full max-w-5xl space-y-6 sm:space-y-8 text-left" },
+                  h('h3', { className: "text-3xl sm:text-5xl font-black leading-[1.05] text-white/95 tracking-tight" },
+                    "Análise técnica em profundidade para a próxima etapa da decisão."
+                  ),
+                  h('p', { className: "text-base sm:text-xl text-white/65 max-w-5xl mx-auto text-center" },
+                    "Abaixo, você pode perguntar todas as suas dúvidas sobre esta propriedade."
+                  ),
+                  h('div', { className: "rounded-[28px] border border-slate-200 bg-white shadow-2xl overflow-hidden mt-4" },
+                    h('div', { className: "px-6 sm:px-8 pt-6 sm:pt-8" },
+                      h('textarea', {
+                        rows: 5,
+                        placeholder: "Ex: Qual é o preço por hectare e a faixa de negociação?",
+                        value: aiPrompt,
+                        onChange: (e) => setAiPrompt(e.target.value),
+                        className: "w-full min-h-[150px] sm:min-h-[170px] resize-none bg-transparent p-0 text-lg sm:text-2xl leading-tight text-slate-700 placeholder:text-slate-500",
+                        style: { border: 'none', boxShadow: 'none', outline: 'none' }
+                      })
+                    ),
+                    h('div', { className: "px-6 sm:px-8 pb-4" },
+                      h('p', { className: "text-xs sm:text-sm font-bold text-slate-500 mb-2" }, "Perguntas rápidas"),
+                      h('div', { className: "flex flex-wrap gap-2" },
+                        quickFarmQuestions.map((question, idx) =>
+                          h('button', {
+                            key: `quick-question-${idx}`,
+                            onClick: () => setAiPrompt(question),
+                            className: "rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors"
+                          }, question)
+                        )
+                      )
+                    ),
+                    h('div', { className: "border-t border-slate-200/90 px-6 sm:px-8 py-4 flex items-center justify-end" },
+                      h('button', {
+                        onClick: openLeadCaptureModal,
+                        className: "inline-flex w-12 h-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-900 to-brand-600 text-white shadow-[0_10px_24px_rgba(15,23,42,0.25)] hover:brightness-110 transition-all",
+                        'aria-label': "Enviar para IA"
+                      },
+                        h('span', { className: "text-xl leading-none" }, "↑")
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          ),
+
+          // Missões Técnicas
+          h('section', { className: "space-y-8" },
+            h('div', { className: "text-center max-w-2xl mx-auto" },
+              h('h2', { className: "text-3xl font-black text-slate-900 mb-3 uppercase tracking-tighter" }, "Diagnóstico Multidimensional"),
+              h('p', { className: "text-slate-500 font-light" }, "Exploração dos pilares de viabilidade do ativo.")
+            ),
+            h('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" },
+              missions.map((mission, idx) =>
+                h(MissionCard, {
+                  key: idx,
+                  ...mission,
+                  onClick: () => setSelectedMission(mission)
+                })
+              )
+            )
+          ),
+
+          // Conformidade e Auditoria
+          h('section', { className: "space-y-8" },
+            h('div', { className: "text-center max-w-2xl mx-auto" },
+              h('h2', { className: "text-3xl font-black text-slate-900 mb-3 uppercase tracking-tighter" }, "Conformidade e Auditoria"),
+              h('p', { className: "text-slate-500 font-light" }, "Checklist regulatório da propriedade e pontos de atenção para compra segura.")
+            ),
+            h('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" },
+              complianceMissions.map((item, idx) =>
+                h(MissionCard, {
+                  key: `compliance-${idx}`,
+                  ...item,
+                  onClick: () => setSelectedMission(item)
+                })
+              )
+            )
+          ),
+
+          // Footer
+          h('footer', { className: "pt-12" },
+            h('div', { className: "rounded-[32px] border border-slate-200 bg-slate-100/95 px-5 sm:px-7 py-8 sm:py-10 text-slate-900 shadow-2xl md:px-10" },
+              h('div', { className: "grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr]" },
+                h('div', { className: "space-y-5" },
+                  h('img', {
+                    src: "imagens/logo_anuncio.png",
+                    alt: "Talhão.ai",
+                    className: "h-12 w-auto object-contain"
+                  }),
+                  h('p', { className: "max-w-md text-sm leading-relaxed text-slate-600" },
+                    "A talhão.ai conecta inteligência geoespacial, diligência fundiária e análise produtiva para acelerar decisões de compra e venda de fazendas."
+                  )
+                ),
+
+                h('div', { className: "space-y-4" },
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Plataforma"),
+                  h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Análise de Fazendas"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Relatório Técnico"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Diligência Jurídica"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Mapa Multicamadas")
+                  )
+                ),
+
+                h('div', { className: "space-y-4" },
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Recursos"),
+                  h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Central de Ajuda"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Casos de Uso"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Política de Privacidade"),
+                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Segurança & LGPD")
+                  )
+                ),
+
+                h('div', { className: "space-y-4" },
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Fale com Especialista"),
+                  h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
+                    h('span', {}, "contato@talhao.ai"),
+                    h('span', {}, "+55 (11) 99999-0000"),
+                    h('span', {}, "São Paulo • Brasil")
+                  ),
+                  h('button', {
+                    onClick: openDemoVersionModal,
+                    className: "mt-2 inline-flex items-center gap-2 rounded-full bg-brand-600 px-4 py-2 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-brand-700"
+                  },
+                    "Agendar demonstração ",
+                    h(ChevronRight, { className: "h-3 w-3" })
+                  )
+                )
+              ),
+
+              h('div', { className: "mt-10 flex flex-col gap-3 border-t border-slate-300 pt-5 text-[10px] font-bold uppercase tracking-widest text-slate-500 sm:flex-row sm:items-center sm:justify-between" },
+                h('span', {}, "Dados Sentinel-2, INCRA e SIGEF • Atualizado em Jan/2026"),
+                h('span', {}, "© 2026 talhão.ai. Todos os direitos reservados.")
+              )
+            )
+          )
+        )
+      ),
+
+        !isMobilePreviewFrame && h('button', {
+          onClick: () => setShowMobilePreview(true),
+          className: "hidden lg:inline-flex fixed bottom-6 right-6 z-[70] rounded-full bg-brand-700 hover:bg-brand-800 text-white px-5 py-3 text-xs font-black uppercase tracking-widest shadow-xl transition-colors"
+        }, "Visualização mobile"),
+
+        !isMobilePreviewFrame && showMobilePreview && h('div', {
+          className: "fixed inset-0 z-[120] bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-4",
+          onClick: () => setShowMobilePreview(false)
+        },
+          h('div', {
+            className: "w-full max-w-[460px] rounded-3xl bg-white border border-slate-200 shadow-2xl p-4",
+            onClick: (e) => e.stopPropagation()
+          },
+            h('div', { className: "flex items-center justify-between mb-3 px-1" },
+              h('p', { className: "text-sm font-black uppercase tracking-widest text-slate-500" }, "Preview Mobile"),
+              h('button', {
+                onClick: () => setShowMobilePreview(false),
+                className: "p-2 rounded-full hover:bg-slate-100 text-slate-600"
+              },
+                h(X, { className: "w-4 h-4" })
+              )
+            ),
+            h('div', { className: "mx-auto w-[390px] max-w-full h-[min(780px,80vh)] rounded-[32px] border-[10px] border-slate-900 overflow-hidden bg-black" },
+                h('iframe', {
+                title: "Prévia mobile farm_page",
+                src: mobilePreviewUrl,
+                className: "w-full h-full bg-white"
+              })
+            )
+          )
+        ),
+
+        // Modal Demo (Header: Criar conta / Login)
+        showDemoModal && h('div', {
+          className: "fixed inset-0 z-[140] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md",
+          onClick: closeDemoVersionModal
+        },
+          h('div', {
+            className: "w-full max-w-xl rounded-3xl border border-brand-300/30 bg-gradient-to-br from-brand-900 via-brand-800 to-black text-white shadow-2xl p-8 md:p-10 relative animate-in fade-in zoom-in duration-200",
+            onClick: (e) => e.stopPropagation(),
+            role: "dialog",
+            'aria-modal': "true",
+            'aria-labelledby': "demo-modal-title",
+            'aria-describedby': "demo-modal-desc"
+          },
+            h('button', {
+              onClick: closeDemoVersionModal,
+              className: "absolute top-4 right-4 text-white/70 hover:text-white transition",
+              'aria-label': "Fechar"
+            },
+              h(X, { className: "w-5 h-5" })
+            ),
+            h('h3', { id: "demo-modal-title", className: "text-3xl font-black leading-tight" }, "Versão Demo"),
+            h('p', { id: "demo-modal-desc", className: "text-white/85 mt-2" }, "Esta é uma versão demo. Para saber mais, preencha seus dados abaixo e nossa equipe entrará em contato."),
+            h('form', {
+              className: "mt-6 grid gap-4",
+              onSubmit: async (e) => {
+                e.preventDefault();
+                const normalized = {
+                  nome: demoForm.nome.trim(),
+                  telefone: demoForm.telefone.trim(),
+                  cidade: demoForm.cidade.trim(),
+                  estado: demoForm.estado.trim()
+                };
+                const phoneDigits = normalized.telefone.replace(/\D/g, '');
+
+                if (!normalized.nome || !normalized.telefone || !normalized.cidade || !normalized.estado) {
+                  setDemoFormError('Preencha todos os campos para continuar.');
+                  setDemoFormSent(false);
+                  return;
+                }
+
+                if (phoneDigits.length < 10) {
+                  setDemoFormError('Informe um telefone válido.');
+                  setDemoFormSent(false);
+                  return;
+                }
+
+                setDemoFormError('');
+                setDemoFormSubmitting(true);
+                try {
+                  await submitFarmLead({
+                    formType: 'demo_signup',
+                    nome: normalized.nome,
+                    telefone: normalized.telefone,
+                    cidade: normalized.cidade,
+                    estado: normalized.estado
+                  });
+                  setDemoFormSent(true);
+                } catch (error) {
+                  setDemoFormSent(false);
+                  setDemoFormError(error && error.message ? error.message : 'Não foi possível enviar seus dados. Tente novamente.');
+                } finally {
+                  setDemoFormSubmitting(false);
+                }
+              }
+            },
+              h('label', { className: "text-sm font-semibold text-brand-100" },
+                "Nome",
+                h('input', {
+                  type: "text",
+                  name: "nome",
+                  required: true,
+                  value: demoForm.nome,
+                  onChange: (e) => setDemoForm((prev) => ({ ...prev, nome: e.target.value })),
+                  className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
+                  placeholder: "Seu nome completo"
+                })
+              ),
+              h('label', { className: "text-sm font-semibold text-brand-100" },
+                "Telefone",
+                h('input', {
+                  type: "tel",
+                  name: "telefone",
+                  required: true,
+                  value: demoForm.telefone,
+                  onChange: (e) => setDemoForm((prev) => ({ ...prev, telefone: e.target.value })),
+                  className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
+                  placeholder: "(00) 00000-0000"
+                })
+              ),
+              h('div', { className: "grid gap-4 md:grid-cols-2" },
+                h('label', { className: "text-sm font-semibold text-brand-100" },
+                  "Cidade",
+                  h('input', {
+                    type: "text",
+                    name: "cidade",
+                    required: true,
+                    value: demoForm.cidade,
+                    onChange: (e) => setDemoForm((prev) => ({ ...prev, cidade: e.target.value })),
+                    className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
+                    placeholder: "Sua cidade"
+                  })
+                ),
+                h('label', { className: "text-sm font-semibold text-brand-100" },
+                  "Estado",
+                  h('input', {
+                    type: "text",
+                    name: "estado",
+                    required: true,
+                    value: demoForm.estado,
+                    onChange: (e) => setDemoForm((prev) => ({ ...prev, estado: e.target.value })),
+                    className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
+                    placeholder: "UF"
+                  })
+                )
+              ),
+              h('button', {
+                type: "submit",
+                disabled: demoFormSubmitting,
+                className: "mt-2 w-full rounded-2xl py-3 text-base font-black bg-white text-brand-900 border border-white shadow-lg hover:bg-brand-50 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              }, demoFormSubmitting ? "Enviando..." : "Enviar"),
+              demoFormError && h('p', { className: "text-sm text-rose-200 font-semibold" }, demoFormError),
+              demoFormSent && h('p', { className: "text-sm text-brand-100 font-semibold" }, "Recebemos suas informações. Em breve entraremos em contato.")
+            )
+          )
+        ),
+
+        // Modal Missão
+        selectedMission && h('div', {
+          className: "fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm"
+        },
+          h('div', { className: "bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden" },
+            h('div', { className: "p-6 flex justify-between items-center border-b" },
+              h('div', { className: "flex items-center gap-3" },
+                (() => {
+                  const Icon = selectedMission.icon;
+                  return h(Icon, { className: "w-6 h-6 text-brand-600" });
+                })(),
+                h('h3', { className: "font-black text-xl" }, selectedMission.title)
+              ),
+              h('button', {
+                onClick: () => setSelectedMission(null),
+                className: "p-2 hover:bg-slate-100 rounded-full"
+              },
+                h(X, { className: "w-5 h-5" })
+              )
+            ),
+            h('div', { className: "p-8 space-y-6" },
+              h('p', { className: "text-slate-500 leading-relaxed" }, selectedMission.description),
+              h('div', { className: "space-y-3" },
+                selectedMission.kpis.map((k, i) =>
+                  h('div', { key: i, className: "flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100" },
+                    h('span', { className: "text-sm font-bold text-slate-700" }, k),
+                    h(CheckCircle2, { className: "w-4 h-4 text-brand-500" })
+                  )
+                )
+              ),
+              h('button', { onClick: openLeadCaptureModal, className: "w-full py-4 bg-brand-50 text-brand-700 font-black rounded-xl text-sm uppercase tracking-widest hover:bg-brand-100 transition-colors" },
+                "Solicitar Laudo Completo"
+              )
+            )
+          )
+        ),
+
+        // Modal Foto em Tela Cheia
+        fullscreenPhotoIndex !== null && h('div', {
+          className: "fixed inset-0 z-[100] bg-black flex items-center justify-center",
+          onClick: () => setFullscreenPhotoIndex(null)
+        },
+          h('div', {
+            className: "relative w-full h-full flex items-center justify-center p-4",
+            onClick: (e) => e.stopPropagation()
+          },
+            h('img', {
+              src: photoGallery[fullscreenPhotoIndex].src,
+              alt: photoGallery[fullscreenPhotoIndex].label,
+              className: "max-w-full max-h-full object-contain rounded-lg"
+            }),
+            h('button', {
+              onClick: () => setFullscreenPhotoIndex(null),
+              className: "absolute top-4 right-4 p-3 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full text-white transition-all z-10"
+            },
+              h(X, { className: "w-6 h-6" })
+            ),
+            h('button', {
+              onClick: (e) => {
+                e.stopPropagation();
+                setFullscreenPhotoIndex((fullscreenPhotoIndex - 1 + photoGallery.length) % photoGallery.length);
+              },
+              className: "absolute left-4 top-1/2 -translate-y-1/2 p-4 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full text-white transition-all z-10"
+            },
+              h(ChevronLeft, { className: "w-6 h-6" })
+            ),
+            h('button', {
+              onClick: (e) => {
+                e.stopPropagation();
+                setFullscreenPhotoIndex((fullscreenPhotoIndex + 1) % photoGallery.length);
+              },
+              className: "absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full text-white transition-all z-10"
+            },
+              h(ChevronRight, { className: "w-6 h-6" })
+            ),
+            h('div', { className: "absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/20 backdrop-blur rounded-lg text-white text-xs font-bold" },
+              `${fullscreenPhotoIndex + 1} / ${photoGallery.length}`
+            )
+          )
+        ),
+
+        // Modal Tela Cheia
+        fullscreen && h('div', {
+          className: "fixed inset-0 z-[100] bg-black flex items-center justify-center p-4",
+          onClick: () => setFullscreen(false)
+        },
+          h('div', {
+            className: "relative w-full h-full flex items-center justify-center",
+            onClick: (e) => e.stopPropagation()
+          },
+            viewMode === 'map' ? h('img', {
+              src: layers[activeLayer].img,
+              alt: "Mapa",
+              className: "max-w-full max-h-full object-contain"
+            }) : viewMode === 'video' ? h('video', {
+              src: "imagens/nuclebras/video-drone.mp4",
+              className: "w-full h-full object-cover",
+              controls: true,
+              autoPlay: true,
+              loop: true,
+              muted: true,
+              defaultMuted: true,
+              playsInline: true,
+              preload: "auto",
+              onLoadedData: (e) => {
+                const playPromise = e.target.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                  playPromise.catch(() => {});
+                }
+              }
+            }) : h('div', { className: "w-full h-full p-6 overflow-y-auto" },
+              h('div', { className: "grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-7xl mx-auto" },
+                photoGallery.map((photo, idx) =>
+                  h('button', {
+                    key: `full-photo-${idx}`,
+                    onClick: () => setFullscreenPhotoIndex(idx),
+                    className: "relative h-52 rounded-xl overflow-hidden border border-white/20 group/item text-left"
+                  },
+                    h('img', {
+                      src: photo.src,
+                      alt: photo.label,
+                      className: "w-full h-full object-cover"
+                    }),
+                    h('div', { className: "absolute inset-0 bg-black/25 opacity-0 group-hover/item:opacity-100 transition-opacity pointer-events-none" }),
+                    h('div', { className: "absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-black/65 px-2.5 py-2 text-white" },
+                      h('span', { className: "text-[10px] font-bold uppercase truncate" }, photo.label),
+                      h(Maximize2, { className: "w-4 h-4 shrink-0" })
+                    )
+                  )
+                )
+              )
+            ),
+            h('div', { className: "absolute top-4 left-4 z-10" },
+              h('div', { className: "bg-white/95 backdrop-blur px-4 py-2 rounded-lg border border-slate-200 shadow-lg" },
+                h('p', { className: "text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-tighter" }, "Visualização Ativa"),
+                h('p', { className: "text-sm font-bold text-slate-800 flex items-center gap-2 uppercase" },
+                  viewMode === 'map' ? h(Fragment, {},
+                    h(Layers, { className: "w-4 h-4 text-brand-500" }),
+                    " ",
+                    layers[activeLayer].title
+                  ) : viewMode === 'video' ? h(Fragment, {},
+                    h(Play, { className: "w-4 h-4 text-brand-500" }),
+                    " ",
+                    "Vídeo da Fazenda"
+                  ) : h(Fragment, {},
+                    h(ImageIcon, { className: "w-4 h-4 text-brand-500" }),
+                    " ",
+                    "Fotos da Fazenda"
+                  )
+                )
+              )
+            ),
+            viewMode === 'map' && h('div', {
+              className: "absolute bottom-16 sm:bottom-20 right-4 sm:right-6 z-10 max-w-[280px] rounded-lg border border-brand-200 bg-brand-700/95 px-3 py-2 shadow-lg backdrop-blur-sm"
+            },
+              h('p', { className: "text-[10px] sm:text-[11px] font-bold text-white leading-snug" },
+                "Legendas detalhadas disponíveis apenas no relatório técnico completo."
+              )
+            ),
+            h('div', { className: "absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[calc(100%-1rem)] overflow-x-auto whitespace-nowrap flex items-center gap-1 p-1 bg-slate-900/40 backdrop-blur-md rounded-xl border border-white/20" },
+              h('button', {
+                key: 'full-video',
+                onClick: () => setViewMode('video'),
+                className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                  viewMode === 'video' ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                }`
+              }, "vídeo"),
+              h('button', {
+                key: 'full-fotos',
+                onClick: () => setViewMode('photos'),
+                className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                  viewMode === 'photos' ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                }`
+              }, "fotos"),
+              Object.keys(layers).map((id) =>
+                h('button', {
+                  key: `full-${id}`,
+                  onClick: () => {
+                    setViewMode('map');
+                    setActiveLayer(id);
+                  },
+                  className: `px-3 sm:px-4 py-2 rounded-lg text-[10px] font-black transition-all uppercase tracking-wider ${
+                    viewMode === 'map' && activeLayer === id ? 'bg-white text-slate-900 shadow-lg' : 'text-white hover:bg-white/10'
+                  }`
+                }, id)
+              )
+            ),
+            h('button', {
+              onClick: () => setFullscreen(false),
+              className: "absolute top-4 right-4 p-3 bg-white/20 hover:bg-white/40 backdrop-blur rounded-full text-white transition-all z-10"
+            },
+              h(X, { className: "w-6 h-6" })
+            )
+          )
+        ),
+
+        // Modal de Captura (estilo chat.html)
+        showUpgradeModal && h('div', {
+          className: "fixed inset-0 z-[130] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md",
+          onClick: closeLeadCaptureModal
+        },
+          h('div', {
+            className: "w-full max-w-xl rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl p-8 md:p-10 relative animate-in fade-in zoom-in duration-200",
+            onClick: (e) => e.stopPropagation(),
+            role: "dialog",
+            'aria-modal': "true",
+            'aria-labelledby': "lead-modal-title",
+            'aria-describedby': "lead-modal-desc"
+          },
+            h('button', {
+              onClick: closeLeadCaptureModal,
+              className: "absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition",
+              'aria-label': "Fechar"
+            },
+              h(X, { className: "w-5 h-5" })
+            ),
+            h('h3', { id: "lead-modal-title", className: "text-3xl font-bold text-slate-900" }, "Quero conhecer mais"),
+            h('p', { id: "lead-modal-desc", className: "text-slate-600 mt-2" }, "Preencha seus dados e entraremos em contato rapidamente."),
+            h('div', { className: "mt-5 rounded-2xl border border-brand-100 bg-brand-50/80 p-4" },
+              leadDownloadReady
+                ? h('div', { className: "space-y-3" },
+                    h('p', { className: "text-sm leading-relaxed text-brand-900 font-semibold" }, "Dados validados com sucesso. O relatório está disponível para download:"),
+                    h('a', {
+                      href: reportPdfPath,
+                      download: "relatorio_MG_000105467.pdf",
+                      className: "inline-flex items-center gap-2 rounded-xl bg-brand-700 px-4 py-2 text-xs font-black uppercase tracking-widest text-white hover:bg-brand-800 transition-colors"
+                    },
+                      "Baixar relatório PDF ",
+                      h(ChevronRight, { className: "w-4 h-4" })
+                    )
+                  )
+                : h('p', { className: "text-sm leading-relaxed text-slate-700" }, "Preencha os dados abaixo para liberar o relatório.")
+            ),
+            h('form', {
+              className: "mt-6 grid gap-4",
+              onSubmit: async (e) => {
+                e.preventDefault();
+                const normalized = {
+                  nome: leadForm.nome.trim(),
+                  whatsapp: leadForm.whatsapp.trim(),
+                  cidade: leadForm.cidade.trim(),
+                  estado: leadForm.estado.trim()
+                };
+                const whatsappDigits = normalized.whatsapp.replace(/\D/g, '');
+
+                if (!normalized.nome || !normalized.whatsapp || !normalized.cidade || !normalized.estado) {
+                  setLeadFormError('Preencha todos os campos para liberar o relatório.');
+                  setLeadDownloadReady(false);
+                  return;
+                }
+
+                if (whatsappDigits.length < 10) {
+                  setLeadFormError('Informe um WhatsApp válido para continuar.');
+                  setLeadDownloadReady(false);
+                  return;
+                }
+
+                setLeadFormError('');
+                setLeadFormSubmitting(true);
+                try {
+                  await submitFarmLead({
+                    formType: 'report_download',
+                    nome: normalized.nome,
+                    telefone: normalized.whatsapp,
+                    cidade: normalized.cidade,
+                    estado: normalized.estado
+                  });
+                  setLeadDownloadReady(true);
+                } catch (error) {
+                  setLeadDownloadReady(false);
+                  setLeadFormError(error && error.message ? error.message : 'Não foi possível enviar seus dados. Tente novamente.');
+                } finally {
+                  setLeadFormSubmitting(false);
+                }
+              }
+            },
+              h('label', { className: "text-sm font-semibold text-slate-700" },
+                "Nome",
+                h('input', {
+                  type: "text",
+                  name: "nome",
+                  required: true,
+                  value: leadForm.nome,
+                  onChange: (e) => setLeadForm((prev) => ({ ...prev, nome: e.target.value })),
+                  className: "mt-2 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-base text-slate-900 focus:border-brand-700 focus:ring-4 focus:ring-brand-700/15 outline-none",
+                  placeholder: "Seu nome completo"
+                })
+              ),
+              h('label', { className: "text-sm font-semibold text-slate-700" },
+                "Whatsapp",
+                h('input', {
+                  type: "tel",
+                  name: "whatsapp",
+                  required: true,
+                  value: leadForm.whatsapp,
+                  onChange: (e) => setLeadForm((prev) => ({ ...prev, whatsapp: e.target.value })),
+                  className: "mt-2 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-base text-slate-900 focus:border-brand-700 focus:ring-4 focus:ring-brand-700/15 outline-none",
+                  placeholder: "(00) 00000-0000"
+                })
+              ),
+              h('div', { className: "grid gap-4 md:grid-cols-2" },
+                h('label', { className: "text-sm font-semibold text-slate-700" },
+                  "Cidade",
+                  h('input', {
+                    type: "text",
+                    name: "cidade",
+                    required: true,
+                    value: leadForm.cidade,
+                    onChange: (e) => setLeadForm((prev) => ({ ...prev, cidade: e.target.value })),
+                    className: "mt-2 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-base text-slate-900 focus:border-brand-700 focus:ring-4 focus:ring-brand-700/15 outline-none",
+                    placeholder: "Sua cidade"
+                  })
+                ),
+                h('label', { className: "text-sm font-semibold text-slate-700" },
+                  "Estado",
+                  h('input', {
+                    type: "text",
+                    name: "estado",
+                    required: true,
+                    value: leadForm.estado,
+                    onChange: (e) => setLeadForm((prev) => ({ ...prev, estado: e.target.value })),
+                    className: "mt-2 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-base text-slate-900 focus:border-brand-700 focus:ring-4 focus:ring-brand-700/15 outline-none",
+                    placeholder: "UF"
+                  })
+                )
+              ),
+              h('button', {
+                type: "submit",
+                disabled: leadFormSubmitting,
+                className: "mt-2 w-full rounded-2xl py-3 text-base font-semibold bg-gradient-to-r from-slate-900 to-brand-800 text-white border border-slate-900 shadow-lg hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              }, leadFormSubmitting ? "Enviando..." : "Baixar relatório"),
+              leadFormError && h('p', { className: "text-sm text-rose-600 font-semibold" }, leadFormError)
+            )
+          )
+        )
+      );
+    }
+
+    // Renderizar a aplicação
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(h(App));
+  </script>
+</body>
+</html>
