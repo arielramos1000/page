@@ -18,14 +18,14 @@
               300: '#86efac',
               400: '#4ade80',
               500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#166534',
+              600: '#2b664f',
+              700: '#2b664f',
+              800: '#2b664f',
               900: '#14532d'
             }
           },
           fontFamily: {
-            sans: ['Space Grotesk', 'Inter', 'ui-sans-serif', 'system-ui']
+            sans: ['Space Grotesk']
           },
           boxShadow: {
             soft: '0 20px 60px rgba(15, 23, 42, 0.06)'
@@ -36,7 +36,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -47,15 +47,25 @@
       --brand-200: #bbf7d0;
       --brand-400: #4ade80;
       --brand-500: #22c55e;
-      --brand-600: #16a34a;
-      --brand-700: #15803d;
-      --brand-800: #166534;
+      --brand-600: #2b664f;
+      --brand-700: #2b664f;
+      --brand-800: #2b664f;
       --brand-900: #14532d;
       --ink-900: #0f172a;
       --surface: #ffffff;
-      --surface-2: #f7f9fb;
+      --surface-2: #f3f4f6;
       --border: #e6ecf3;
       --shadow-soft: 0 20px 60px rgba(15, 23, 42, 0.06);
+      --panel-bg: linear-gradient(180deg, #f5f5f6 0%, #ededf0 100%);
+      --panel-border: #e4e7eb;
+      --panel-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 18px rgba(15, 23, 42, 0.04);
+      --brand-text-highlight: #2b664f;
+      --ambient-green-a: rgba(106, 164, 134, 0.22);
+      --ambient-green-b: rgba(127, 186, 155, 0.14);
+      --ambient-green-c: rgba(169, 214, 188, 0.10);
+      --ambient-float-distance: 4px;
+      --ambient-float-duration-base: 11s;
+      --ambient-blur: 44px;
     }
 
     html, body, #root {
@@ -66,16 +76,40 @@
 
     body {
       margin: 0;
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
-      background: radial-gradient(circle at 12% 18%, rgba(22, 101, 52, 0.06), transparent 32%),
-                  radial-gradient(circle at 82% -4%, rgba(22, 101, 52, 0.08), transparent 30%),
-                  var(--surface-2);
+      font-family: 'Space Grotesk';
+      background: linear-gradient(180deg, #f3f4f6 0%, #f4f5f7 100%);
       color: var(--ink-900);
       letter-spacing: -0.01em;
     }
 
     .font-mono {
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-family: 'Space Grotesk';
+    }
+
+    /* Calibracao de pesos para usar apenas Space Grotesk com hierarquia consistente */
+    .font-light {
+      font-weight: 400 !important;
+    }
+
+    .font-normal {
+      font-weight: 400 !important;
+    }
+
+    .font-medium {
+      font-weight: 500 !important;
+    }
+
+    .font-semibold {
+      font-weight: 600 !important;
+    }
+
+    .font-bold {
+      font-weight: 600 !important;
+    }
+
+    .font-extrabold,
+    .font-black {
+      font-weight: 700 !important;
     }
 
     ::selection { background: var(--brand-100); }
@@ -88,13 +122,257 @@
     }
 
     .card-surface {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
       border-radius: 20px;
-      box-shadow: var(--shadow-soft);
+      box-shadow: var(--panel-shadow);
+    }
+
+    .ambient-section {
+      position: relative;
+      isolation: isolate;
+      z-index: 0;
+    }
+
+    .ambient-section::before,
+    .ambient-section::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .ambient-section--default::before {
+      inset: -7% -3%;
+      background:
+        radial-gradient(62% 44% at 20% 24%, var(--ambient-green-a) 0%, transparent 74%),
+        radial-gradient(66% 50% at 82% 74%, var(--ambient-green-b) 0%, transparent 76%);
+      filter: blur(var(--ambient-blur));
+      opacity: 0.92;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 2s) ease-in-out infinite alternate;
+    }
+
+    .ambient-section--default::after {
+      inset: 0;
+      background: linear-gradient(180deg, rgba(231, 242, 236, 0.42) 0%, rgba(231, 242, 236, 0.12) 44%, rgba(231, 242, 236, 0.28) 100%);
+      border-radius: inherit;
+      opacity: 0.72;
+    }
+
+    .ambient-section--default {
+      background: linear-gradient(180deg, rgba(236, 246, 240, 0.42) 0%, rgba(236, 246, 240, 0.16) 48%, rgba(236, 246, 240, 0.34) 100%);
+    }
+
+    .ambient-section--uniform-green {
+      background: #eaf4ee;
+    }
+
+    .ambient-section--uniform-green::before {
+      inset: -7% -3%;
+      background:
+        radial-gradient(62% 44% at 20% 24%, rgba(106, 164, 134, 0.16) 0%, transparent 74%),
+        radial-gradient(66% 50% at 82% 74%, rgba(127, 186, 155, 0.12) 0%, transparent 76%);
+      filter: blur(var(--ambient-blur));
+      opacity: 0.82;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 2s) ease-in-out infinite alternate;
+    }
+
+    .ambient-section--uniform-green::after {
+      inset: 0;
+      background: none;
+      opacity: 0;
+    }
+
+    .ambient-section--harmonized::before {
+      inset: -5% -2%;
+      background:
+        radial-gradient(60% 42% at 16% 22%, rgba(116, 179, 145, 0.17) 0%, transparent 74%),
+        radial-gradient(58% 42% at 84% 74%, rgba(121, 184, 151, 0.12) 0%, transparent 76%);
+      filter: blur(calc(var(--ambient-blur) * 0.85));
+      opacity: 0.68;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 3s) ease-in-out infinite alternate;
+    }
+
+    .ambient-section--harmonized::after {
+      inset: 0;
+      background: linear-gradient(180deg, rgba(229, 241, 234, 0.24) 0%, rgba(229, 241, 234, 0.02) 52%, rgba(229, 241, 234, 0.16) 100%);
+      border-radius: inherit;
+      opacity: 0.78;
+    }
+
+    .ambient-section--harmonized {
+      background: linear-gradient(180deg, rgba(232, 243, 236, 0.22) 0%, rgba(232, 243, 236, 0.06) 52%, rgba(232, 243, 236, 0.18) 100%);
+    }
+
+    .ambient-section--ticker::before {
+      inset: -24px 0;
+      background:
+        radial-gradient(42% 140% at 22% 50%, rgba(118, 177, 145, 0.18) 0%, transparent 78%),
+        radial-gradient(42% 140% at 78% 50%, rgba(118, 177, 145, 0.16) 0%, transparent 78%);
+      filter: blur(calc(var(--ambient-blur) * 0.62));
+      opacity: 0.82;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 4s) ease-in-out infinite alternate;
+    }
+
+    .ambient-section--ticker::after {
+      inset: 0;
+      background: linear-gradient(90deg, rgba(236, 246, 240, 0.18) 0%, rgba(236, 246, 240, 0.36) 50%, rgba(236, 246, 240, 0.18) 100%);
+      opacity: 0.72;
+    }
+
+    .ambient-section--ticker {
+      background: linear-gradient(90deg, rgba(236, 246, 240, 0.16) 0%, rgba(236, 246, 240, 0.32) 50%, rgba(236, 246, 240, 0.16) 100%);
+    }
+
+    .ambient-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ambient-main-box {
+      position: relative;
+      isolation: isolate;
+      z-index: 0;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 1px 2px rgba(15, 23, 42, 0.06),
+        0 14px 30px rgba(45, 121, 87, 0.12),
+        0 26px 46px rgba(127, 186, 155, 0.09);
+    }
+
+    .ambient-main-box::before {
+      content: "";
+      position: absolute;
+      inset: -12px -10px;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(68% 44% at 24% 20%, var(--ambient-green-a) 0%, transparent 76%),
+        radial-gradient(68% 48% at 78% 84%, var(--ambient-green-b) 0%, transparent 78%);
+      filter: blur(calc(var(--ambient-blur) * 0.72));
+      opacity: 0.78;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 2s) ease-in-out infinite alternate;
+    }
+
+    .ambient-float {
+      animation: ambient-float-y var(--ambient-float-duration-base) ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .ambient-float--slow {
+      animation-duration: calc(var(--ambient-float-duration-base) + 2s);
+    }
+
+    .ambient-float--fast {
+      animation-duration: calc(var(--ambient-float-duration-base) - 1.5s);
+    }
+
+    /* Cor unica para textos de destaque em verde (identica ao guia visual) */
+    .text-brand-500,
+    .text-brand-600,
+    .text-brand-700,
+    .text-brand-800,
+    .text-brand-900 {
+      color: var(--brand-text-highlight) !important;
+    }
+
+    .hover\:text-brand-500:hover,
+    .hover\:text-brand-600:hover,
+    .hover\:text-brand-700:hover,
+    .hover\:text-brand-800:hover,
+    .hover\:text-brand-900:hover,
+    .focus-visible\:text-brand-500:focus-visible,
+    .focus-visible\:text-brand-600:focus-visible,
+    .focus-visible\:text-brand-700:focus-visible,
+    .focus-visible\:text-brand-800:focus-visible,
+    .focus-visible\:text-brand-900:focus-visible,
+    .active\:text-brand-500:active,
+    .active\:text-brand-600:active,
+    .active\:text-brand-700:active,
+    .active\:text-brand-800:active,
+    .active\:text-brand-900:active {
+      color: var(--brand-text-highlight) !important;
+    }
+
+    .group:hover .group-hover\:text-brand-500,
+    .group:hover .group-hover\:text-brand-600,
+    .group:hover .group-hover\:text-brand-700,
+    .group:hover .group-hover\:text-brand-800,
+    .group:hover .group-hover\:text-brand-900 {
+      color: var(--brand-text-highlight) !important;
+    }
+
+    .aptidao-score-card:hover {
+      border-color: #bbf7d0 !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 1px 2px rgba(15, 23, 42, 0.06), 0 10px 22px rgba(21, 128, 61, 0.16) !important;
+    }
+
+    .aptidao-pill-neutral {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid #d7dce2;
+      background: linear-gradient(180deg, #f4f5f7 0%, #e7e9ed 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 4px 12px rgba(15, 23, 42, 0.12);
+      color: #1f2937;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+
+    .aptidao-pill-neutral-icon {
+      width: 16px;
+      height: 16px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+
+    .market-glass-panel {
+      background: rgba(255, 255, 255, 0.56) !important;
+      border: 1px solid rgba(255, 255, 255, 0.68) !important;
+      backdrop-filter: blur(16px) saturate(120%);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
+      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.17);
+    }
+
+    .market-glass-stat {
+      background: rgba(255, 255, 255, 0.48) !important;
+      border-color: rgba(223, 232, 242, 0.78) !important;
+      backdrop-filter: blur(11px) saturate(118%);
+      -webkit-backdrop-filter: blur(11px) saturate(118%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78), 0 12px 28px rgba(15, 23, 42, 0.14);
+    }
+
+    .stat-card-hover-green {
+      background: linear-gradient(180deg, #f3f4f6 0%, #f4f5f7 100%) !important;
+      transform: translateY(0);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+      transition-property: transform, border-color, box-shadow;
+      will-change: transform, box-shadow, border-color;
+    }
+
+    :where(div, section, aside, article)[class*="rounded"][class*="border"][class*="bg-white"]:not(.stat-card-hover-green),
+    :where(div, section, aside, article)[class*="rounded"][class*="border"][class*="bg-slate-100"]:not(.stat-card-hover-green),
+    :where(div, section, aside, article)[class*="rounded"][class*="border"][class*="bg-slate-50"]:not(.stat-card-hover-green),
+    :where(div, section, aside, article)[class*="rounded"][class*="border"][class*="bg-brand-50"]:not(.stat-card-hover-green) {
+      background: var(--panel-bg) !important;
+      border-color: var(--panel-border) !important;
+      box-shadow: var(--panel-shadow) !important;
+    }
+
+    /* Mesmo hover do card de aptidão: borda + sombra verde */
+    .stat-card-hover-green.rounded-2xl.border:hover {
+      transform: translateY(-2px);
+      border-color: #bbf7d0 !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 1px 2px rgba(15, 23, 42, 0.06), 0 10px 22px rgba(21, 128, 61, 0.16) !important;
     }
 
     input, select, textarea {
+      font-family: inherit;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: #f9fbff;
@@ -124,6 +402,731 @@
     @keyframes marquee {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
+    }
+
+    .market-tape-stage {
+      --tape-gutter: 1rem;
+      --tape-fade: 56px;
+      --tape-mask-bg: #f4f5f7;
+    }
+
+    @media (min-width: 640px) {
+      .market-tape-stage {
+        --tape-gutter: 1.5rem;
+        --tape-fade: 72px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .market-tape-stage {
+        --tape-gutter: 10rem;
+        --tape-fade: 88px;
+      }
+    }
+
+    .market-tape-edge {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+      width: calc(var(--tape-gutter) + var(--tape-fade));
+    }
+
+    .market-tape-edge--left {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        var(--tape-mask-bg) 0,
+        var(--tape-mask-bg) var(--tape-gutter),
+        rgba(244, 245, 247, 0.92) calc(var(--tape-gutter) + (var(--tape-fade) * 0.55)),
+        rgba(244, 245, 247, 0) calc(var(--tape-gutter) + var(--tape-fade))
+      );
+    }
+
+    .market-tape-edge--right {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        var(--tape-mask-bg) 0,
+        var(--tape-mask-bg) var(--tape-gutter),
+        rgba(244, 245, 247, 0.92) calc(var(--tape-gutter) + (var(--tape-fade) * 0.55)),
+        rgba(244, 245, 247, 0) calc(var(--tape-gutter) + var(--tape-fade))
+      );
+    }
+
+    .chat-mist-green-section {
+      background: linear-gradient(180deg, #f3f5f4 0%, #eef3f0 52%, #f2f5f3 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-mist-green-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(980px 420px at 50% 34%, rgba(27, 95, 71, 0.25) 0%, rgba(27, 95, 71, 0.14) 38%, rgba(27, 95, 71, 0.05) 58%, transparent 78%),
+        radial-gradient(860px 340px at 50% 74%, rgba(33, 111, 83, 0.18) 0%, rgba(33, 111, 83, 0.08) 44%, transparent 76%),
+        radial-gradient(520px 230px at 50% 50%, rgba(64, 142, 108, 0.13) 0%, rgba(64, 142, 108, 0.05) 52%, transparent 82%);
+    }
+
+    .chat-mist-green-soften {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(600px 240px at 50% 36%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.09) 44%, rgba(255, 255, 255, 0.20) 100%);
+    }
+
+    .chat-mist-green-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: none;
+      opacity: 0;
+    }
+
+    .chat-mist-green-transition-top,
+    .chat-mist-green-transition-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 88px;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .chat-mist-green-transition-top {
+      top: 0;
+      background: linear-gradient(180deg, #f3f4f6 0%, rgba(243, 244, 246, 0.82) 42%, rgba(243, 244, 246, 0) 100%);
+    }
+
+    .chat-mist-green-transition-bottom {
+      bottom: 0;
+      background: linear-gradient(0deg, #f4f5f7 0%, rgba(244, 245, 247, 0.82) 42%, rgba(244, 245, 247, 0) 100%);
+    }
+
+    .ready-start-section {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #edf5f0 0%, #e2efe7 56%, #d7e8de 100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, filter 0.35s ease;
+      will-change: transform, box-shadow;
+    }
+
+    .ready-start-section::after {
+      content: "";
+      position: absolute;
+      inset: -10% -5% -14% -5%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transform: translate3d(0, 8px, 0) scale(0.985);
+      background: radial-gradient(
+        52% 42% at 74% 58%,
+        rgba(84, 162, 124, 0.30) 0%,
+        rgba(84, 162, 124, 0.16) 38%,
+        rgba(84, 162, 124, 0) 76%
+      );
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .ready-start-section:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 28px 58px rgba(15, 23, 42, 0.17),
+        0 16px 40px rgba(43, 102, 79, 0.24),
+        0 0 0 1px rgba(102, 171, 137, 0.34);
+    }
+
+    .ready-start-section:hover::after {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      animation: ready-start-hover-pulse 2.8s ease-in-out infinite;
+    }
+
+    .ready-start-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(520px 260px at 22% 26%, rgba(207, 236, 221, 0.72) 0%, rgba(207, 236, 221, 0.28) 44%, transparent 78%),
+        radial-gradient(420px 260px at 68% 68%, rgba(171, 212, 189, 0.46) 0%, rgba(171, 212, 189, 0.18) 46%, transparent 80%),
+        radial-gradient(380px 220px at 86% 26%, rgba(196, 229, 210, 0.44) 0%, rgba(196, 229, 210, 0.16) 46%, transparent 78%);
+      background-size: 120% 120%, 112% 112%, 116% 116%;
+      background-position: 20% 24%, 68% 68%, 84% 24%;
+      background-repeat: no-repeat;
+      animation: ready-start-glow-flow 14s ease-in-out infinite alternate;
+      will-change: background-position;
+    }
+
+    .ready-start-bottom-haze {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(100px 180px at 42% 100%, rgba(112, 170, 139, 0.30) 0%, rgba(112, 170, 139, 0.12) 42%, transparent 78%),
+        radial-gradient(100px 180px at 58% 100%, rgba(106, 164, 134, 0.28) 0%, rgba(106, 164, 134, 0.10) 42%, transparent 80%),
+        radial-gradient(140px 180px at 88% 100%, rgba(119, 177, 146, 0.24) 0%, rgba(119, 177, 146, 0.08) 42%, transparent 80%);
+      background-size: 116% 116%, 116% 116%, 120% 120%;
+      background-position: 44% 100%, 58% 100%, 86% 100%;
+      background-repeat: no-repeat;
+      animation: ready-start-haze-flow 11s ease-in-out infinite alternate;
+      will-change: background-position;
+    }
+
+    .ready-start-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 168px;
+      height: 52px;
+      border-radius: 14px;
+      padding: 0 26px;
+      border: 1px solid #1f5a43;
+      background: linear-gradient(180deg, #2b664f 0%, #1f5a43 100%);
+      color: #f8fffb;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 12px 28px rgba(31, 90, 67, 0.24);
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ready-start-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26), 0 14px 30px rgba(31, 90, 67, 0.3);
+    }
+
+    .broker-social-icon {
+      display: inline-flex;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid #1f5a43;
+      background: linear-gradient(180deg, #2b664f 0%, #1f5a43 100%);
+      color: #ffffff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 18px rgba(31, 90, 67, 0.24);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+    }
+
+    .broker-social-icon:hover {
+      transform: translateY(-2px);
+      border-color: #86efac;
+      filter: brightness(1.05);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 0 4px rgba(134, 239, 172, 0.24), 0 12px 26px rgba(74, 222, 128, 0.38);
+    }
+
+    .journey-tech-section {
+      position: relative;
+      border-radius: 32px;
+      border: 1px solid #dbe2ea;
+      background: linear-gradient(180deg, #f4f5f7 0%, #f3f4f6 100%);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .journey-section-balanced-ambient::before {
+      inset: -7% -3%;
+      background:
+        radial-gradient(62% 44% at 20% 24%, var(--ambient-green-a) 0%, transparent 74%),
+        radial-gradient(62% 44% at 80% 24%, var(--ambient-green-a) 0%, transparent 74%);
+      filter: blur(var(--ambient-blur));
+      opacity: 0.92;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 2s) ease-in-out infinite alternate;
+    }
+
+    .ambient-section--uniform-green.journey-section-balanced-ambient::before {
+      inset: -7% -3%;
+      background:
+        radial-gradient(62% 44% at 20% 24%, rgba(106, 164, 134, 0.16) 0%, transparent 74%),
+        radial-gradient(62% 44% at 80% 24%, rgba(106, 164, 134, 0.16) 0%, transparent 74%);
+      filter: blur(var(--ambient-blur));
+      opacity: 0.82;
+      animation: ambient-glow-drift calc(var(--ambient-float-duration-base) + 2s) ease-in-out infinite alternate;
+    }
+
+    .journey-tech-kicker {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #d5dbe3;
+      border-radius: 999px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .report-cta-panel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      box-shadow: var(--panel-shadow);
+      transition: background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+    }
+
+    .report-cta-panel:hover {
+      transform: translateY(-2px);
+      border-color: rgba(134, 239, 172, 0.44);
+      background: linear-gradient(135deg, #1f5a43 0%, #14532d 100%);
+      box-shadow: 0 16px 34px rgba(5, 46, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+
+    .report-cta-lock {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #d7dce2;
+      color: #2b664f;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(15, 23, 42, 0.16);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease, border-color 0.28s ease, color 0.28s ease;
+    }
+
+    .report-cta-panel:hover .report-cta-lock {
+      transform: scale(1.14);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.36);
+      color: #ffffff;
+      box-shadow: 0 0 0 8px rgba(187, 247, 208, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .report-cta-title {
+      color: #0f172a;
+      transition: color 0.28s ease;
+    }
+
+    .report-cta-copy {
+      color: #475569;
+      transition: color 0.28s ease;
+    }
+
+    .report-cta-panel:hover .report-cta-title {
+      color: #ffffff;
+    }
+
+    .report-cta-panel:hover .report-cta-copy {
+      color: rgba(248, 250, 252, 0.88);
+    }
+
+    .report-cta-button {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d5dce5;
+      background: linear-gradient(180deg, #ffffff 0%, #f3f6f9 100%);
+      color: #1f5a43;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 6px 14px rgba(15, 23, 42, 0.08);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+    }
+
+    .report-cta-button:hover {
+      transform: translateY(-2px);
+      border-color: #f1f5f9;
+      background: linear-gradient(90deg, #000000 0%, #052e16 50%, #166534 100%);
+      color: #ffffff;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.28);
+    }
+
+    .journey-topic-item {
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      text-align: left;
+      border-radius: 18px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #8f9aa8;
+      padding: 18px 18px 16px;
+      transition: all 0.22s ease;
+    }
+
+    .journey-topic-item:hover {
+      color: #475569;
+      background: rgba(255, 255, 255, 0.55);
+      border-color: #dbe2ea;
+    }
+
+    .journey-topic-item.is-active {
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.72);
+      border-color: #d8dee7;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .journey-topic-label {
+      font-size: clamp(0.98rem, 2vw, 1.78rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .journey-topic-index {
+      font-size: 0.36em;
+      line-height: 1;
+      vertical-align: super;
+      margin-left: 8px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #94a3b8;
+    }
+
+    .journey-topic-item.is-active .journey-topic-index {
+      color: #64748b;
+    }
+
+    .journey-topic-detail-media {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 22px;
+      border: 1px solid #dbe2ea;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+      background: #e2e8f0;
+    }
+
+    .journey-topic-detail-copy {
+      width: 100%;
+      max-width: 702px;
+      margin: 0 auto;
+    }
+
+    .journey-topic-detail-image {
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      margin: 0;
+      border-radius: 0;
+      animation: journey-image-reveal 0.35s ease-out;
+      will-change: opacity, transform;
+    }
+
+    .journey-topic-detail-media img.journey-topic-detail-image {
+      transform: scale(1.03);
+      transform-origin: center center;
+    }
+
+    .journey-typing-caret {
+      display: inline-block;
+      margin-left: 2px;
+      animation: journey-caret-blink 0.75s steps(1, end) infinite;
+      color: currentColor;
+    }
+
+    .chat-stack-layer-a {
+      --chat-layer-a-x: 0.5rem;
+      --chat-layer-a-y: 0.75rem;
+      transform: translate(var(--chat-layer-a-x), var(--chat-layer-a-y));
+      animation: chat-stack-layer-a-float 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+      will-change: transform;
+    }
+
+    .chat-stack-layer-b {
+      --chat-layer-b-x: -0.5rem;
+      --chat-layer-b-y: 1.5rem;
+      transform: translate(var(--chat-layer-b-x), var(--chat-layer-b-y));
+      animation: chat-stack-layer-b-float 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+      will-change: transform;
+    }
+
+    @media (min-width: 640px) {
+      .chat-stack-layer-a {
+        --chat-layer-a-x: 0.75rem;
+        --chat-layer-a-y: 1rem;
+      }
+
+      .chat-stack-layer-b {
+        --chat-layer-b-x: -0.75rem;
+        --chat-layer-b-y: 2rem;
+      }
+    }
+
+    @keyframes chat-stack-layer-a-float {
+      from {
+        transform: translate(var(--chat-layer-a-x), var(--chat-layer-a-y));
+      }
+      to {
+        transform: translate(var(--chat-layer-a-x), calc(var(--chat-layer-a-y) - 10px));
+      }
+    }
+
+    @keyframes chat-stack-layer-b-float {
+      from {
+        transform: translate(var(--chat-layer-b-x), var(--chat-layer-b-y));
+      }
+      to {
+        transform: translate(var(--chat-layer-b-x), calc(var(--chat-layer-b-y) + 10px));
+      }
+    }
+
+    @keyframes journey-caret-blink {
+      0%,
+      49% {
+        opacity: 1;
+      }
+      50%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes cta-icon-blink {
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.42;
+        transform: scale(1.1);
+      }
+    }
+
+    .cta-icon-blink {
+      animation: cta-icon-blink 1.05s ease-in-out infinite;
+    }
+
+    @keyframes journey-image-reveal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes ready-start-glow-flow {
+      0% {
+        background-position: 20% 24%, 68% 68%, 84% 24%;
+      }
+      50% {
+        background-position: 24% 30%, 63% 62%, 78% 30%;
+      }
+      100% {
+        background-position: 17% 26%, 72% 70%, 86% 22%;
+      }
+    }
+
+    @keyframes ready-start-haze-flow {
+      0% {
+        background-position: 44% 100%, 58% 100%, 86% 100%;
+      }
+      50% {
+        background-position: 47% 100%, 55% 100%, 82% 100%;
+      }
+      100% {
+        background-position: 42% 100%, 61% 100%, 88% 100%;
+      }
+    }
+
+    @keyframes ready-start-hover-pulse {
+      0%,
+      100% {
+        opacity: 0.84;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: translate3d(0, -2px, 0) scale(1.012);
+      }
+    }
+
+    @keyframes ambient-float-y {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(calc(var(--ambient-float-distance) * -1));
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes ambient-glow-drift {
+      0% {
+        transform: translate3d(-0.8%, 0, 0) scale(0.995);
+      }
+      50% {
+        transform: translate3d(0.5%, -0.5%, 0) scale(1.01);
+      }
+      100% {
+        transform: translate3d(1%, 0.5%, 0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .journey-topic-detail-image {
+        animation: none;
+        border-radius: 0;
+        filter: none;
+      }
+
+      .ready-start-section {
+        transition: none;
+      }
+
+      .ready-start-section:hover {
+        transform: none;
+      }
+
+      .ready-start-section::after {
+        transition: none;
+      }
+
+      .ready-start-glow,
+      .ready-start-bottom-haze {
+        animation: none;
+      }
+
+      .ready-start-section:hover::after {
+        animation: none;
+      }
+
+      .report-cta-panel,
+      .report-cta-lock,
+      .report-cta-button {
+        transition: none !important;
+      }
+
+      .report-cta-panel:hover {
+        transform: none;
+      }
+
+      .report-cta-panel:hover .report-cta-lock,
+      .report-cta-button:hover {
+        transform: none;
+      }
+
+      .ambient-section::before,
+      .ambient-section::after,
+      .ambient-main-box::before {
+        animation: none !important;
+      }
+
+      .ambient-float {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
+
+    .header-menu-option {
+      transition: all 0.2s ease;
+    }
+
+    .header-menu-option-icon {
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 58%, #bbf7d0 100%);
+      border: 1px solid #86efac;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 8px 18px rgba(21, 128, 61, 0.14);
+      transition: all 0.2s ease;
+    }
+
+    .header-menu-option-icon svg {
+      color: #14532d;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .header-menu-option:hover .header-menu-option-icon {
+      background: linear-gradient(145deg, #166534 0%, #14532d 55%, #052e16 100%);
+      border-color: #166534;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 24px rgba(5, 46, 22, 0.35);
+    }
+
+    .header-menu-option:hover .header-menu-option-icon svg {
+      color: #ecfdf5;
+      transform: scale(1.04);
+    }
+
+    .topic-icon-chip {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #f6fffa, #e7f1ff);
+      color: #0f172a;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      transition: all 0.2s ease;
+    }
+
+    .topic-icon-chip svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .topic-icon-chip.is-active {
+      background: linear-gradient(135deg, #ecfdf5, #dcfce7);
+      border-color: #86efac;
+      color: #14532d;
+      box-shadow: 0 8px 20px rgba(21, 128, 61, 0.14);
+    }
+
+    .farm-top-tab-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      color: #64748b;
+      background: transparent;
+      transition: all 0.22s ease;
+      flex-shrink: 0;
+    }
+
+    .farm-top-tab-icon svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.22s ease, width 0.22s ease, height 0.22s ease, color 0.22s ease;
+    }
+
+    button:hover .farm-top-tab-icon:not(.is-active) {
+      color: #334155;
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .farm-top-tab-icon.is-active {
+      width: 27px;
+      height: 27px;
+      background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 58%, #bbf7d0 100%);
+      border-color: #86efac;
+      color: #14532d;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 8px 18px rgba(21, 128, 61, 0.2);
+    }
+
+    .farm-top-tab-icon.is-active svg {
+      width: 17px;
+      height: 17px;
+      transform: scale(1.03);
     }
   </style>
 
@@ -159,6 +1162,57 @@
     const Trees = (props) => h(Icon, props, h('path', { d: "M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z" }), h('path', { d: "M7 16v6" }), h('path', { d: "M13 19v3" }), h('path', { d: "M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5" }));
     const Landmark = (props) => h(Icon, props, h('line', { x1: "3", y1: "22", x2: "21", y2: "22" }), h('line', { x1: "6", y1: "18", x2: "6", y2: "11" }), h('line', { x1: "10", y1: "18", x2: "10", y2: "11" }), h('line', { x1: "14", y1: "18", x2: "14", y2: "11" }), h('line', { x1: "18", y1: "18", x2: "18", y2: "11" }), h('polygon', { points: "12 2 20 7 4 7" }));
     const Scaling = (props) => h(Icon, props, h('path', { d: "M21 3 9 15" }), h('path', { d: "M12 3H3v9" }), h('path', { d: "M16 16h5v-5" }), h('path', { d: "M21 3 13 11" }));
+    // Ícones do painel técnico (mesmo padrão visual do dashboard_nb2)
+    const TopicTarget = (props) => h(Icon, props,
+      h('circle', { cx: "12", cy: "12", r: "8" }),
+      h('path', { d: "M12 2v2m0 16v2m10-10h-2M4 12H2m12-6a6 6 0 0 0-6 6" }),
+      h('circle', { cx: "12", cy: "12", r: "2" })
+    );
+    const TopicMap = (props) => h(Icon, props,
+      h('path', { d: "M9 3 3 5v16l6-2 6 2 6-2V3l-6 2-6-2z" }),
+      h('path', { d: "M9 3v16" }),
+      h('path', { d: "M15 5v16" })
+    );
+    const TopicTruck = (props) => h(Icon, props,
+      h('path', { d: "M3 7h12v10H3z" }),
+      h('path', { d: "M15 10h4l2 3v4h-6z" }),
+      h('circle', { cx: "7.5", cy: "17.5", r: "1.5" }),
+      h('circle', { cx: "17", cy: "17.5", r: "1.5" })
+    );
+    const TopicPin = (props) => h(Icon, props,
+      h('path', { d: "M12 21s7-5.4 7-11.2A7 7 0 0 0 5 9.8C5 15.6 12 21 12 21z" }),
+      h('circle', { cx: "12", cy: "10", r: "3" })
+    );
+    const TopicSprout = (props) => h(Icon, props,
+      h('path', { d: "M7 20s4-3 4-10V4" }),
+      h('path', { d: "M11 4c-4.5 0-6.5 2.5-6.5 5 2 0 4.5-.5 6.5-2" }),
+      h('path', { d: "M11 4c0-2.5 2-4 6.5-4 0 2.5-1.5 4.5-4 5.5" })
+    );
+    const TopicCloudRain = (props) => h(Icon, props,
+      h('path', { d: "M16 16a4 4 0 1 0-4-4" }),
+      h('path', { d: "M5 16h11a4 4 0 0 0 0-8 6 6 0 0 0-11 2" }),
+      h('path', { d: "M8 19v2m4-2v2m4-2v2" })
+    );
+    const TopicDroplet = (props) => h(Icon, props,
+      h('path', { d: "M12 2s6 6.2 6 11a6 6 0 1 1-12 0c0-4.8 6-11 6-11z" })
+    );
+    const TopicCrane = (props) => h(Icon, props,
+      h('path', { d: "M3 6h18" }),
+      h('path', { d: "M6 6v12" }),
+      h('path', { d: "M6 10h4l3-4h5" }),
+      h('path', { d: "M13 6v14" }),
+      h('circle', { cx: "6", cy: "20", r: "1" }),
+      h('circle', { cx: "13", cy: "20", r: "1" })
+    );
+    const TopicShield = (props) => h(Icon, props,
+      h('path', { d: "M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z" }),
+      h('path', { d: "M9.5 12.5 11 14l3.5-3.5" })
+    );
+    const TopicScroll = (props) => h(Icon, props,
+      h('path', { d: "M8 21h10a2 2 0 0 0 2-2V5" }),
+      h('path', { d: "M6 3h12v4H8a2 2 0 0 0-2 2v10" }),
+      h('path', { d: "M8 17h4" })
+    );
     const ChevronRight = (props) => h(Icon, props, h('path', { d: "m9 18 6-6-6-6" }));
     const ChevronLeft = (props) => h(Icon, props, h('path', { d: "m15 18-6-6 6-6" }));
     const ChevronDown = (props) => h(Icon, props, h('path', { d: "m6 9 6 6 6-6" }));
@@ -181,132 +1235,229 @@
     const ExternalLink = (props) => h(Icon, props, h('path', { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }), h('polyline', { points: "15 3 21 3 21 9" }), h('line', { x1: "10", y1: "14", x2: "21", y2: "3" }));
 
     // Componentes Atômicos
-    const StatCard = ({ label, value, subtext }) => (
-      h('div', { className: "group card-surface p-6 rounded-2xl hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
-        h('p', { className: "text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1" }, label),
-        h('p', { className: "text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-brand-800" }, value),
-        subtext && h('p', { className: "text-xs text-slate-400 mt-1" }, subtext)
-      )
-    );
+    const StatCard = ({ label, value, subtext, className = "", valueClassName = "", labelClassName = "", subtextClassName = "" }) => {
+      const normalizedValue = String(value)
+        .replace(/R\$\s+/g, 'R$\u00A0')
+        .replace(/(\d)\s+ha\b/gi, '$1\u00A0ha');
+
+      return h('div', { className: `rounded-2xl border border-[#d9e1ec] bg-white px-5 py-4 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset] ${className}`.trim() },
+        h('p', { className: `text-[11px] font-bold uppercase tracking-[0.08em] text-[#7b8ea8] ${labelClassName}`.trim() }, label),
+        h('p', { className: `mt-1 text-[clamp(1.75rem,2.8vw,2.15rem)] leading-none font-black tracking-tight text-[#0b2545] ${valueClassName}`.trim() }, normalizedValue),
+        subtext && h('p', { className: `mt-1 text-sm font-medium text-[#8ea2be] ${subtextClassName}`.trim() }, subtext)
+      );
+    };
 
     const Badge = ({ status, text }) => {
       const styles = {
         green: "bg-brand-50 text-brand-700 border-brand-100",
         yellow: "bg-amber-50 text-amber-700 border-amber-100",
         red: "bg-rose-50 text-rose-700 border-rose-100",
-        neutral: "bg-slate-50 text-slate-600 border-slate-200"
+        neutral: "bg-slate-50 text-slate-600 border-slate-200",
+        highlight: "text-slate-900"
       };
+      const highlightStyle = status === 'highlight'
+        ? {
+            background: "linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(120deg, #bbf7d0 0%, #4ade80 55%, #166534 100%) border-box",
+            border: "1px solid transparent"
+          }
+        : undefined;
       return h('span', {
-        className: `px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-tight ${styles[status] || styles.neutral}`
+        className: `px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-tight ${styles[status] || styles.neutral}`,
+        style: highlightStyle
       }, text);
     };
 
-    const MissionCard = ({ icon: Icon, title, kpis, badge, status, onClick }) => (
-      h('div', {
-        onClick: onClick,
-        className: "group card-surface p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden hover:-translate-y-1"
-      },
-        h('div', { className: "flex justify-between items-start mb-4" },
-          h('div', { className: "p-3 bg-slate-50 rounded-lg group-hover:bg-brand-50 transition-colors" },
-            h(Icon, { className: "w-6 h-6 text-slate-600 group-hover:text-brand-600" })
-          ),
-          h(Badge, { status, text: badge })
-        ),
-        h('h3', { className: "text-lg font-bold text-slate-900 mb-3 group-hover:text-brand-700" }, title),
-        h('ul', { className: "space-y-2" },
-          kpis.map((kpi, idx) =>
-            h('li', { key: idx, className: "text-sm text-slate-500 flex items-center gap-2" },
-              h('div', { className: "w-1 h-1 bg-slate-300 rounded-full" }),
-              kpi
-            )
-          )
-        ),
-        h('div', { className: "mt-4 flex items-center text-xs font-bold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity" },
-          "VER DETALHES ",
-          h(ChevronRight, { className: "w-3 h-3 ml-1" })
-        )
-      )
-    );
+    const TopicMiniChart = ({ series = [] }) => {
+      const values = Array.isArray(series) && series.length > 0 ? series : [42, 56, 49, 63, 58, 67, 74];
+      const maxValue = Math.max(...values, 1);
+      const minValue = Math.min(...values, 0);
+      const range = Math.max(maxValue - minValue, 1);
+      const xStep = values.length > 1 ? 240 / (values.length - 1) : 0;
+      const points = values.map((value, idx) => {
+        const normalized = (value - minValue) / range;
+        const x = 10 + (idx * xStep);
+        const y = 68 - (normalized * 50);
+        return `${x},${y}`;
+      }).join(' ');
+      const lastX = 10 + ((values.length - 1) * xStep);
+      const areaPoints = `10,68 ${points} ${lastX},68`;
 
-    const ComplianceCard = ({ title, description, status, icon: Icon }) => (
-      h('div', { className: "card-surface flex items-start gap-4 p-5 rounded-xl" },
-        h('div', { className: `p-2 rounded-lg ${status === 'green' ? 'bg-brand-50' : 'bg-amber-50'}` },
-          h(Icon, { className: `w-5 h-5 ${status === 'green' ? 'text-brand-600' : 'text-amber-600'}` })
+      return h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50/90 px-3 py-3" },
+        h('div', { className: "flex items-center justify-between mb-2" },
+          h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500" }, "Série técnica"),
+          h('p', { className: "text-[11px] font-black uppercase tracking-widest text-brand-700" }, "Tendência")
         ),
-        h('div', { className: "flex-1" },
-          h('div', { className: "flex justify-between items-center mb-1" },
-            h('h4', { className: "font-bold text-slate-900" }, title),
-            h(Badge, { status, text: status === 'green' ? "Regular" : "Atenção" })
-          ),
-          h('p', { className: "text-sm text-slate-500 leading-relaxed" }, description)
+        h('svg', { viewBox: "0 0 260 80", className: "w-full h-20" },
+          h('line', { x1: "10", y1: "68", x2: "250", y2: "68", stroke: "#cbd5e1", strokeWidth: "1" }),
+          h('line', { x1: "10", y1: "43", x2: "250", y2: "43", stroke: "#e2e8f0", strokeWidth: "1", strokeDasharray: "3 3" }),
+          h('line', { x1: "10", y1: "18", x2: "250", y2: "18", stroke: "#e2e8f0", strokeWidth: "1", strokeDasharray: "3 3" }),
+          h('polygon', {
+            points: areaPoints,
+            fill: "rgba(34,197,94,0.12)"
+          }),
+          h('polyline', {
+            points,
+            fill: "none",
+            stroke: "#166534",
+            strokeWidth: "2.4",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }),
+          values.map((value, idx) => {
+            const normalized = (value - minValue) / range;
+            const x = 10 + (idx * xStep);
+            const y = 68 - (normalized * 50);
+            return h('circle', {
+              key: `topic-mini-chart-point-${idx}`,
+              cx: x,
+              cy: y,
+              r: "2.5",
+              fill: "#166534"
+            });
+          })
         )
-      )
-    );
+      );
+    };
 
     // Componente Principal
     function App() {
       const [activeLayer, setActiveLayer] = useState('perimetro');
-      const [selectedMission, setSelectedMission] = useState(null);
       const [selectedAptidao, setSelectedAptidao] = useState('lavoura');
+      const [isAptidaoMenuOpen, setIsAptidaoMenuOpen] = useState(false);
       const [viewMode, setViewMode] = useState('video');
       const [fullscreen, setFullscreen] = useState(false);
       const [fullscreenPhotoIndex, setFullscreenPhotoIndex] = useState(null);
       const [showUpgradeModal, setShowUpgradeModal] = useState(false);
       const [showDemoModal, setShowDemoModal] = useState(false);
-      const [demoForm, setDemoForm] = useState({ nome: '', telefone: '', cidade: '', estado: '' });
-      const [demoFormError, setDemoFormError] = useState('');
-      const [demoFormSent, setDemoFormSent] = useState(false);
-      const [demoFormSubmitting, setDemoFormSubmitting] = useState(false);
       const [leadForm, setLeadForm] = useState({ nome: '', whatsapp: '', cidade: '', estado: '' });
       const [leadFormError, setLeadFormError] = useState('');
       const [leadDownloadReady, setLeadDownloadReady] = useState(false);
       const [leadFormSubmitting, setLeadFormSubmitting] = useState(false);
       const [activeHeaderMenu, setActiveHeaderMenu] = useState(null); // 'products' | 'applications' | 'resources'
       const headerMenuRef = useRef(null);
+      const aptidaoMenuRef = useRef(null);
       const nextStepTitleRef = useRef(null);
       const isHeaderMenuOpen = Boolean(activeHeaderMenu);
       const [showNextStepTitle, setShowNextStepTitle] = useState(false);
       const isMobilePreviewFrame = new URLSearchParams(window.location.search).get('mobile_preview') === '1';
       const [showMobilePreview, setShowMobilePreview] = useState(false);
       const [aiPrompt, setAiPrompt] = useState('');
+      const [aiPromptPlaceholder, setAiPromptPlaceholder] = useState('');
+      const journeyWhyAnalyzePhraseByTopicId = {
+        area_topografia: '"Antes de comprar, entenda o terreno: sua extensão e forma vão ditar suas possibilidades reais."',
+        localizacao_regiao: '"Sua fazenda é tão estratégica quanto a região onde ela está. Não subestime isso."',
+        situacao_ambiental: '"Passivos ambientais custam caro. Saiba em que situação a fazenda está antes de assinar."',
+        situacao_fundiaria: '"Titularidade confusa ou contestada transforma seu investimento em um pesadelo jurídico."',
+        agua_irrigacao: '"Acesso à água e sistema de irrigação não são luxo — são necessidade."',
+        solo_manejo: '"Antes de investir, saiba o que você tem embaixo dos pés e como cuidar disso."',
+        acesso_logistica: '"Distância de estrada, mercado e insumos determina seus custos. Calcule bem isso."',
+        clima_risco: '"Clima muda, e quem não se prepara perde. Entenda o padrão climático antes de investir."',
+        benfeitorias_infra: '"O que já está construído define quanto você gasta para a fazenda funcionar. Não negligencie isso."'
+      };
+      const [journeyWhyAnalyzeTypedText, setJourneyWhyAnalyzeTypedText] = useState('');
+      const [marketListingIndex, setMarketListingIndex] = useState(0);
+      const [activeFarmTopicId, setActiveFarmTopicId] = useState('descricao');
+      const [activeJourneyTopicId, setActiveJourneyTopicId] = useState('area_topografia');
+      const journeyWhyAnalyzeFullText =
+        journeyWhyAnalyzePhraseByTopicId[activeJourneyTopicId] ||
+        journeyWhyAnalyzePhraseByTopicId.area_topografia;
+      const farmTopTabsViewportRef = useRef(null);
+      const farmTopTabRefs = useRef({});
+      const [farmTopActiveIndicator, setFarmTopActiveIndicator] = useState({ left: 0, width: 0, opacity: 0 });
       const mobilePreviewUrl = (() => {
         const previewUrl = new URL(window.location.href);
         previewUrl.searchParams.set('mobile_preview', '1');
         return previewUrl.toString();
       })();
+      const aiPromptInputRef = useRef(null);
       const reportPdfPath = "arquivos/relatorio_MG_000105467.pdf";
-      const submitFarmLead = async ({ formType, nome, telefone, cidade, estado }) => {
-        const response = await fetch('/api/farm-lead', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            form_type: formType,
-            nome,
-            telefone,
-            cidade,
-            estado
-          })
-        });
+      const reportPdfFilename = "relatorio_MG_000105467.pdf";
+      const isLocalRuntime = window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+      const isNetworkFetchError = (error) => {
+        const message = error && error.message ? String(error.message).toLowerCase() : '';
+        return message.includes('failed to fetch') || message.includes('networkerror') || message.includes('load failed');
+      };
+      const downloadReportPdf = async () => {
+        try {
+          const response = await fetch(reportPdfPath);
+          if (!response.ok) {
+            throw new Error(`Falha ao baixar PDF: ${response.status}`);
+          }
 
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(data && data.error ? data.error : 'Não foi possível enviar seus dados. Tente novamente.');
+          const blob = await response.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = reportPdfFilename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+          console.error('[farm-page] Não foi possível baixar o relatório sem navegação.', error);
+        }
+      };
+      const queueLeadLocally = (payload) => {
+        try {
+          const key = 'talhao_farm_page_leads_local_queue';
+          const queue = JSON.parse(localStorage.getItem(key) || '[]');
+          queue.push({
+            ...payload,
+            queued_at: new Date().toISOString(),
+            page: 'farm_page'
+          });
+          localStorage.setItem(key, JSON.stringify(queue));
+        } catch (error) {
+          console.warn('[farm-page] Falha ao salvar lead localmente.', error);
+        }
+      };
+      const getLeadErrorMessage = (error) => {
+        const defaultMessage = 'Não foi possível enviar seus dados. Tente novamente.';
+        if (!error || !error.message) return defaultMessage;
+
+        const message = String(error.message).trim();
+        if (!message) return defaultMessage;
+        if (isNetworkFetchError(error)) {
+          return 'Não foi possível conectar ao servidor do formulário. Se estiver em ambiente local, rode com vercel dev.';
+        }
+        return message;
+      };
+      const submitFarmLead = async ({ formType, nome, telefone, cidade, estado }) => {
+        const payload = {
+          form_type: formType,
+          nome,
+          telefone,
+          cidade,
+          estado
+        };
+
+        try {
+          const response = await fetch('/api/farm-lead', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data && data.error ? data.error : 'Não foi possível enviar seus dados. Tente novamente.');
+          }
+        } catch (error) {
+          if (isLocalRuntime && isNetworkFetchError(error)) {
+            queueLeadLocally(payload);
+            console.warn('[farm-page] API /api/farm-lead indisponivel em ambiente local. Lead salvo apenas para teste local.');
+            return;
+          }
+          throw error;
         }
       };
       const openDemoVersionModal = () => {
-        setDemoForm({ nome: '', telefone: '', cidade: '', estado: '' });
-        setDemoFormError('');
-        setDemoFormSent(false);
-        setDemoFormSubmitting(false);
         setShowDemoModal(true);
       };
       const closeDemoVersionModal = () => {
         setShowDemoModal(false);
-        setDemoFormError('');
-        setDemoFormSent(false);
-        setDemoFormSubmitting(false);
       };
       const openLeadCaptureModal = () => {
         setLeadFormError('');
@@ -348,6 +1499,30 @@
       }, [isHeaderMenuOpen]);
 
       useEffect(() => {
+        if (!isAptidaoMenuOpen) return;
+
+        const handleOutsideClick = (event) => {
+          if (aptidaoMenuRef.current && !aptidaoMenuRef.current.contains(event.target)) {
+            setIsAptidaoMenuOpen(false);
+          }
+        };
+
+        const handleEscape = (event) => {
+          if (event.key === 'Escape') {
+            setIsAptidaoMenuOpen(false);
+          }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+          document.removeEventListener('mousedown', handleOutsideClick);
+          document.removeEventListener('keydown', handleEscape);
+        };
+      }, [isAptidaoMenuOpen]);
+
+      useEffect(() => {
         const titleElement = nextStepTitleRef.current;
         if (!titleElement) return;
 
@@ -367,13 +1542,77 @@
       }, []);
 
       const aptidoes = {
-        gado: { label: "Gado", score: 88, color: "text-amber-600" },
-        lavoura: { label: "Lavoura", score: 94, color: "text-brand-600" },
-        dupla: { label: "Dupla Aptidão", score: 87, color: "text-blue-600" },
-        real_estate: { label: "Real Estate", score: 65, color: "text-purple-600" },
-        culturas: { label: "Culturas Perenes", score: 93, color: "text-rose-600" },
-        silvicultura: { label: "Silvicultura", score: 79, color: "text-green-800" },
-        outras: { label: "Outras", score: 50, color: "text-slate-500" },
+        gado: {
+          label: "Gado",
+          score: 88,
+          color: "text-amber-600",
+          toneLabel: "Pecuária consolidada",
+          reason: "Alto desempenho por disponibilidade hídrica e topografia favorável para manejo."
+        },
+        lavoura: {
+          label: "Lavoura",
+          score: 94,
+          color: "text-brand-600",
+          toneLabel: "Vocação agrícola da região",
+          reason: "Alto desempenho por relevo favorável e boa regularidade documental."
+        },
+        dupla: {
+          label: "Dupla Aptidão",
+          score: 87,
+          color: "text-blue-600",
+          toneLabel: "Flexibilidade operacional",
+          reason: "Boa performance para alternar lavoura e pecuária com risco produtivo equilibrado."
+        },
+        real_estate: {
+          label: "Real Estate",
+          score: 65,
+          color: "text-purple-600",
+          toneLabel: "Potencial estratégico",
+          reason: "Atratividade moderada para tese imobiliária rural, com foco em valorização de médio prazo."
+        },
+        culturas: {
+          label: "Culturas Perenes",
+          score: 93,
+          color: "text-rose-600",
+          toneLabel: "Alto potencial para frutas",
+          reason: "Condições de solo e clima sustentam ciclos perenes com estabilidade produtiva."
+        },
+        silvicultura: {
+          label: "Silvicultura",
+          score: 79,
+          color: "text-green-800",
+          toneLabel: "Viável mas não recomendado",
+          reason: "Bom potencial para projetos florestais, com necessidade de manejo técnico criterioso."
+        },
+        outras: {
+          label: "Outras",
+          score: 50,
+          color: "text-slate-500",
+          toneLabel: "Faça um estudo prévio",
+          reason: "Aptidão limitada para usos alternativos sem estudos específicos e adequações adicionais."
+        },
+      };
+
+      const getScoreLevel = (score) => {
+        if (score >= 80) {
+          return {
+            label: "Excelente",
+            chipClass: "bg-brand-100 text-brand-800 border-brand-200",
+            ringClass: "text-brand-500"
+          };
+        }
+        if (score >= 60) {
+          return {
+            label: "Favorável",
+            chipClass: "bg-amber-100 text-amber-800 border-amber-200",
+            ringClass: "text-amber-500"
+          };
+        }
+        return {
+          label: "Atenção",
+          chipClass: "bg-rose-100 text-rose-800 border-rose-200",
+          ringClass: "text-rose-500"
+        };
       };
 
       const layers = {
@@ -382,42 +1621,276 @@
         declividade: { title: "Análise de Declividade", img: "imagens/nuclebras/declividade.jpg" },
         ndvi: { title: "Índice de Vegetação (NDVI)", img: "imagens/nuclebras/ndvi_20.jpg" },
       };
+      const farmTopics = [
+        {
+          id: 'descricao',
+          tabLabel: "Descrição Geral & Resumo",
+          sideLabel: "Descrição Geral & Resumo",
+          icon: TopicTarget,
+          title: "Descrição Geral & Resumo",
+          subtitle: "Resumo executivo do ativo para leitura rápida antes da diligência detalhada.",
+          image: "imagens/nuclebras/perimetro.jpg",
+          statusBadge: "Visão geral",
+          statusTone: "green",
+          kpis: [
+            { label: "Área total", value: "106 ha" },
+            { label: "Preço pedido", value: "R$ 4.000.000" },
+            { label: "Uso principal", value: "Lavoura" }
+          ],
+          miniSeries: [63, 65, 66, 68, 69, 71, 73],
+          highlights: [
+            "Ativo com perfil agrícola consolidado e vocação produtiva clara.",
+            "Conjunto técnico e fundiário favorece análise de compra objetiva.",
+            "Boa relação entre potencial operacional e preço por hectare."
+          ]
+        },
+        {
+          id: 'area_topografia',
+          tabLabel: "Área & Topografia",
+          sideLabel: "Área & Topografia",
+          icon: TopicMap,
+          title: "Área & Topografia",
+          subtitle: "Leitura da forma do terreno, declividade e eficiência esperada para mecanização.",
+          image: "imagens/nuclebras/declividade.jpg",
+          statusBadge: "Excelente",
+          statusTone: "green",
+          kpis: [
+            { label: "Declividade média", value: "4,7%" },
+            { label: "Área mecanizável", value: "85%" },
+            { label: "Talhões críticos", value: "12 ha" }
+          ],
+          miniSeries: [64, 68, 72, 74, 77, 79, 82],
+          highlights: [
+            "Predomínio de inclinações baixas, com boa trafegabilidade.",
+            "Topografia favorece ganho operacional em ciclos mecanizados.",
+            "Intervenções conservacionistas são pontuais e previsíveis."
+          ]
+        },
+        {
+          id: 'localizacao_regiao',
+          tabLabel: "Localização & Região",
+          sideLabel: "Localização & Região",
+          icon: TopicPin,
+          title: "Localização & Região",
+          subtitle: "Contexto geográfico, inserção regional e posicionamento estratégico do imóvel.",
+          image: "imagens/nuclebras/altitude.jpg",
+          statusBadge: "Favorável",
+          statusTone: "green",
+          kpis: [
+            { label: "Município", value: "Caldas / MG" },
+            { label: "Distância de SP", value: "285 km" },
+            { label: "Polo regional", value: "Sul de Minas" }
+          ],
+          miniSeries: [58, 60, 61, 63, 65, 66, 68],
+          highlights: [
+            "Região com mercado rural ativo e liquidez recorrente.",
+            "Boa conexão com centros de serviço e suporte agrícola.",
+            "Localização contribui para resiliência comercial do ativo."
+          ]
+        },
+        {
+          id: 'situacao_ambiental',
+          tabLabel: "Situação Ambiental",
+          sideLabel: "Situação Ambiental",
+          icon: TopicShield,
+          title: "Situação Ambiental",
+          subtitle: "Conformidade ambiental com foco em CAR, passivos e áreas de preservação.",
+          image: "imagens/nuclebras/CAR.jpg",
+          statusBadge: "Atenção leve",
+          statusTone: "yellow",
+          kpis: [
+            { label: "Status CAR", value: "Regular" },
+            { label: "Reserva legal", value: "Averbada" },
+            { label: "Passivo crítico", value: "Não identificado" }
+          ],
+          miniSeries: [49, 51, 54, 56, 57, 59, 61],
+          highlights: [
+            "Cadastro ambiental coerente com o perímetro declarado.",
+            "Sem restrição crítica imediata para continuidade de negociação.",
+            "Recomenda-se validação final em diligência documental."
+          ]
+        },
+        {
+          id: 'situacao_fundiaria',
+          tabLabel: "Situação Fundiária",
+          sideLabel: "Situação Fundiária",
+          icon: TopicScroll,
+          title: "Situação Fundiária",
+          subtitle: "Leitura de regularidade registral, georreferenciamento e consistência cadastral.",
+          image: "imagens/nuclebras/SIGEF.jpg",
+          secondaryImage: "imagens/nuclebras/CAR.jpg",
+          statusBadge: "Regular",
+          statusTone: "green",
+          kpis: [
+            { label: "Matrícula", value: "Georreferenciada" },
+            { label: "Sobreposição", value: "0,3%" },
+            { label: "CCIR", value: "Atualizado" }
+          ],
+          miniSeries: [56, 58, 60, 61, 63, 65, 66],
+          highlights: [
+            "Base fundiária com boa aderência aos registros oficiais.",
+            "Baixa incidência de conflito de limites em área produtiva.",
+            "Estrutura documental apta para diligência jurídica final."
+          ]
+        },
+        {
+          id: 'agua_irrigacao',
+          tabLabel: "Água & Irrigação",
+          sideLabel: "Água & Irrigação",
+          icon: TopicDroplet,
+          title: "Água & Irrigação",
+          subtitle: "Disponibilidade hídrica, captação e robustez para manejo em períodos críticos.",
+          image: "imagens/nuclebras/disponibilidade_hidrica.jpg",
+          statusBadge: "Regular",
+          statusTone: "green",
+          kpis: [
+            { label: "Precipitação anual", value: "1.600 mm" },
+            { label: "Nascentes internas", value: "2" },
+            { label: "Outorga", value: "Disponível" }
+          ],
+          miniSeries: [55, 58, 63, 66, 62, 68, 72],
+          highlights: [
+            "Regime de chuvas consistente para o perfil produtivo local.",
+            "Pontos de captação mapeados para suporte operacional.",
+            "Bom nível de segurança hídrica para planejamento anual."
+          ]
+        },
+        {
+          id: 'solo_manejo',
+          tabLabel: "Solo & Manejo",
+          sideLabel: "Solo & Manejo",
+          icon: TopicSprout,
+          title: "Solo & Manejo",
+          subtitle: "Caracterização do solo e resposta esperada a práticas de manejo e correção.",
+          image: "imagens/nuclebras/tipo_de_solo.jpg",
+          statusBadge: "Favorável",
+          statusTone: "green",
+          kpis: [
+            { label: "Classe predominante", value: "Latossolo" },
+            { label: "Profundidade efetiva", value: "Alta" },
+            { label: "Resposta ao manejo", value: "Boa" }
+          ],
+          miniSeries: [57, 60, 63, 62, 65, 67, 70],
+          highlights: [
+            "Perfil físico-químico compatível com produção intensiva.",
+            "Correções localizadas tendem a aumentar uniformidade.",
+            "Base técnica favorável para ganho de produtividade."
+          ]
+        },
+        {
+          id: 'acesso_logistica',
+          tabLabel: "Acesso & Logística",
+          sideLabel: "Acesso & Logística",
+          icon: TopicTruck,
+          title: "Acesso & Logística",
+          subtitle: "Avaliação de acesso viário, deslocamento operacional e escoamento de produção.",
+          image: "imagens/nuclebras/perimetro.jpg",
+          statusBadge: "Favorável",
+          statusTone: "green",
+          kpis: [
+            { label: "Acesso principal", value: "Pavimentado" },
+            { label: "Distância armazém", value: "32 km" },
+            { label: "Índice logístico", value: "Alto" }
+          ],
+          miniSeries: [54, 56, 59, 61, 63, 65, 67],
+          highlights: [
+            "Fluxo de entrada e saída com boa previsibilidade operacional.",
+            "Posicionamento reduz custo indireto de transporte no ciclo.",
+            "Acesso favorece visitas técnicas e diligência presencial."
+          ]
+        },
+        {
+          id: 'clima_risco',
+          tabLabel: "Clima & Risco Climático",
+          sideLabel: "Clima & Risco Climático",
+          icon: TopicCloudRain,
+          title: "Clima & Risco Climático",
+          subtitle: "Condições climáticas médias e exposição a risco para o calendário produtivo.",
+          image: "imagens/nuclebras/ndvi_20.jpg",
+          statusBadge: "Estável",
+          statusTone: "green",
+          kpis: [
+            { label: "Temperatura média", value: "18,5°C" },
+            { label: "Risco de geada", value: "Médio" },
+            { label: "Janela de chuva", value: "Boa" }
+          ],
+          miniSeries: [60, 62, 64, 66, 65, 68, 70],
+          highlights: [
+            "Comportamento climático compatível com manejo regional.",
+            "Risco moderado controlável com planejamento agronômico.",
+            "Boa previsibilidade para definição de janela operacional."
+          ]
+        },
+        {
+          id: 'benfeitorias_infra',
+          tabLabel: "Benfeitorias & Infraestrutura",
+          sideLabel: "Benfeitorias & Infraestrutura",
+          icon: TopicCrane,
+          title: "Benfeitorias & Infraestrutura",
+          subtitle: "Estado das estruturas existentes e suporte físico para operação da fazenda.",
+          image: "imagens/nuclebras/farm_page1.jpeg",
+          statusBadge: "Em operação",
+          statusTone: "green",
+          kpis: [
+            { label: "Casa sede", value: "1 unidade" },
+            { label: "Estrutura operacional", value: "Funcional" },
+            { label: "Energia", value: "Trifásica" }
+          ],
+          miniSeries: [52, 55, 57, 60, 62, 64, 66],
+          highlights: [
+            "Benfeitorias existentes suportam início de operação rápida.",
+            "Infraestrutura reduz necessidade de CAPEX imediato.",
+            "Conjunto físico contribui para eficiência de implantação."
+          ]
+        }
+      ];
 
       const productOptions = [
-        { title: "Buscar/Anunciar propriedades", description: "Encontre imóveis rurais ou publique sua fazenda em minutos", icon: Search },
-        { title: "Download de polígono", description: "Baixe os limites georreferenciados da área para uso técnico", icon: MapIcon },
+        { title: "Buscar propriedades", description: "Encontre imóveis rurais ou publique sua fazenda em minutos", icon: Search },
+        { title: "Download de polígono", description: "Baixe os limites georreferenciados de qualquer propriedade", icon: MapIcon },
         { title: "Acessar dados do imóvel", description: "Consulte dados fundiários, ambientais e produtivos em um só lugar", icon: Landmark },
         { title: "Histórico de uso e ocupação", description: "Veja a evolução do uso da terra ao longo dos anos", icon: Layers },
         { title: "Relatório técnico personalizado", description: "Gere análises sob medida conforme seu objetivo de compra ou venda", icon: Sparkles },
         { title: "Nível de aptidão para diferentes culturas", description: "Compare a vocação da área para cada tipo de cultura", icon: Trees },
       ];
+      const footerProductLinks = productOptions.flatMap((option) =>
+        option.title.split('\n').map((title) => title.trim()).filter(Boolean)
+      );
 
       const applicationOptions = [
-        { title: "Compra de fazendas", description: "Fluxo guiado para aquisição segura", icon: MapIcon },
-        { title: "Venda assistida", description: "Estratégia comercial para ativos rurais", icon: Landmark },
+        { title: "Comprar fazendas", description: "Mais agilidade desde a busca de propriedades até a tomada de decisão", icon: MapIcon },
+        { title: "Vender fazendas", description: "Mais transparência e assertividade na precificação e no anúncio da propriedade", icon: Landmark },
         { title: "Due diligence", description: "Checklist técnico-jurídico integrado", icon: ShieldCheck },
-        { title: "Precificação", description: "Benchmark por região e tipo de solo", icon: Scaling },
-        { title: "Monitoramento", description: "Acompanhe desempenho e risco do ativo", icon: Search },
-        { title: "Inteligência de mercado", description: "Sinais e tendências para decisão", icon: Sparkles },
+        { title: "Analisar preço por hectare", description: "Benchmark por região, tipo de solo, topografia e aptidão agrícola", icon: Scaling },
+        { title: "Monitoramenteo e avaliação", description: "Acompanhe o desempenho da fazenda e eventuais riscos do ativo", icon: Search },
+        { title: "Inteligência de mercado", description: "Analise a evolução agrícola de diferentes regiões", icon: Sparkles },
       ];
 
       const resourceOptions = [
-        { title: "Relatórios técnicos", description: "Laudos com métricas auditáveis", icon: Search },
+        { title: "Relatórios técnicos", description: "Relatórios técnicos e personalizados com métricas auditáveis", icon: Search },
         { title: "Mapas multicamadas", description: "Visualização geoespacial avançada", icon: Layers },
         { title: "Biblioteca jurídica", description: "Documentação e modelos de referência", icon: ShieldCheck },
         { title: "Central de ajuda", description: "Guias e boas práticas de operação", icon: Info },
-        { title: "API e integrações", description: "Conecte com sistemas internos", icon: Send },
-        { title: "Treinamentos", description: "Capacitação para times comerciais", icon: Calendar },
+        { title: "Interações com AI", description: "Conheça mais sobre a propriedade antes de tomar sua decisão", icon: Send },
+        { title: "Suporte comercial", description: "Entenda como a tecnologia auxilia a padronizar e otimizar transações imobiliárias rurais", icon: Calendar },
+      ];
+      const footerInstitutionalOptions = [
+        "Termos de usos",
+        "Segurança LGPD",
+        "Política de Privacidade",
+        "Política de Cookies",
+        "Aviso legal",
+        "Mapa do site"
       ];
 
       const headerMenuItems = [
-        { key: 'products', label: "Produtos" },
+        { key: 'products', label: "Soluções" },
         { key: 'applications', label: "Aplicações" },
         { key: 'resources', label: "Recursos" },
       ];
 
       const headerMenus = {
-        products: { title: "Produtos", options: productOptions },
+        products: { title: "Soluções", options: productOptions },
         applications: { title: "Aplicações", options: applicationOptions },
         resources: { title: "Recursos", options: resourceOptions },
       };
@@ -433,91 +1906,239 @@
         { src: "imagens/nuclebras/farm_page6.jpeg", label: "Foto da fazenda 6" },
       ];
 
-      const missions = [
-        {
-          title: "Terreno & Mecanização",
-          icon: Scaling,
-          badge: "85% Mecanizável",
-          status: "green",
-          kpis: ["Declividade média: 4%", "Ausência de afloramentos", "Solo Latossolo Vermelho"],
-          description: "A topografia da área permite a utilização de maquinário de grande porte em quase toda a extensão produtiva."
-        },
-        {
-          title: "Vigor Vegetativo (NDVI)",
-          icon: Trees,
-          badge: "Estável",
-          status: "green",
-          kpis: ["Média de NDVI: 0,72", "Histórico de 5 anos: consistente", "Sem estresse hídrico severo"],
-          description: "Análise multitemporal demonstra que a fazenda mantém biomassa saudável mesmo em períodos de transição climática."
-        },
-        {
-          title: "Fundiário & Legal",
-          icon: Landmark,
-          badge: "100% OK",
-          status: "green",
-          kpis: ["Matrícula Georreferenciada", "Sem sobreposição", "CCIR atualizado"],
-          description: "Documentação completa e validada nos sistemas oficiais, garantindo segurança jurídica."
-        },
-        {
-          title: "Clima & Recursos Hídricos",
-          icon: Droplets,
-          badge: "Rico em água",
-          status: "green",
-          kpis: ["Precipitação: 1.600 mm/ano", "2 nascentes internas", "Outorga disponível"],
-          description: "Localização privilegiada com regime de chuvas estável e pontos de captação de água identificados."
-        }
+      const journeyTopicOrder = [
+        'area_topografia',
+        'localizacao_regiao',
+        'situacao_ambiental',
+        'situacao_fundiaria',
+        'agua_irrigacao',
+        'solo_manejo',
+        'acesso_logistica',
+        'clima_risco',
+        'benfeitorias_infra'
       ];
 
-      const complianceMissions = [
-        {
-          title: "CAR",
-          icon: ShieldCheck,
-          badge: "Regular",
-          status: "green",
-          kpis: ["Cadastro sincronizado", "Reserva legal averbada", "Sem passivo ambiental crítico"],
-          description: "Cadastro Ambiental Rural validado com consistência entre perímetro, uso do solo e áreas de preservação."
-        },
-        {
-          title: "SIGEF/INCRA",
-          icon: MapIcon,
-          badge: "Regular",
-          status: "green",
-          kpis: ["Georreferenciamento concluído", "Sem sobreposição relevante", "Base fundiária coerente"],
-          description: "Camada fundiária revisada e aderente aos registros oficiais, reduzindo risco de disputa de limites."
-        },
-        {
-          title: "Histórico Produtivo",
-          icon: Search,
-          badge: "Regular",
-          status: "green",
-          kpis: ["Séries produtivas consistentes", "Rotação de culturas registrada", "Estabilidade operacional"],
-          description: "Histórico agronômico reforça previsibilidade de produtividade e favorece planejamento de médio prazo."
-        },
-        {
-          title: "Direitos Minerários",
-          icon: Info,
-          badge: "Atenção",
-          status: "yellow",
-          kpis: ["Requerimento ativo em 15%", "Sem impedimento imediato", "Necessita monitoramento jurídico"],
-          description: "Existe requerimento de pesquisa minerária incidente em parte da área, demandando acompanhamento técnico-jurídico."
-        }
-      ];
-
-      const marketTapeText = "PREÇO/HECTARE: R$ 45.769 // ALTITUDE: 1.187m ALTA // DECLIVIDADE MÉDIA: 4,7% // MATRÍCULA: Registrada // APROVEITAMENTO DA ÁREA: 68,5% // DISTÂNCIA ATÉ SÃO PAULO: 285km // RISCO DE GEADA: Médio // TIPO DE SOLO: Latossolo vermelho // TEMPERATURA MÉDIA: 18,5°C";
+      const marketTapeText = "PREÇO/HECTARE: R$ 37.738 // ALTITUDE MÉDIA: 1.285m // DECLIVIDADE MÉDIA: 4,7% // MATRÍCULA: Registrada // APROVEITAMENTO DA ÁREA: 68,5% // DISTÂNCIA ATÉ SÃO PAULO: 285km // RISCO DE GEADA: Médio // TIPO DE SOLO: Latossolo vermelho // TEMPERATURA MÉDIA: 18,5°C";
       const quickFarmQuestions = [
-        "Qual é o preço por hectare e a faixa de negociação?",
-        "Há algum risco jurídico ou ambiental relevante?",
-        "Qual é a aptidão agrícola e potencial de valorização?"
+        "Qual é a altitude média e como ela impacta a produtividade?",
+        "Como é a topografia da área e o potencial de mecanização?",
+        "Qual é a análise climática da região ao longo do ano?",
+        "Como é a logística de acesso e escoamento da produção nesta região?"
       ];
+      useEffect(() => {
+        let charIndex = 0;
+        setJourneyWhyAnalyzeTypedText('');
+        const typingInterval = setInterval(() => {
+          charIndex += 1;
+          setJourneyWhyAnalyzeTypedText(journeyWhyAnalyzeFullText.slice(0, charIndex));
+          if (charIndex >= journeyWhyAnalyzeFullText.length) {
+            clearInterval(typingInterval);
+          }
+        }, 12);
+
+        return () => clearInterval(typingInterval);
+      }, [journeyWhyAnalyzeFullText]);
+      useEffect(() => {
+        const typingPhrases = quickFarmQuestions.map((question) => `Ex: ${question}`);
+        let typingIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingTimeout = null;
+
+        const runTypingEffect = () => {
+          const promptInput = aiPromptInputRef.current;
+          if (!promptInput) {
+            typingTimeout = setTimeout(runTypingEffect, 250);
+            return;
+          }
+
+          if (document.activeElement === promptInput || promptInput.value.trim().length > 0) {
+            typingTimeout = setTimeout(runTypingEffect, 250);
+            return;
+          }
+
+          const fullText = typingPhrases[typingIndex];
+
+          if (!isDeleting) {
+            charIndex += 1;
+            setAiPromptPlaceholder(fullText.slice(0, charIndex));
+            if (charIndex >= fullText.length) {
+              isDeleting = true;
+              typingTimeout = setTimeout(runTypingEffect, 1200);
+              return;
+            }
+            typingTimeout = setTimeout(runTypingEffect, 70);
+            return;
+          }
+
+          charIndex -= 1;
+          setAiPromptPlaceholder(fullText.slice(0, Math.max(0, charIndex)));
+
+          if (charIndex <= 0) {
+            isDeleting = false;
+            typingIndex = (typingIndex + 1) % typingPhrases.length;
+            typingTimeout = setTimeout(runTypingEffect, 350);
+            return;
+          }
+
+          typingTimeout = setTimeout(runTypingEffect, 40);
+        };
+
+        runTypingEffect();
+
+        return () => {
+          if (typingTimeout) {
+            clearTimeout(typingTimeout);
+          }
+        };
+      }, []);
       const socialLinks = [
-        { label: "Instagram", href: "https://www.instagram.com/", icon: InstagramIcon },
+        { label: "Instagram", href: "https://www.instagram.com/rodrigomouraportinhola?igshid=Y2IzZGU1MTFhOQ%3D%3D", icon: InstagramIcon },
         { label: "TikTok", href: "https://www.tiktok.com/", icon: TikTokIcon },
-        { label: "LinkedIn", href: "https://www.linkedin.com/", icon: LinkedInIcon },
+        { label: "LinkedIn", href: "https://www.linkedin.com/in/romoura/?locale=en_US", icon: LinkedInIcon },
         { label: "YouTube", href: "https://www.youtube.com/", icon: YouTubeIcon },
         { label: "Email", href: "mailto:contato@talhao.ai", icon: MailIcon },
       ];
+      const marketListings = [
+        {
+          title: "Fazenda em Poços de Caldas (MG)",
+          summary: "Ativo com 184 ha, topografia amigável para mecanização e histórico produtivo consistente para culturas anuais.",
+          location: "Poços de Caldas / MG",
+          priceTotal: "R$ 8.950.000",
+          pricePerHa: "R$ 48.641",
+          area: "184 ha"
+        },
+        {
+          title: "Fazenda em Alfenas (MG)",
+          summary: "Propriedade com 260 ha, estrutura pronta para operação e acesso logístico facilitado para escoamento da produção.",
+          location: "Alfenas / MG",
+          priceTotal: "R$ 13.800.000",
+          pricePerHa: "R$ 53.076",
+          area: "260 ha"
+        },
+        {
+          title: "Fazenda em Varginha (MG)",
+          summary: "Área de 320 ha com bom potencial de expansão agrícola e excelente janela de valorização no Sul de Minas.",
+          location: "Varginha / MG",
+          priceTotal: "R$ 17.280.000",
+          pricePerHa: "R$ 54.000",
+          area: "320 ha"
+        }
+      ];
+      const activeMarketListing = marketListings[marketListingIndex];
+      const showPreviousMarketListing = () => {
+        setMarketListingIndex((prev) => (prev - 1 + marketListings.length) % marketListings.length);
+      };
+      const showNextMarketListing = () => {
+        setMarketListingIndex((prev) => (prev + 1) % marketListings.length);
+      };
+      const activeFarmTopic = farmTopics.find((topic) => topic.id === activeFarmTopicId) || farmTopics[0];
+      const activeFarmTopicIndex = farmTopics.findIndex((topic) => topic.id === activeFarmTopic.id);
+      const getFarmTopTabLines = (label) => {
+        const text = String(label || '').trim();
+        if (!text) return ['', '\u00A0'];
 
-      return h('div', { className: "min-h-screen bg-white font-sans text-slate-900 selection:bg-brand-100 antialiased relative" },
+        if (text.includes(' & ')) {
+          const [left, right] = text.split(/\s&\s/, 2);
+          return [`${left} &`, right || '\u00A0'];
+        }
+
+        const words = text.split(/\s+/);
+        if (words.length === 1) return [words[0], '\u00A0'];
+
+        const breakIndex = Math.ceil(words.length / 2);
+        return [
+          words.slice(0, breakIndex).join(' '),
+          words.slice(breakIndex).join(' ') || '\u00A0'
+        ];
+      };
+      const syncFarmTopActiveIndicator = ({ scrollToActive = false } = {}) => {
+        const viewport = farmTopTabsViewportRef.current;
+        const activeTab = farmTopTabRefs.current[activeFarmTopicId];
+        if (!viewport || !activeTab) return;
+
+        const nextLeft = activeTab.offsetLeft;
+        const nextWidth = activeTab.offsetWidth;
+        setFarmTopActiveIndicator({
+          left: nextLeft,
+          width: nextWidth,
+          opacity: nextWidth > 0 ? 1 : 0
+        });
+
+        if (!scrollToActive) return;
+        const tabStart = activeTab.offsetLeft;
+        const tabEnd = tabStart + activeTab.offsetWidth;
+        const viewportStart = viewport.scrollLeft;
+        const viewportEnd = viewportStart + viewport.clientWidth;
+        if (tabStart < viewportStart || tabEnd > viewportEnd) {
+          activeTab.scrollIntoView({ behavior: 'smooth', inline: 'end', block: 'nearest' });
+        }
+      };
+      useEffect(() => {
+        const rafId = window.requestAnimationFrame(() => syncFarmTopActiveIndicator({ scrollToActive: true }));
+        return () => window.cancelAnimationFrame(rafId);
+      }, [activeFarmTopicId]);
+      useEffect(() => {
+        const onResize = () => syncFarmTopActiveIndicator();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, [activeFarmTopicId]);
+      const selectedAptidaoData = aptidoes[selectedAptidao];
+      const scoreLevel = getScoreLevel(selectedAptidaoData.score);
+      const scoreCircleRadius = 42;
+      const scoreCircleCircumference = 2 * Math.PI * scoreCircleRadius;
+      const brokerWhatsappNumber = "5519981150397";
+      const sendWhatsAppMessage = ({ message, whatsappNumber = "" }) => {
+        const messageText = String(message || '').trim();
+        if (!messageText) return;
+
+        const baseUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}` : "https://wa.me/";
+        const whatsappUrl = `${baseUrl}?text=${encodeURIComponent(messageText)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      };
+      const shareFarmOnWhatsApp = () => {
+        const shareMessage = "Olá! Estou compartilhando uma fazenda da talhão.ai com você.";
+        sendWhatsAppMessage({ message: shareMessage });
+      };
+      const contactBrokerOnWhatsApp = () => {
+        const contactMessage = "Olá! Tenho interesse nesta fazenda da talhão.ai e gostaria de mais informações.";
+        sendWhatsAppMessage({ message: contactMessage, whatsappNumber: brokerWhatsappNumber });
+      };
+      const contactPartnershipOnWhatsApp = () => {
+        const partnershipMessage = "Quero ser um parceiro da talhão.ai";
+        sendWhatsAppMessage({ message: partnershipMessage, whatsappNumber: brokerWhatsappNumber });
+      };
+      const journeyTopicMap = new Map(farmTopics.map((topic) => [topic.id, topic]));
+      const journeyTopicImageMap = {
+        area_topografia: "imagens/fazenda_1_1.png",
+        localizacao_regiao: "imagens/fazenda_1_2.png",
+        situacao_ambiental: "imagens/fazenda_1_3.png",
+        situacao_fundiaria: "imagens/fazenda_2_1.png",
+        agua_irrigacao: "imagens/fazenda_2_2.png",
+        solo_manejo: "imagens/fazenda_2_3.png",
+        acesso_logistica: "imagens/fazenda_3_1.png",
+        clima_risco: "imagens/fazenda_3_2.png",
+        benfeitorias_infra: "imagens/fazenda_3_3.png"
+      };
+      const journeyTopics = journeyTopicOrder
+        .map((id) => {
+          const topic = journeyTopicMap.get(id);
+          if (!topic) return null;
+          return {
+            ...topic,
+            image: journeyTopicImageMap[id] || topic.image
+          };
+        })
+        .filter(Boolean);
+      const activeJourneyTopic =
+        journeyTopics.find((topic) => topic.id === activeJourneyTopicId) ||
+        journeyTopics[0] ||
+        farmTopics[0];
+      const activeJourneyIndex = activeJourneyTopic
+        ? journeyTopics.findIndex((topic) => topic.id === activeJourneyTopic.id)
+        : -1;
+
+      return h('div', { className: "min-h-screen font-sans text-slate-900 selection:bg-brand-100 antialiased relative" },
         // Header
             h('header', { className: "sticky top-0 z-40 pt-3 sm:pt-4" },
           h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] relative", ref: headerMenuRef },
@@ -536,8 +2157,8 @@
                     onClick: () => setActiveHeaderMenu((prev) => prev === menuItem.key ? null : menuItem.key),
                     className: `inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-lg font-bold transition-all ${
                       activeHeaderMenu === menuItem.key
-                        ? 'bg-white border-slate-300 text-slate-900 shadow-sm'
-                        : 'border-transparent text-brand-800 hover:text-brand-700 hover:bg-white/70'
+                        ? 'bg-white border-slate-300 text-brand-800 shadow-sm'
+                        : 'border-transparent text-slate-900 hover:text-brand-800 hover:bg-white/70'
                     }`
                   },
                     menuItem.label,
@@ -546,7 +2167,7 @@
                 )
               ),
               h('div', { className: "flex items-center gap-2 sm:gap-6" },
-                h('button', { onClick: openDemoVersionModal, className: "hidden sm:inline-flex text-sm xl:text-lg font-bold text-brand-800 hover:text-brand-700 transition-colors" }, "Criar conta"),
+                h('button', { onClick: openDemoVersionModal, className: "hidden sm:inline-flex text-sm xl:text-lg font-bold text-slate-900 hover:text-brand-800 focus-visible:text-brand-800 active:text-brand-800 transition-colors" }, "Criar conta"),
                 h('button', { onClick: openDemoVersionModal, className: "inline-flex items-center justify-center rounded-full bg-brand-800 hover:bg-brand-900 text-white px-4 xl:px-8 h-9 xl:h-12 text-sm xl:text-lg font-black transition-colors" }, "Login")
               )
             ),
@@ -558,8 +2179,8 @@
                   onClick: () => setActiveHeaderMenu((prev) => prev === menuItem.key ? null : menuItem.key),
                   className: `inline-flex shrink-0 items-center gap-1.5 px-3 py-2 rounded-xl border text-sm font-bold transition-all ${
                     activeHeaderMenu === menuItem.key
-                      ? 'bg-white border-slate-300 text-slate-900 shadow-sm'
-                      : 'bg-slate-100/80 border-slate-200 text-brand-800'
+                      ? 'bg-white border-slate-300 text-brand-800 shadow-sm'
+                      : 'bg-slate-100/80 border-slate-200 text-slate-900 hover:text-brand-800'
                   }`
                 },
                   menuItem.label,
@@ -581,14 +2202,14 @@
                         setActiveHeaderMenu(null);
                         openDemoVersionModal();
                       },
-                      className: "w-full flex items-start gap-3 sm:gap-4 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 text-left hover:border-brand-200 hover:bg-brand-50/40 transition-all duration-200"
+                      className: "header-menu-option w-full flex items-start gap-3 sm:gap-4 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 text-left hover:border-brand-200 hover:bg-brand-50/40 transition-all duration-200"
                     },
-                      h('div', { className: "w-11 h-11 sm:w-14 sm:h-14 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0" },
-                        h(item.icon, { className: "w-5 h-5 sm:w-6 sm:h-6 text-slate-700" })
+                      h('div', { className: "header-menu-option-icon w-11 h-11 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0" },
+                        h(item.icon, { className: "w-5 h-5 sm:w-6 sm:h-6" })
                       ),
                       h('div', { className: "space-y-0.5 sm:space-y-1" },
-                        h('p', { className: "text-base sm:text-xl font-black text-slate-900 leading-tight" }, item.title),
-                        h('p', { className: "text-sm sm:text-lg text-slate-500 leading-snug" }, item.description)
+                        h('p', { className: "text-sm sm:text-base font-black text-slate-900 leading-tight whitespace-pre-line" }, item.title),
+                        h('p', { className: "text-xs sm:text-sm text-slate-500 leading-snug" }, item.description)
                       )
                     )
                   )
@@ -602,85 +2223,154 @@
         h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] py-6 xl:py-10" },
           h('div', { className: "space-y-14 xl:space-y-24" },
           // Hero Section
-          h('section', { className: "grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-6 xl:gap-8 items-start" },
-            h('div', { className: "space-y-6" },
+          h('section', { className: "ambient-section ambient-section--default grid grid-cols-1 gap-6 xl:gap-8 items-start xl:flex xl:items-center" },
+            h('div', { className: "ambient-content space-y-6 xl:flex-[1]" },
               h('div', { className: "flex items-center gap-3" },
-                h(Badge, { status: "neutral", text: "Fazendas disponíveis" }),
-                h('div', { className: "flex items-center gap-1.5 text-slate-400 text-xs font-medium" },
-                  "Janeiro 2026"
+                h('div', { className: "flex items-center gap-3" },
+                  h('span', { className: "aptidao-pill-neutral" },
+                    h('span', {}, "Fazendas disponíveis")
+                  ),
+                  h('div', { className: "flex items-center gap-1.5 text-slate-400 text-xs font-medium" },
+                    "Janeiro 2026"
+                  )
                 )
               ),
 
-              h('div', { className: "flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-8" },
-                h('div', { className: "flex-1 max-w-3xl" },
+              h('div', { className: "grid grid-cols-1 lg:grid-cols-2 items-start gap-6 lg:gap-8" },
+                h('div', { className: "max-w-3xl" },
                   h('h1', { className: "text-3xl sm:text-4xl xl:text-5xl font-black tracking-tight text-slate-900 mb-4" },
                     "Fazenda em ",
                     h('span', { className: "text-brand-600" }, "Caldas (MG)")
                   ),
                   h('p', { className: "text-base sm:text-lg xl:text-xl text-slate-500 leading-relaxed font-light" },
-                    "Análise automática com múltiplas camadas geoespaciais e regulatórias para decisão baseada em dados reais."
+                    "Fazenda com elevada aptidão agrícola, ideal para culturas de alto valor agregado e principais culturas nacionais."
+                  ),
+                  h('button', {
+                    onClick: shareFarmOnWhatsApp,
+                    className: "mt-4 w-full sm:w-[320px] inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200 bg-slate-100/90 px-4 py-2 text-[11px] font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/30 sm:text-xs"
+                  },
+                    h(Send, { className: "h-3.5 w-3.5" }),
+                    "Compartilhar anúncio no WhatsApp"
+                  ),
+                  h('button', {
+                    onClick: contactBrokerOnWhatsApp,
+                    className: "mt-3 w-full sm:w-[320px] inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200 bg-slate-100/90 px-4 py-2 text-[11px] font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/30 sm:text-xs"
+                  },
+                    h(Phone, { className: "h-3.5 w-3.5" }),
+                    "Entrar em contato com o corretor"
                   )
                 ),
 
-                h('div', { className: "group card-surface p-6 rounded-2xl w-full max-w-[320px] lg:shrink-0 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
-                  h('div', { className: "mb-6" },
-                    h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3" }, "Selecione a Aptidão"),
-                    h('select', {
-                      value: selectedAptidao,
-                      onChange: (e) => setSelectedAptidao(e.target.value),
-                      className: "w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-brand-500"
-                    },
-                      Object.entries(aptidoes).map(([id, apt]) =>
-                        h('option', { key: id, value: id }, apt.label)
+                h('div', {
+                  className: "ambient-main-box ambient-float ambient-float--fast card-surface aptidao-score-card w-full max-w-[320px] justify-self-center rounded-2xl p-5 transition-all duration-300 ease-out"
+                },
+                  h('div', { className: "space-y-2" },
+                    h('h3', { className: "aptidao-pill-neutral" },
+                      h(Icon, { className: "aptidao-pill-neutral-icon", size: 16 },
+                        h('path', { d: "M4 7V4h3" }),
+                        h('path', { d: "M17 7V4h-3" }),
+                        h('path', { d: "M4 17v3h3" }),
+                        h('path', { d: "M17 17v3h-3" })
+                      ),
+                      h('span', {}, "Índice de aptidão")
+                    ),
+                    h('p', { className: "text-xs text-slate-600 leading-relaxed" }, "Baseado principalmente em solo, topografia e clima.")
+                  ),
+                  h('div', { className: "mt-4" },
+                    h('div', { className: "relative mt-2", ref: aptidaoMenuRef },
+                      h('button', {
+                        type: "button",
+                        onClick: () => setIsAptidaoMenuOpen((prev) => !prev),
+                        className: "w-full inline-flex items-center justify-between gap-3 rounded-xl border-2 border-brand-100 bg-white px-3 py-2.5 text-sm font-bold text-slate-800 transition-all outline-none hover:border-brand-300 focus-visible:border-brand-700 focus-visible:ring-4 focus-visible:ring-brand-700/20",
+                        'aria-haspopup': "listbox",
+                        'aria-expanded': isAptidaoMenuOpen ? "true" : "false",
+                        'aria-label': "Selecionar tipo de aptidão"
+                      },
+                        h('span', { className: "truncate text-left" }, selectedAptidaoData.label),
+                        h(ChevronDown, { className: `h-4 w-4 text-brand-700 transition-transform duration-200 ${isAptidaoMenuOpen ? 'rotate-180' : ''}` })
+                      ),
+                      isAptidaoMenuOpen && h('div', {
+                        className: "absolute z-40 mt-2 w-full rounded-2xl border border-brand-100 bg-white/95 p-2 shadow-[0_16px_34px_rgba(15,23,42,0.14)] backdrop-blur-sm"
+                      },
+                        h('div', { className: "max-h-64 space-y-1 overflow-y-auto pr-1", role: "listbox", 'aria-label': "Opções de aptidão" },
+                          Object.entries(aptidoes).map(([id, apt]) => {
+                            const isSelected = id === selectedAptidao;
+                            return h('button', {
+                              key: `aptidao-option-${id}`,
+                              type: "button",
+                              role: "option",
+                              'aria-selected': isSelected ? "true" : "false",
+                              onClick: () => {
+                                setSelectedAptidao(id);
+                                setIsAptidaoMenuOpen(false);
+                              },
+                              className: `w-full rounded-xl border px-3 py-2 text-left text-sm font-semibold transition-all ${
+                                isSelected
+                                  ? 'border-brand-200 bg-brand-50 text-brand-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]'
+                                  : 'border-transparent text-slate-700 hover:border-slate-200 hover:bg-slate-100'
+                              }`
+                            },
+                              h('span', { className: "flex items-center justify-between gap-3" },
+                                h('span', { className: "truncate" }, apt.label),
+                                isSelected && h(CheckCircle2, { className: "h-4 w-4 shrink-0 text-brand-700" })
+                              )
+                            );
+                          })
+                        )
                       )
                     )
                   ),
-                  h('div', { className: "flex items-center gap-6" },
-                    h('div', { className: "relative flex items-center justify-center" },
-                      h('svg', { className: "w-20 h-20 transform -rotate-90" },
+                  h('div', { className: "mt-5 flex items-center gap-5" },
+                    h('div', { className: "relative flex shrink-0 items-center justify-center" },
+                      h('svg', { className: "h-24 w-24 -rotate-90 overflow-visible", viewBox: "0 0 100 100" },
                         h('circle', {
-                          cx: "40",
-                          cy: "40",
-                          r: "36",
+                          cx: "50",
+                          cy: "50",
+                          r: scoreCircleRadius,
                           stroke: "currentColor",
-                          strokeWidth: "8",
+                          strokeWidth: "10",
                           fill: "transparent",
                           className: "text-slate-100"
                         }),
                         h('circle', {
-                          cx: "40",
-                          cy: "40",
-                          r: "36",
+                          cx: "50",
+                          cy: "50",
+                          r: scoreCircleRadius,
                           stroke: "currentColor",
-                          strokeWidth: "8",
+                          strokeWidth: "10",
                           fill: "transparent",
-                          strokeDasharray: 226,
-                          strokeDashoffset: 226 - (226 * aptidoes[selectedAptidao].score) / 100,
-                          className: `transition-all duration-700 ${aptidoes[selectedAptidao].score > 70 ? 'text-brand-500' : 'text-amber-500'}`
+                          strokeDasharray: scoreCircleCircumference,
+                          strokeDashoffset: scoreCircleCircumference - (scoreCircleCircumference * selectedAptidaoData.score) / 100,
+                          className: `transition-all duration-700 ${scoreLevel.ringClass}`
                         })
                       ),
-                      h('span', { className: "absolute text-xl font-black" }, aptidoes[selectedAptidao].score)
-                    ),
-                    h('div', {},
-                      h('p', { className: "text-xs font-bold text-slate-400 uppercase" }, "Score Geral"),
-                      h('p', { className: `text-lg font-black transition-colors duration-300 group-hover:text-brand-800 ${aptidoes[selectedAptidao].color}` },
-                        aptidoes[selectedAptidao].score >= 80 ? 'Excelente' : aptidoes[selectedAptidao].score >= 60 ? 'Favorável' : 'Atenção'
+                      h('div', { className: "absolute text-center leading-tight" },
+                        h('p', { className: "text-[1.6rem] font-black text-slate-900" }, selectedAptidaoData.score),
+                        h('p', { className: "text-[10px] font-black uppercase tracking-widest text-slate-500" }, "/100")
                       )
+                    ),
+                    h('div', { className: "min-w-0 space-y-2 pl-1" },
+                      h('p', { className: "text-[10px] font-black uppercase tracking-widest text-slate-500" }, "Nível de aptidão"),
+                      h('span', { className: `inline-flex rounded-full border px-2.5 py-1 text-xs font-black ${scoreLevel.chipClass}` }, scoreLevel.label)
                     )
-                  )
+                  ),
+                  h('button', {
+                    onClick: openLeadCaptureModal,
+                    className: "mt-4 w-full rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-sm font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
+                  }, `Entender score ${selectedAptidaoData.score}/100 no relatório`)
                 )
               ),
 
               h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
-                h(StatCard, { label: "Área Total", value: "106 ha", subtext: "Área Consolidada" }),
-                h(StatCard, { label: "Município", value: "Caldas / MG", subtext: "Terras raras" }),
-                h(StatCard, { label: "Preço", value: "R$ 4.000.000", subtext: "Oportunidade de investimento" }),
-                h(StatCard, { label: "Preço por hectare", value: "R$ 37.738", subtext: "Aproveitamento de 68,5%" })
+                h(StatCard, { label: "Área Total", value: "106 ha", subtext: "Área Consolidada", className: "stat-card-hover-green" }),
+                h(StatCard, { label: "Município", value: "Caldas / MG", subtext: "Terras raras", className: "stat-card-hover-green" }),
+                h(StatCard, { label: "Preço", value: "R$ 4.000.000", subtext: "Oportunidade de investimento", className: "stat-card-hover-green" }),
+                h(StatCard, { label: "Preço por hectare", value: "R$ 37.738", subtext: "Aproveitamento de 68,5%", className: "stat-card-hover-green" })
               )
             ),
 
-            h('div', { className: "bg-white rounded-3xl border border-slate-200 p-2 shadow-xl overflow-hidden" },
-              h('div', { className: "relative h-[420px] sm:h-[500px] xl:h-[560px] rounded-2xl bg-slate-900 overflow-hidden group" },
+            h('div', { className: "ambient-content ambient-main-box ambient-float ambient-float--slow bg-white rounded-3xl border border-slate-200 p-2 shadow-xl overflow-hidden xl:flex-[1.55] xl:self-center" },
+              h('div', { className: "relative h-[483px] sm:h-[575px] xl:h-[644px] rounded-2xl bg-slate-900 overflow-hidden group" },
                 viewMode === 'map' ? h('img', {
                   src: layers[activeLayer].img,
                   alt: "Mapa",
@@ -792,74 +2482,258 @@
 
           // Faixa de Indicadores (copiada da página chat)
           h('section', {
-            className: "w-screen overflow-hidden border-y border-slate-200 bg-white py-3",
+            className: "market-tape-stage relative w-screen overflow-hidden py-3",
             style: { marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)" }
           },
-            h('div', { className: "flex whitespace-nowrap animate-[marquee_20s_linear_infinite] gap-12 text-xs font-mono font-bold text-black" },
+            h('div', { className: "relative z-0 flex whitespace-nowrap animate-[marquee_20s_linear_infinite] gap-12 text-xs font-mono font-bold text-black px-2" },
               Array.from({ length: 10 }, (_, idx) =>
                 h('span', { key: `ticker-${idx}` }, marketTapeText)
+              )
+            ),
+            h('div', { className: "market-tape-edge market-tape-edge--left" }),
+            h('div', { className: "market-tape-edge market-tape-edge--right" })
+          ),
+
+          // Painel técnico da fazenda
+          h('section', { className: "ambient-section ambient-section--default journey-section-balanced-ambient space-y-6" },
+            h('div', { className: "flex justify-center" },
+              h('span', { className: "aptidao-pill-neutral" },
+                h('span', {}, "Conheça melhor a propriedade")
+              )
+            ),
+            h('div', { className: "ambient-content ambient-main-box ambient-float ambient-float--slow rounded-[32px] border border-slate-200 bg-slate-100/80 p-4 sm:p-6 xl:p-8 shadow-2xl" },
+              h('div', { className: "mb-5 sm:mb-6 space-y-2" },
+                h('h3', { className: "text-2xl sm:text-3xl font-black tracking-tight text-slate-900" }, `Visão técnica em ${farmTopics.length} tópicos da fazenda anunciada`),
+                h('p', { className: "text-sm sm:text-base text-slate-600 max-w-4xl" }, "Use a barra ativa superior ou a navegação lateral para alternar entre os eixos técnicos com conteúdo sincronizado.")
+              ),
+
+              h('div', {
+                className: "mb-4 sm:mb-5 rounded-2xl border border-slate-200 bg-white/90 px-1.5 sm:px-2 shadow-sm"
+              },
+                h('div', {
+                  ref: farmTopTabsViewportRef,
+                  className: "overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                  role: "tablist",
+                  'aria-label': "Tópicos técnicos da fazenda"
+                },
+                  h('div', { className: "relative inline-flex min-w-max xl:min-w-full items-stretch gap-0.5 pb-2 pt-1.5" },
+                    h('div', { className: "pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-200" }),
+                    farmTopics.map((topic) => {
+                      const isActive = activeFarmTopic.id === topic.id;
+                      const TopicIcon = topic.icon;
+                      const [tabLineOne, tabLineTwo] = getFarmTopTabLines(topic.tabLabel);
+                      const tabLineTwoIsPlaceholder = tabLineTwo === '\u00A0';
+                      return h('button', {
+                        key: `farm-topic-tab-${topic.id}`,
+                        id: `farm-topic-tab-${topic.id}`,
+                        ref: (node) => {
+                          if (node) {
+                            farmTopTabRefs.current[topic.id] = node;
+                          } else {
+                            delete farmTopTabRefs.current[topic.id];
+                          }
+                        },
+                        role: "tab",
+                        type: "button",
+                        tabIndex: isActive ? 0 : -1,
+                        'aria-selected': isActive ? "true" : "false",
+                        'aria-controls': `farm-topic-panel-${topic.id}`,
+                        onClick: () => setActiveFarmTopicId(topic.id),
+                        className: `relative shrink-0 xl:flex-1 px-2.5 sm:px-3.5 py-2.5 text-[10px] sm:text-[11px] font-medium tracking-normal leading-tight transition-colors ${
+                          isActive
+                            ? 'text-slate-900'
+                            : 'text-slate-500 hover:text-slate-800'
+                        }`
+                      },
+                        h('span', { className: "inline-flex w-full items-center justify-start gap-1.5 text-left font-sans" },
+                          h('span', { className: `farm-top-tab-icon ${isActive ? 'is-active' : ''}` },
+                            h(TopicIcon, {})
+                          ),
+                          h('span', { className: "grid leading-[1.05]" },
+                            h('span', { className: "whitespace-nowrap" }, tabLineOne),
+                            h('span', {
+                              className: `whitespace-nowrap ${tabLineTwoIsPlaceholder ? 'opacity-0 select-none' : ''}`,
+                              'aria-hidden': tabLineTwoIsPlaceholder ? "true" : "false"
+                            }, tabLineTwo)
+                          )
+                        )
+                      );
+                    }),
+                    h('span', {
+                      'aria-hidden': "true",
+                      className: "pointer-events-none absolute bottom-0 h-[3px] rounded-full bg-brand-700 transition-all duration-300 ease-out",
+                      style: {
+                        width: farmTopActiveIndicator.width,
+                        transform: `translateX(${farmTopActiveIndicator.left}px)`,
+                        opacity: farmTopActiveIndicator.opacity
+                      }
+                    })
+                  )
+                )
+              ),
+
+              h('div', { className: "grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 lg:gap-6" },
+                h('aside', { className: "rounded-2xl border border-slate-200 bg-slate-100/80 p-3 sm:p-4" },
+                  h('div', { className: "flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[700px] pb-1 lg:pb-0 lg:pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" },
+                    farmTopics.map((topic) => {
+                      const isActive = activeFarmTopic.id === topic.id;
+                      const TopicIcon = topic.icon;
+                      const [sideLineOne, sideLineTwo] = getFarmTopTabLines(topic.sideLabel);
+                      const sideLineTwoIsPlaceholder = sideLineTwo === '\u00A0';
+                      return h('button', {
+                        key: `farm-topic-side-${topic.id}`,
+                        type: "button",
+                        onClick: () => setActiveFarmTopicId(topic.id),
+                        className: `group flex min-w-[220px] lg:min-w-0 items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition-all ${
+                          isActive
+                            ? 'border-brand-200 bg-slate-100/90 text-brand-900'
+                            : 'border-slate-200 bg-slate-100/90 text-slate-700 hover:border-slate-300 hover:bg-slate-100'
+                        }`
+                      },
+                        h('div', { className: "flex items-center gap-2.5 min-w-0" },
+                          h('div', { className: `topic-icon-chip ${isActive ? 'is-active' : ''}` },
+                            h(TopicIcon, { className: "w-4 h-4" })
+                          ),
+                          h('span', { className: "grid leading-[1.05] text-[10px] sm:text-[11px] font-medium tracking-normal font-sans" },
+                            h('span', { className: "whitespace-nowrap" }, sideLineOne),
+                            h('span', {
+                              className: `whitespace-nowrap ${sideLineTwoIsPlaceholder ? 'opacity-0 select-none' : ''}`,
+                              'aria-hidden': sideLineTwoIsPlaceholder ? "true" : "false"
+                            }, sideLineTwo)
+                          )
+                        ),
+                        h('div', { className: `hidden lg:block h-5 w-1 rounded-full ${isActive ? 'bg-brand-700' : 'bg-transparent'}` })
+                      );
+                    })
+                  )
+                ),
+
+                h('div', {
+                  id: `farm-topic-panel-${activeFarmTopic.id}`,
+                  role: "tabpanel",
+                  'aria-labelledby': `farm-topic-tab-${activeFarmTopic.id}`,
+                  className: "rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 lg:p-6"
+                },
+                  h('div', { className: "flex flex-wrap items-start justify-between gap-3" },
+                    h('div', { className: "space-y-1" },
+                      h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500" }, `Tópico ${activeFarmTopicIndex + 1} de ${farmTopics.length}`),
+                      h('h4', { className: "text-2xl font-black tracking-tight text-slate-900" }, activeFarmTopic.title),
+                      h('p', { className: "text-sm text-slate-600 max-w-2xl" }, activeFarmTopic.subtitle)
+                    ),
+                    h(Badge, {
+                      status: activeFarmTopic.statusTone === 'yellow' ? 'yellow' : activeFarmTopic.statusTone === 'red' ? 'red' : activeFarmTopic.statusTone === 'green' ? 'green' : 'neutral',
+                      text: activeFarmTopic.statusBadge
+                    })
+                  ),
+
+                  h('div', { className: "mt-4 grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-4" },
+                    h('div', { className: "space-y-4" },
+                      h('div', { className: "relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-900" },
+                        h('img', {
+                          src: activeFarmTopic.image,
+                          alt: activeFarmTopic.title,
+                          className: "h-[260px] sm:h-[320px] w-full object-cover"
+                        }),
+                        h('div', { className: "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-4 py-3" },
+                          h('p', { className: "text-[10px] font-black uppercase tracking-widest text-white/75" }, "Visual principal"),
+                          h('p', { className: "text-sm font-bold text-white" }, activeFarmTopic.sideLabel)
+                        )
+                      ),
+                      activeFarmTopic.secondaryImage && h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 p-2.5" },
+                        h('p', { className: "text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2" }, "Camada complementar (CAR)"),
+                        h('img', {
+                          src: activeFarmTopic.secondaryImage,
+                          alt: "Camada complementar CAR",
+                          className: "h-28 w-full rounded-lg object-cover border border-slate-200"
+                        })
+                      )
+                    ),
+
+                    h('div', { className: "space-y-4" },
+                      h('div', { className: "grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3 gap-2.5" },
+                        activeFarmTopic.kpis.map((kpi, idx) =>
+                          h('div', {
+                            key: `farm-topic-kpi-${activeFarmTopic.id}-${idx}`,
+                            className: "rounded-xl border border-slate-200 bg-slate-50 px-3 py-3"
+                          },
+                            h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-500" }, kpi.label),
+                            h('p', { className: "text-base font-black text-slate-900 mt-1" }, kpi.value)
+                          )
+                        )
+                      ),
+
+                      h(TopicMiniChart, { series: activeFarmTopic.miniSeries }),
+
+                      h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4" },
+                        h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2" }, "Destaques técnicos"),
+                        h('ul', { className: "space-y-2" },
+                          activeFarmTopic.highlights.map((item, idx) =>
+                            h('li', { key: `farm-topic-highlight-${activeFarmTopic.id}-${idx}`, className: "text-sm text-slate-700 flex items-start gap-2" },
+                              h('div', { className: "mt-2 h-1.5 w-1.5 rounded-full bg-brand-600 shrink-0" }),
+                              h('span', {}, item)
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
               )
             )
           ),
 
           // Precificação PRO + Corretor
-          h('section', { className: "grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch" },
-            h('div', { className: "bg-white rounded-3xl border-2 border-slate-900 p-5 sm:p-6 xl:p-8 flex flex-col justify-between gap-8 relative overflow-hidden shadow-2xl h-full" },
-              h('div', { className: "absolute top-0 right-0 p-4" },
+          h('section', { className: "ambient-section grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch" },
+            h('div', { className: "ambient-main-box ambient-float ambient-float--slow group card-surface rounded-3xl border-2 border-transparent hover:border-slate-900 transition-colors duration-200 p-5 sm:p-6 xl:p-8 flex flex-col gap-8 relative overflow-hidden shadow-2xl h-full" },
+              h('div', { className: "absolute top-0 right-0 p-4 opacity-0 -translate-y-1 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0" },
                 h('div', { className: "bg-slate-900 text-white px-3 py-1 rounded-bl-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2" },
                   h(ShieldCheck, { className: "w-3 h-3" }),
                   " RELATÓRIO EXCLUSIVO DA TALHÃO"
                 )
               ),
               h('div', { className: "space-y-4 pt-12" },
-                h('h2', { className: "text-3xl font-black text-slate-900 leading-tight" }, "Entenda o preço da fazenda"),
-                h('p', { className: "text-slate-500" }, "Avaliação baseada no mercado atual de Caldas (MG)."),
-                h('div', { className: "flex items-end gap-3" },
+                h('h2', { className: "text-3xl font-black text-slate-900 leading-tight" }, "Entender precificação da fazenda"),
+                h('div', { className: "flex items-end gap-3 -mt-1" },
                   h('span', { className: "text-4xl font-black text-brand-600 tracking-tighter" }, "R$ 37.738"),
                   h('span', { className: "text-lg font-bold text-slate-400 pb-1" }, "/ hectare")
                 ),
-              ),
-              h('div', { className: "group bg-gradient-to-br from-brand-900 via-brand-800 to-black p-6 rounded-2xl border border-brand-400/30 text-center space-y-4 w-full shadow-[0_16px_40px_rgba(3,23,15,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:brightness-105" },
-                h('div', { className: "w-12 h-12 bg-white/15 border border-white/25 rounded-full flex items-center justify-center mx-auto mb-4" },
-                  h(Lock, { className: "w-6 h-6 text-white" })
+                h('div', { className: "flex items-start gap-2 text-sm text-slate-600 leading-relaxed" },
+                  h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
+                  h('p', {},
+                    h('span', { className: "font-bold text-slate-800" }, "Valor da Terra Nua (VTN) em Caldas, MG: "),
+                    "R$42.589 por hectare, indicando que a fazenda está à venda por um bom preço."
+                  )
                 ),
-                h('h3', { className: "font-black text-white uppercase tracking-tighter" }, "Acesse o relatório técnico"),
-                h('p', { className: "text-xs text-white/85 leading-relaxed" }, "Para entender como esta é uma grande oportunidade de compra, acesse abaixo o relatório completo desta propriedade."),
+              ),
+              h('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-3" },
+                h(StatCard, { label: "Arquivo", value: "Baixar KML", subtext: "Download georreferenciado" }),
+                h(StatCard, { label: "Arquivo", value: "Baixar CAR", subtext: "Cadastro ambiental rural" }),
+                h(StatCard, { label: "Navegação", value: "Rota até a fazenda", subtext: "Acesso e deslocamento" })
+              ),
+              h('div', { className: "mt-auto report-cta-panel px-6 pt-6 pb-6 text-center space-y-4 w-full" },
+                h('div', { className: "report-cta-lock mx-auto mb-4" },
+                  h(Lock, { className: "w-6 h-6" })
+                ),
+                h('h3', { className: "report-cta-title font-black uppercase tracking-tighter" }, "Acesse o relatório técnico"),
+                h('p', { className: "report-cta-copy text-xs leading-relaxed" }, "Para entender como esta é uma grande oportunidade de compra, acesse abaixo o relatório completo desta propriedade."),
                 h('button', {
                   onClick: openLeadCaptureModal,
-                  className: "w-full bg-white text-brand-900 py-4 rounded-xl text-sm font-black hover:bg-brand-50 transition-all flex items-center justify-center gap-2 shadow-lg"
+                  className: "report-cta-button py-4 text-sm font-black"
                 },
                   "ACESSAR RELATÓRIO ",
                   h(ChevronRight, { className: "w-4 h-4" })
                 )
-              ),
-              h('div', { className: "grid grid-cols-1 sm:grid-cols-3 gap-3" },
-                h('button', {
-                  onClick: openLeadCaptureModal,
-                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
-                },
-                  h(MapIcon, { className: "w-4 h-4" }),
-                  "Baixar KML"
-                ),
-                h('button', {
-                  onClick: openLeadCaptureModal,
-                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
-                },
-                  h(ShieldCheck, { className: "w-4 h-4" }),
-                  "Baixar CAR"
-                ),
-                h('button', {
-                  onClick: openLeadCaptureModal,
-                  className: "inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-brand-50 text-brand-800 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all hover:bg-brand-100 hover:border-brand-300"
-                },
-                  h(Send, { className: "w-4 h-4" }),
-                  "Rota até a fazenda"
-                )
               )
             ),
 
-            h('div', { className: "card-surface rounded-3xl border border-slate-200 p-5 sm:p-6 xl:p-8 shadow-2xl flex flex-col h-full" },
-              h('div', { className: "flex items-start gap-4 mb-6" },
+            h('div', { className: "ambient-main-box ambient-float ambient-float--fast group card-surface rounded-3xl border-2 border-transparent hover:border-slate-900 transition-colors duration-200 p-5 sm:p-6 xl:p-8 shadow-2xl flex flex-col h-full relative overflow-hidden" },
+              h('div', { className: "absolute top-0 right-0 p-4 opacity-0 -translate-y-1 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0" },
+                h('div', { className: "bg-slate-900 text-white px-3 py-1 rounded-bl-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2" },
+                  h(ShieldCheck, { className: "w-3 h-3" }),
+                  " RELATÓRIO EXCLUSIVO DA TALHÃO"
+                )
+              ),
+              h('div', { className: "flex items-start gap-4 mb-6 pt-12" },
                 h('div', { className: "w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0" },
                   h(Search, { className: "w-6 h-6 text-brand-700" })
                 ),
@@ -871,21 +2745,13 @@
               ),
 
               h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" },
-                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Aptidão Agrícola"),
-                  h('p', { className: "text-lg font-black text-brand-700" }, "94 / 100")
+                h('div', { className: "group card-surface px-5 py-4 rounded-2xl hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
+                  h('p', { className: "text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1" }, "Aptidão agrícola máxima"),
+                  h('p', { className: "text-2xl leading-tight font-bold text-slate-900 transition-colors duration-300 group-hover:text-brand-800" }, "94 / 100")
                 ),
-                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Mecanização"),
-                  h('p', { className: "text-lg font-black text-slate-900" }, "85% da área")
-                ),
-                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Segurança Jurídica"),
-                  h('p', { className: "text-lg font-black text-slate-900" }, "100% regular")
-                ),
-                h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                  h('p', { className: "text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1" }, "Valorização Estimada"),
-                  h('p', { className: "text-lg font-black text-slate-900" }, "+18% (36 meses)")
+                h('div', { className: "group card-surface px-5 py-4 rounded-2xl hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_16px_40px_rgba(34,197,94,0.18)] transition-all duration-300 ease-out" },
+                  h('p', { className: "text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1" }, "Mecanização"),
+                  h('p', { className: "text-2xl leading-tight font-bold text-slate-900 transition-colors duration-300 group-hover:text-brand-800" }, "100% da área")
                 )
               ),
 
@@ -903,84 +2769,90 @@
                     h('span', { className: "font-bold text-slate-800" }, "Base produtiva consistente: "),
                     "histórico multianual e indicadores geoespaciais sugerem estabilidade agronômica e potencial de ganho."
                   )
-                ),
-                h('div', { className: "flex items-start gap-2" },
-                  h(CheckCircle2, { className: "w-4 h-4 mt-0.5 text-brand-600 shrink-0" }),
-                  h('p', {},
-                    h('span', { className: "font-bold text-slate-800" }, "Risco controlado: "),
-                    "documentação fundiária validada e diligência técnica estruturada para uma decisão de compra segura."
-                  )
                 )
               ),
 
-              h('div', { className: "mt-6 flex flex-wrap gap-2" },
-                h('span', { className: "px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-100 text-xs font-bold uppercase tracking-wide" }, "Laudo Especialista"),
-                h('span', { className: "px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wide" }, "Métricas Auditáveis"),
-                h('span', { className: "px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wide" }, "Decisão Orientada a Dados")
-              ),
-
-              h('div', { className: "mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" },
+              h('div', { className: "mt-auto report-cta-panel px-6 pt-6 pb-6 text-center space-y-4 w-full" },
+                h('div', { className: "report-cta-lock mx-auto mb-4" },
+                  h(Lock, { className: "w-6 h-6" })
+                ),
+                h('h3', { className: "report-cta-title font-black uppercase tracking-tighter" }, "Acesse o relatório técnico"),
+                h('p', { className: "report-cta-copy text-xs leading-relaxed" }, "Para entender como esta é uma grande oportunidade de compra, acesse abaixo o relatório completo desta propriedade."),
                 h('button', {
                   onClick: openLeadCaptureModal,
-                  className: "rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 py-3 text-xs font-black uppercase tracking-widest transition-colors"
-                }, "Ver Prévia do Laudo"),
-                h('button', {
-                  onClick: openLeadCaptureModal,
-                  className: "rounded-xl bg-brand-700 hover:bg-brand-800 text-white py-3 text-xs font-black uppercase tracking-widest transition-colors"
-                }, "Desbloquear Relatório")
+                  className: "report-cta-button py-4 text-sm font-black"
+                },
+                  "ACESSAR RELATÓRIO ",
+                  h(ChevronRight, { className: "w-4 h-4" })
+                )
               )
             ),
 
             h('div', { className: "p-5 sm:p-6 xl:p-8 flex flex-col h-full justify-between" },
               h('div', { className: "space-y-6" },
-                h('h3', {
-                  ref: nextStepTitleRef,
-                  className: `text-[2.6rem] sm:text-5xl lg:text-6xl xl:text-[8rem] font-black text-brand-800 leading-[0.95] tracking-tight transition-all duration-700 ease-out ${
-                    showNextStepTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`
-                },
-                  "Qual o seu",
-                  h('br'),
-                  "próximo",
-                  h('br'),
-                  "passo?"
+                h('div', { className: "space-y-0" },
+                  h('h3', {
+                    ref: nextStepTitleRef,
+                    className: `text-[2.6rem] sm:text-5xl lg:text-6xl xl:text-[8rem] font-black text-brand-800 leading-[0.95] tracking-tight transition-all duration-700 ease-out ${
+                      showNextStepTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                    }`
+                  },
+                    "Qual o seu",
+                    h('br'),
+                    "próximo",
+                    h('br'),
+                    "passo?"
+                  ),
                 ),
                 h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
                   h('button', {
                     onClick: openLeadCaptureModal,
-                    className: "w-full rounded-full bg-brand-700 hover:bg-brand-800 text-white py-4 text-lg font-black tracking-wide transition-colors"
+                    className: "w-full rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-lg font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
                   }, "Falar com o corretor"),
                   h('button', {
                     onClick: openLeadCaptureModal,
-                    className: "w-full rounded-full border border-brand-700 bg-white hover:bg-brand-50 text-brand-800 py-4 text-lg font-black tracking-wide transition-colors"
+                    className: "w-full rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-lg font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
                   }, "Agendar visita"),
                   h('button', {
                     onClick: openLeadCaptureModal,
-                    className: "w-full rounded-full bg-slate-900 hover:bg-slate-800 text-white py-4 text-lg font-black tracking-wide transition-colors"
+                    className: "w-full rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-lg font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
                   }, "Ler relatório técnico"),
                   h('button', {
                     onClick: openLeadCaptureModal,
-                    className: "w-full rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-900 py-4 text-lg font-black tracking-wide transition-colors"
+                    className: "w-full rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-lg font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
                   }, "Enviar proposta")
                 )
               ),
-              h('div', { className: "pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between text-base font-bold text-slate-900" },
-                h('a', { href: "#", className: "underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors" }, "Denunciar anúncio"),
-                h('a', { href: "#", className: "underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors" }, "Compartilhar")
+              h('div', { className: "pt-8 flex items-center justify-start text-base font-bold text-slate-900" },
+                h('a', {
+                  href: "#",
+                  onClick: (e) => { e.preventDefault(); openDemoVersionModal(); },
+                  className: "underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700 transition-colors"
+                }, "Denunciar anúncio")
               )
             )
           ),
 
           // Corretor Especialista
-          h('section', { className: "card-surface rounded-[32px] border border-slate-200 p-5 sm:p-7 md:p-10 shadow-2xl space-y-8 relative overflow-hidden" },
-            h('div', { className: "absolute -top-20 -right-24 w-64 h-64 bg-brand-100/70 rounded-full blur-3xl pointer-events-none" }),
-            h('div', { className: "absolute -bottom-24 -left-20 w-64 h-64 bg-slate-200/80 rounded-full blur-3xl pointer-events-none" }),
+          h('section', { className: "ambient-section ambient-section--default journey-section-balanced-ambient space-y-6" },
+            h('div', { className: "flex justify-start" },
+              h('span', { className: "aptidao-pill-neutral" },
+                h('span', {}, "Conheça o corretor")
+              )
+            ),
+            h('div', { className: "ambient-content ambient-main-box ambient-float ambient-float--slow card-surface rounded-[32px] border border-slate-200 p-5 sm:p-7 md:p-10 shadow-2xl space-y-8 relative overflow-hidden" },
+            h('div', { className: "absolute -bottom-24 -left-20 w-64 h-64 bg-slate-200/55 rounded-full blur-3xl pointer-events-none" }),
 
-            h('div', { className: "relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4" },
+            h('div', { className: "relative flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4" },
               h('div', { className: "space-y-2" },
-                h('p', { className: "text-[10px] font-black uppercase tracking-widest text-brand-700" }, "Corretor Responsável"),
                 h('h2', { className: "text-3xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight" }, "Competência técnica e histórico reputacional em transações de fazendas"),
                 h('p', { className: "text-sm text-slate-500 max-w-3xl" }, "Condução comercial com diligência fundiária, leitura técnica do ativo e negociação estruturada para proteger comprador e vendedor em todas as fases da operação.")
+              ),
+              h('button', {
+                onClick: openDemoVersionModal,
+                className: "self-end lg:self-start inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-100/90 px-4 py-2 text-[11px] font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/30 sm:text-xs"
+              },
+                "Conhecer portfolio de fazendas do Rodrigo"
               )
             ),
 
@@ -994,7 +2866,6 @@
                   }),
                   h('div', { className: "space-y-4" },
                     h('h3', { className: "text-2xl font-black text-slate-900 leading-tight" }, "Rodrigo Portinhola"),
-                    h('p', { className: "text-xs font-black uppercase tracking-widest text-brand-700" }, "Corretor especializado em Fazendas"),
                     h('p', { className: "text-sm text-slate-500" }, "Especialista em compra e venda de propriedades rurais produtivas, com atuação focada em Minas Gerais, Goiás e MATOPIBA."),
                     h('div', { className: "flex flex-wrap items-center gap-2 pt-1" },
                       socialLinks.map((item) =>
@@ -1005,9 +2876,9 @@
                           rel: item.href.startsWith('mailto:') ? undefined : "noopener noreferrer",
                           title: item.label,
                           'aria-label': item.label,
-                          className: "group inline-flex h-10 w-10 items-center justify-center rounded-xl border border-brand-200 bg-brand-50 text-brand-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-700 hover:text-white hover:border-brand-700"
+                          className: "broker-social-icon"
                         },
-                          h(item.icon, { className: "h-4 w-4" })
+                          h(item.icon, { className: "h-5 w-5", strokeWidth: 1.5 })
                         )
                       )
                     )
@@ -1016,20 +2887,20 @@
 
                 h('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" },
                   h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Fazendas transacionadas"),
-                    h('p', { className: "text-lg font-black text-slate-900" }, "96")
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Valor do portfolio"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "R$ 250 milhões")
                   ),
                   h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Volume negociado"),
-                    h('p', { className: "text-lg font-black text-slate-900" }, "R$ 2,4 bi")
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Atuação focada no"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "Sul de MG")
                   ),
                   h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Clientes recorrentes"),
-                    h('p', { className: "text-lg font-black text-slate-900" }, "42")
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Fazendas vendidas"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "27")
                   ),
                   h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" },
-                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "NPS médio"),
-                    h('p', { className: "text-lg font-black text-brand-700" }, "91")
+                    h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1" }, "Clientes atendidos"),
+                    h('p', { className: "text-lg font-black text-slate-900" }, "+100")
                   )
                 ),
 
@@ -1059,7 +2930,7 @@
                 )
               ),
 
-              h('div', { className: "space-y-4" },
+              h('div', { className: "flex h-full flex-col gap-4" },
                 h('div', { className: "bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-sm" },
                   h('h4', { className: "text-lg font-black text-slate-900 uppercase tracking-tight" }, "Credenciais e reputação"),
                   h('div', { className: "space-y-3 text-sm" },
@@ -1074,76 +2945,90 @@
                     h('div', { className: "flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200" },
                       h(Search, { className: "w-4 h-4 mt-0.5 text-brand-700 shrink-0" }),
                       h('p', { className: "text-slate-600 leading-relaxed" }, h('span', { className: "font-bold text-slate-800" }, "Histórico de recomendação"), " com taxa elevada de clientes recorrentes e indicações qualificadas.")
+                    ),
+                    h('div', { className: "flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200" },
+                      h(ShieldCheck, { className: "w-4 h-4 mt-0.5 text-brand-700 shrink-0" }),
+                      h('p', { className: "text-slate-600 leading-relaxed" }, h('span', { className: "font-bold text-slate-800" }, "Processo auditável ponta a ponta"), " com documentação organizada, trilha de decisão e acompanhamento até o fechamento.")
                     )
                   )
                 ),
 
-                h('div', { className: "bg-slate-900 rounded-3xl p-6 text-white space-y-5 shadow-xl" },
+                h('div', { className: "mt-auto bg-gradient-to-br from-black via-[#052e16] to-[#14532d] rounded-3xl p-6 text-white space-y-5 shadow-xl" },
                   h('div', { className: "space-y-2" },
                     h('p', { className: "text-[10px] font-black uppercase tracking-widest text-brand-200" }, "Atendimento Premium"),
                     h('h4', { className: "text-2xl font-black leading-tight" }, "Acompanhamento do início ao fechamento"),
                     h('p', { className: "text-sm text-slate-300 leading-relaxed" }, "Suporte estratégico em proposta, diligência documental, negociação e alinhamento final entre as partes para uma transação segura.")
                   ),
                   h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-3" },
-                    h('button', { onClick: openLeadCaptureModal, className: "rounded-xl bg-brand-600 hover:bg-brand-700 text-white py-3 px-4 text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2" },
+                    h('button', { onClick: openLeadCaptureModal, className: "rounded-xl border border-slate-600 hover:border-slate-400 text-slate-100 py-3 px-4 text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2" },
                       h(Phone, { className: "w-4 h-4" }),
                       "Falar com corretor"
                     ),
                     h('button', { onClick: openLeadCaptureModal, className: "rounded-xl border border-slate-600 hover:border-slate-400 text-slate-100 py-3 px-4 text-xs font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2" },
-                      "Ver histórico completo ",
+                      "Agendar uma conversa ",
                       h(ExternalLink, { className: "w-4 h-4" })
                     )
                   )
                 )
               )
             )
-          ),
+          )
+        ),
 
           // Quebra de Página (Fundo Escuro + Chat)
           h('section', {
-            className: "w-screen overflow-hidden border-y border-[#173327]/60",
+            className: "ambient-section ambient-section--harmonized chat-mist-green-section w-screen overflow-hidden",
             style: { marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)" }
           },
-            h('div', { className: "relative min-h-[420px] sm:min-h-[540px] bg-gradient-to-b from-[#03150c] via-[#072418] to-[#000000]" },
-              h('div', { className: "absolute inset-0 bg-[radial-gradient(circle_at_18%_80%,rgba(34,197,94,0.2),transparent_45%),radial-gradient(circle_at_82%_16%,rgba(21,128,61,0.22),transparent_42%)]" }),
-              h('div', { className: "relative h-full w-full flex items-center justify-center px-6 py-16 sm:py-20" },
+            h('div', { className: "relative min-h-[460px] sm:min-h-[620px]" },
+              h('div', { className: "chat-mist-green-glow" }),
+              h('div', { className: "chat-mist-green-soften" }),
+              h('div', { className: "chat-mist-green-grain" }),
+              h('div', { className: "chat-mist-green-transition-top" }),
+              h('div', { className: "chat-mist-green-transition-bottom" }),
+              h('div', { className: "relative z-10 h-full w-full flex items-center justify-center px-6 py-16 sm:py-20" },
                 h('div', { className: "w-full max-w-5xl space-y-6 sm:space-y-8 text-left" },
-                  h('h3', { className: "text-3xl sm:text-5xl font-black leading-[1.05] text-white/95 tracking-tight" },
-                    "Análise técnica em profundidade para a próxima etapa da decisão."
+                  h('h3', { className: "text-3xl sm:text-5xl font-black leading-[1.05] text-slate-900 tracking-tight text-center" },
+                    "Análise técnica em profundidade para a próxima etapa da decisão"
                   ),
-                  h('p', { className: "text-base sm:text-xl text-white/65 max-w-5xl mx-auto text-center" },
-                    "Abaixo, você pode perguntar todas as suas dúvidas sobre esta propriedade."
+                  h('p', { className: "text-base sm:text-xl text-slate-600 max-w-5xl mx-auto text-center" },
+                    "Aqui você pode tirar todas as suas dúvidas sobre a propriedade."
                   ),
-                  h('div', { className: "rounded-[28px] border border-slate-200 bg-white shadow-2xl overflow-hidden mt-4" },
-                    h('div', { className: "px-6 sm:px-8 pt-6 sm:pt-8" },
-                      h('textarea', {
-                        rows: 5,
-                        placeholder: "Ex: Qual é o preço por hectare e a faixa de negociação?",
-                        value: aiPrompt,
-                        onChange: (e) => setAiPrompt(e.target.value),
-                        className: "w-full min-h-[150px] sm:min-h-[170px] resize-none bg-transparent p-0 text-lg sm:text-2xl leading-tight text-slate-700 placeholder:text-slate-500",
-                        style: { border: 'none', boxShadow: 'none', outline: 'none' }
-                      })
-                    ),
-                    h('div', { className: "px-6 sm:px-8 pb-4" },
-                      h('p', { className: "text-xs sm:text-sm font-bold text-slate-500 mb-2" }, "Perguntas rápidas"),
-                      h('div', { className: "flex flex-wrap gap-2" },
-                        quickFarmQuestions.map((question, idx) =>
-                          h('button', {
-                            key: `quick-question-${idx}`,
-                            onClick: () => setAiPrompt(question),
-                            className: "rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors"
-                          }, question)
+                  h('div', { className: "relative isolate mt-4" },
+                    h('div', { className: "pointer-events-none absolute inset-0 -z-20 chat-stack-layer-a rounded-[28px] border border-emerald-200/55 bg-emerald-100/45 shadow-[0_16px_40px_rgba(20,92,66,0.14)]" }),
+                    h('div', { className: "pointer-events-none absolute inset-0 -z-30 chat-stack-layer-b rounded-[28px] border border-emerald-300/45 bg-emerald-200/28 shadow-[0_20px_44px_rgba(17,78,58,0.12)]" }),
+                    h('div', { className: "relative z-10 rounded-[28px] border border-slate-200/90 bg-white/95 backdrop-blur-sm shadow-[0_20px_50px_rgba(15,23,42,0.10)] overflow-hidden" },
+                      h('div', { className: "px-6 sm:px-8 pt-6 sm:pt-8" },
+                        h('textarea', {
+                          ref: aiPromptInputRef,
+                          rows: 5,
+                          placeholder: aiPromptPlaceholder,
+                          value: aiPrompt,
+                          onChange: (e) => setAiPrompt(e.target.value),
+                          className: "w-full min-h-[150px] sm:min-h-[170px] resize-none bg-transparent p-0 text-lg sm:text-2xl leading-tight text-slate-700 placeholder:text-slate-500",
+                          style: { border: 'none', boxShadow: 'none', outline: 'none', background: '#f3f4f6' }
+                        })
+                      ),
+                      h('div', { className: "px-6 sm:px-8 pb-4" },
+                        h('p', { className: "text-xs sm:text-sm font-bold text-slate-500 mb-2" }, "Perguntas rápidas"),
+                        h('div', { className: "flex flex-wrap gap-2" },
+                          quickFarmQuestions.map((question, idx) =>
+                            h('button', {
+                              key: `quick-question-${idx}`,
+                              onClick: () => setAiPrompt(question),
+                              className: "rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors"
+                            }, question)
+                          )
                         )
-                      )
-                    ),
-                    h('div', { className: "border-t border-slate-200/90 px-6 sm:px-8 py-4 flex items-center justify-end" },
-                      h('button', {
-                        onClick: openLeadCaptureModal,
-                        className: "inline-flex w-12 h-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-900 to-brand-600 text-white shadow-[0_10px_24px_rgba(15,23,42,0.25)] hover:brightness-110 transition-all",
-                        'aria-label': "Enviar para IA"
-                      },
-                        h('span', { className: "text-xl leading-none" }, "↑")
+                      ),
+                      h('div', { className: "border-t border-slate-200/90 px-6 sm:px-8 py-4 flex items-center justify-end" },
+                        h('button', {
+                          onClick: openDemoVersionModal,
+                          className: "inline-flex w-12 h-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-900 to-brand-600 text-white shadow-[0_10px_24px_rgba(43,102,79,0.22)] hover:brightness-110 transition-all",
+                          'aria-label': "Enviar para IA"
+                        },
+                          h(ChevronRight, { className: "w-5 h-5" })
+                        )
                       )
                     )
                   )
@@ -1152,36 +3037,183 @@
             )
           ),
 
-          // Missões Técnicas
-          h('section', { className: "space-y-8" },
-            h('div', { className: "text-center max-w-2xl mx-auto" },
-              h('h2', { className: "text-3xl font-black text-slate-900 mb-3 uppercase tracking-tighter" }, "Diagnóstico Multidimensional"),
-              h('p', { className: "text-slate-500 font-light" }, "Exploração dos pilares de viabilidade do ativo.")
+          // Jornada técnica (estilo Discover)
+          h('section', { className: "ambient-section ambient-section--default journey-section-balanced-ambient space-y-6" },
+            h('div', { className: "px-5 pt-3 pb-4 sm:px-8 sm:pt-4 sm:pb-5 xl:px-10 xl:pt-5 xl:pb-6 text-center max-w-6xl mx-auto space-y-3" },
+              h('span', { className: "journey-tech-kicker" }, "Entenda os tópicos analisados")
             ),
-            h('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" },
-              missions.map((mission, idx) =>
-                h(MissionCard, {
-                  key: idx,
-                  ...mission,
-                  onClick: () => setSelectedMission(mission)
+            h('div', { className: "mx-auto w-full max-w-[1240px] grid grid-cols-1 items-start gap-4 xl:grid-cols-[0.95fr_1.05fr] xl:gap-4" },
+              h('div', { className: "ambient-main-box card-surface w-full max-w-[580px] mx-auto xl:mx-0 xl:justify-self-end rounded-3xl border border-slate-200 p-4 sm:p-6 xl:p-7 space-y-2 sm:space-y-3" },
+                journeyTopics.map((topic, idx) => {
+                  const isActive = activeJourneyTopic && activeJourneyTopic.id === topic.id;
+                  const topicIndex = String(idx + 1).padStart(2, '0');
+                  const topicLabel = topic.tabLabel || topic.title || `Tópico ${topicIndex}`;
+                  return h('button', {
+                    key: `journey-topic-${topic.id}`,
+                    type: "button",
+                    onClick: () => setActiveJourneyTopicId(topic.id),
+                    className: `journey-topic-item ${isActive ? 'is-active' : ''}`,
+                    'aria-pressed': isActive ? "true" : "false",
+                    'aria-label': `${topicLabel} ${topicIndex}`
+                  },
+                    h('span', { className: "journey-topic-label" },
+                      topicLabel,
+                      h('span', { className: "journey-topic-index" }, topicIndex)
+                    )
+                  );
+                })
+              ),
+              h('div', { className: "ambient-main-box ambient-float ambient-float--fast card-surface xl:justify-self-start rounded-3xl border border-slate-200 p-0 pb-5 sm:pb-6 xl:pb-7 space-y-5 sm:space-y-6 overflow-hidden" },
+                h('div', { className: "journey-topic-detail-media" },
+                  activeJourneyTopic && activeJourneyTopic.image
+                    ? h('img', {
+                        key: `journey-topic-image-${activeJourneyTopic.id}-${activeJourneyTopic.image}`,
+                        src: activeJourneyTopic.image,
+                        alt: activeJourneyTopic.title || "Tópico técnico da fazenda",
+                        className: "journey-topic-detail-image"
+                      })
+                    : h('div', { className: "journey-topic-detail-image flex items-center justify-center text-slate-500 font-semibold" }, "Imagem do tópico indisponível")
+                ),
+                h('div', { className: "journey-topic-detail-copy px-5 sm:px-6 xl:px-7 space-y-2.5" },
+                  h('div', { className: "flex justify-start" },
+                    h('span', { className: "aptidao-pill-neutral" },
+                      h('span', {}, "Por que analisar isso é importante?")
+                    )
+                  ),
+                  h('p', { className: "text-2xl sm:text-3xl font-black text-slate-900 leading-tight tracking-tight" },
+                    journeyWhyAnalyzeTypedText,
+                    h('span', { className: "journey-typing-caret", 'aria-hidden': "true" }, "|")
+                  )
+                )
+              )
+            )
+          ),
+
+          // Quebra de Página (Vitrine de Mercado)
+          h('section', {
+            className: "ambient-section ambient-section--harmonized relative overflow-hidden rounded-[32px] border border-slate-200 min-h-[1120px] sm:min-h-[1240px] px-4 sm:px-8 py-10 sm:py-14 shadow-2xl",
+            style: {
+              backgroundImage: "url('imagens/landing_page.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center"
+            }
+          },
+            h('div', { className: "absolute inset-0 bg-gradient-to-br from-[#052e16]/72 via-[#14532d]/45 to-[#0f172a]/45 backdrop-blur-[2px]" }),
+            h('div', { className: "absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(240,253,244,0.35),transparent_42%),radial-gradient(circle_at_82%_88%,rgba(220,252,231,0.2),transparent_45%)] backdrop-blur-sm" }),
+            h('div', { className: "ambient-content relative z-10 mx-auto flex min-h-[980px] sm:min-h-[1080px] w-full max-w-6xl flex-col items-center justify-center gap-8" },
+              h('div', { className: "text-center" },
+                h('span', { className: "aptidao-pill-neutral" },
+                  h('span', {}, "Explore mais")
+                ),
+                h('h3', { className: "mt-4 text-3xl sm:text-5xl font-black tracking-tight text-white" }, "Outras fazendas à venda")
+              ),
+              h('div', { className: "relative w-full max-w-4xl" },
+                h('button', {
+                  type: "button",
+                  onClick: showPreviousMarketListing,
+                  className: "hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 h-12 w-12 items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-lg transition-all hover:scale-105 hover:bg-white"
+                },
+                  h(ChevronLeft, { className: "w-5 h-5" })
+                ),
+                h('div', { className: "ambient-main-box ambient-float ambient-float--slow market-glass-panel mx-auto w-full max-w-3xl rounded-3xl p-6 sm:p-8" },
+                  h('p', { className: "text-2xl sm:text-4xl font-black leading-tight text-slate-900 tracking-tight" }, activeMarketListing.title),
+                  h('p', { className: "mt-3 text-sm sm:text-base text-slate-600 leading-relaxed" }, activeMarketListing.summary),
+                  h('div', { className: "mt-6 flex flex-col sm:flex-row sm:items-center gap-4" },
+                    h('img', {
+                      src: "imagens/rodrigo_moura.png",
+                      alt: "Rodrigo Portinhola",
+                      className: "h-[132px] w-[132px] rounded-full object-cover border border-brand-200 shadow-sm shrink-0"
+                    }),
+                    h('div', { className: "space-y-3" },
+                      h('p', { className: "text-base font-bold text-slate-900 leading-tight" }, "Rodrigo Portinhola"),
+                      h('div', { className: "flex flex-wrap items-center gap-2" },
+                        socialLinks.map((item) =>
+                          h('a', {
+                            key: `market-broker-social-${item.label}`,
+                            href: item.href,
+                            target: item.href.startsWith('mailto:') ? undefined : "_blank",
+                            rel: item.href.startsWith('mailto:') ? undefined : "noopener noreferrer",
+                            title: item.label,
+                            'aria-label': item.label,
+                            className: "broker-social-icon"
+                          },
+                            h(item.icon, { className: "h-5 w-5", strokeWidth: 1.5 })
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  h('div', { className: "mt-6" },
+                    h('button', {
+                      onClick: openDemoVersionModal,
+                      className: "inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg"
+                    },
+                      "Ver detalhes do anúncio ",
+                      h(ChevronRight, { className: "w-4 h-4 cta-icon-blink" })
+                    )
+                  )
+                ),
+                h('button', {
+                  type: "button",
+                  onClick: showNextMarketListing,
+                  className: "hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 h-12 w-12 items-center justify-center rounded-full bg-white/85 text-slate-700 shadow-lg transition-all hover:scale-105 hover:bg-white"
+                },
+                  h(ChevronRight, { className: "w-5 h-5" })
+                )
+              ),
+              h('div', { className: "sm:hidden flex items-center justify-center gap-3" },
+                h('button', {
+                  type: "button",
+                  onClick: showPreviousMarketListing,
+                  className: "h-10 w-10 rounded-full border border-white/40 bg-white/85 text-slate-700 shadow"
+                }, h(ChevronLeft, { className: "w-4 h-4 mx-auto" })),
+                h('button', {
+                  type: "button",
+                  onClick: showNextMarketListing,
+                  className: "h-10 w-10 rounded-full border border-white/40 bg-white/85 text-slate-700 shadow"
+                }, h(ChevronRight, { className: "w-4 h-4 mx-auto" }))
+              ),
+              h('div', { className: "w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5" },
+                h(StatCard, {
+                  label: "Preço total",
+                  value: activeMarketListing.priceTotal,
+                  className: "market-glass-stat",
+                  labelClassName: "text-[10px]",
+                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
+                }),
+                h(StatCard, {
+                  label: "Preço por hectare",
+                  value: activeMarketListing.pricePerHa,
+                  className: "market-glass-stat",
+                  labelClassName: "text-[10px]",
+                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
+                }),
+                h(StatCard, {
+                  label: "Área total",
+                  value: activeMarketListing.area,
+                  className: "market-glass-stat",
+                  labelClassName: "text-[10px]",
+                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
                 })
               )
             )
           ),
 
-          // Conformidade e Auditoria
-          h('section', { className: "space-y-8" },
-            h('div', { className: "text-center max-w-2xl mx-auto" },
-              h('h2', { className: "text-3xl font-black text-slate-900 mb-3 uppercase tracking-tighter" }, "Conformidade e Auditoria"),
-              h('p', { className: "text-slate-500 font-light" }, "Checklist regulatório da propriedade e pontos de atenção para compra segura.")
-            ),
-            h('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" },
-              complianceMissions.map((item, idx) =>
-                h(MissionCard, {
-                  key: `compliance-${idx}`,
-                  ...item,
-                  onClick: () => setSelectedMission(item)
-                })
+          // Seção CTA final
+          h('section', { className: "ambient-section ambient-section--harmonized ready-start-section rounded-[32px] border border-[#d5e4da] px-8 py-12 sm:px-12 sm:py-16 lg:px-20 lg:py-20 shadow-2xl" },
+            h('div', { className: "ready-start-glow" }),
+            h('div', { className: "ready-start-bottom-haze" }),
+            h('div', { className: "ambient-content relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12" },
+              h('div', { className: "space-y-4" },
+                h('h3', { className: "text-[clamp(2.2rem,5vw,5rem)] leading-[1.03] font-black tracking-tight text-slate-900" }, "Quer ser um parceiro?"),
+                h('p', { className: "text-[clamp(1.4rem,2.7vw,3rem)] leading-tight font-medium text-slate-700" }, "Entre em contato no link ao lado")
+              ),
+              h('button', {
+                onClick: contactPartnershipOnWhatsApp,
+                className: "self-start lg:self-center inline-flex items-center justify-center gap-2 rounded-full bg-brand-800 hover:bg-brand-900 text-white px-4 xl:px-8 h-9 xl:h-12 text-sm xl:text-lg font-black transition-colors"
+              },
+                "Agendar uma conversa ",
+                h(Phone, { className: "w-4 h-4" })
               )
             )
           ),
@@ -1189,58 +3221,81 @@
           // Footer
           h('footer', { className: "pt-12" },
             h('div', { className: "rounded-[32px] border border-slate-200 bg-slate-100/95 px-5 sm:px-7 py-8 sm:py-10 text-slate-900 shadow-2xl md:px-10" },
-              h('div', { className: "grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr]" },
-                h('div', { className: "space-y-5" },
+              h('div', { className: "grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]" },
+                h('div', { className: "flex h-full flex-col items-start gap-5 text-left" },
                   h('img', {
                     src: "imagens/logo_anuncio.png",
                     alt: "Talhão.ai",
-                    className: "h-12 w-auto object-contain"
+                    className: "h-12 w-auto object-contain self-start"
                   }),
                   h('p', { className: "max-w-md text-sm leading-relaxed text-slate-600" },
-                    "A talhão.ai conecta inteligência geoespacial, diligência fundiária e análise produtiva para acelerar decisões de compra e venda de fazendas."
+                    "A talhão.ai oferece mais eficiência nas transações imobiliárias rurais em todo o Brasil"
+                  ),
+                  h('p', { className: "mt-auto text-sm font-semibold text-slate-700" },
+                    "São Paulo - Brasil"
                   )
                 ),
 
                 h('div', { className: "space-y-4" },
-                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Plataforma"),
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Soluções"),
                   h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Análise de Fazendas"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Relatório Técnico"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Diligência Jurídica"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Mapa Multicamadas")
+                    footerProductLinks.map((title, idx) =>
+                      h('a', {
+                        key: `footer-product-${idx}-${title}`,
+                        href: "#",
+                        onClick: (e) => { e.preventDefault(); openDemoVersionModal(); },
+                        className: "transition-colors hover:text-brand-700"
+                      }, title)
+                    )
+                  )
+                ),
+
+                h('div', { className: "space-y-4" },
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Aplicações"),
+                  h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
+                    applicationOptions.map((option) =>
+                      h('a', {
+                        key: `footer-application-${option.title}`,
+                        href: "#",
+                        onClick: (e) => { e.preventDefault(); openDemoVersionModal(); },
+                        className: "transition-colors hover:text-brand-700"
+                      }, option.title)
+                    )
                   )
                 ),
 
                 h('div', { className: "space-y-4" },
                   h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Recursos"),
                   h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Central de Ajuda"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Casos de Uso"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Política de Privacidade"),
-                    h('a', { href: "#", onClick: (e) => { e.preventDefault(); openDemoVersionModal(); }, className: "transition-colors hover:text-brand-700" }, "Segurança & LGPD")
+                    resourceOptions.map((option) =>
+                      h('a', {
+                        key: `footer-resource-${option.title}`,
+                        href: "#",
+                        onClick: (e) => { e.preventDefault(); openDemoVersionModal(); },
+                        className: "transition-colors hover:text-brand-700"
+                      }, option.title)
+                    )
                   )
                 ),
 
                 h('div', { className: "space-y-4" },
-                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Fale com Especialista"),
+                  h('p', { className: "text-xs font-black uppercase tracking-widest text-slate-500" }, "Institucional"),
                   h('div', { className: "flex flex-col gap-2 text-sm font-semibold text-slate-800" },
-                    h('span', {}, "contato@talhao.ai"),
-                    h('span', {}, "+55 (11) 99999-0000"),
-                    h('span', {}, "São Paulo • Brasil")
-                  ),
-                  h('button', {
-                    onClick: openDemoVersionModal,
-                    className: "mt-2 inline-flex items-center gap-2 rounded-full bg-brand-600 px-4 py-2 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-brand-700"
-                  },
-                    "Agendar demonstração ",
-                    h(ChevronRight, { className: "h-3 w-3" })
+                    footerInstitutionalOptions.map((item) =>
+                      h('a', {
+                        key: `footer-institutional-${item}`,
+                        href: "#",
+                        onClick: (e) => { e.preventDefault(); openDemoVersionModal(); },
+                        className: "transition-colors hover:text-brand-700"
+                      }, item)
+                    )
                   )
                 )
               ),
 
               h('div', { className: "mt-10 flex flex-col gap-3 border-t border-slate-300 pt-5 text-[10px] font-bold uppercase tracking-widest text-slate-500 sm:flex-row sm:items-center sm:justify-between" },
                 h('span', {}, "Dados Sentinel-2, INCRA e SIGEF • Atualizado em Jan/2026"),
-                h('span', {}, "© 2026 talhão.ai. Todos os direitos reservados.")
+                h('span', {}, "© 2026 talhão.ai | Todos os direitos reservados")
               )
             )
           )
@@ -1285,7 +3340,7 @@
           onClick: closeDemoVersionModal
         },
           h('div', {
-            className: "w-full max-w-xl rounded-3xl border border-brand-300/30 bg-gradient-to-br from-brand-900 via-brand-800 to-black text-white shadow-2xl p-8 md:p-10 relative animate-in fade-in zoom-in duration-200",
+            className: "w-full max-w-xl rounded-3xl border border-slate-200 bg-white/95 backdrop-blur-xl shadow-2xl p-8 md:p-10 relative animate-in fade-in zoom-in duration-200",
             onClick: (e) => e.stopPropagation(),
             role: "dialog",
             'aria-modal': "true",
@@ -1294,151 +3349,28 @@
           },
             h('button', {
               onClick: closeDemoVersionModal,
-              className: "absolute top-4 right-4 text-white/70 hover:text-white transition",
+              className: "absolute top-4 right-4 text-slate-500 hover:text-slate-900 transition",
               'aria-label': "Fechar"
             },
               h(X, { className: "w-5 h-5" })
             ),
-            h('h3', { id: "demo-modal-title", className: "text-3xl font-black leading-tight" }, "Versão Demo"),
-            h('p', { id: "demo-modal-desc", className: "text-white/85 mt-2" }, "Esta é uma versão demo. Para saber mais, preencha seus dados abaixo e nossa equipe entrará em contato."),
-            h('form', {
-              className: "mt-6 grid gap-4",
-              onSubmit: async (e) => {
-                e.preventDefault();
-                const normalized = {
-                  nome: demoForm.nome.trim(),
-                  telefone: demoForm.telefone.trim(),
-                  cidade: demoForm.cidade.trim(),
-                  estado: demoForm.estado.trim()
-                };
-                const phoneDigits = normalized.telefone.replace(/\D/g, '');
-
-                if (!normalized.nome || !normalized.telefone || !normalized.cidade || !normalized.estado) {
-                  setDemoFormError('Preencha todos os campos para continuar.');
-                  setDemoFormSent(false);
-                  return;
-                }
-
-                if (phoneDigits.length < 10) {
-                  setDemoFormError('Informe um telefone válido.');
-                  setDemoFormSent(false);
-                  return;
-                }
-
-                setDemoFormError('');
-                setDemoFormSubmitting(true);
-                try {
-                  await submitFarmLead({
-                    formType: 'demo_signup',
-                    nome: normalized.nome,
-                    telefone: normalized.telefone,
-                    cidade: normalized.cidade,
-                    estado: normalized.estado
-                  });
-                  setDemoFormSent(true);
-                } catch (error) {
-                  setDemoFormSent(false);
-                  setDemoFormError(error && error.message ? error.message : 'Não foi possível enviar seus dados. Tente novamente.');
-                } finally {
-                  setDemoFormSubmitting(false);
-                }
-              }
-            },
-              h('label', { className: "text-sm font-semibold text-brand-100" },
-                "Nome",
-                h('input', {
-                  type: "text",
-                  name: "nome",
-                  required: true,
-                  value: demoForm.nome,
-                  onChange: (e) => setDemoForm((prev) => ({ ...prev, nome: e.target.value })),
-                  className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
-                  placeholder: "Seu nome completo"
-                })
-              ),
-              h('label', { className: "text-sm font-semibold text-brand-100" },
-                "Telefone",
-                h('input', {
-                  type: "tel",
-                  name: "telefone",
-                  required: true,
-                  value: demoForm.telefone,
-                  onChange: (e) => setDemoForm((prev) => ({ ...prev, telefone: e.target.value })),
-                  className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
-                  placeholder: "(00) 00000-0000"
-                })
-              ),
-              h('div', { className: "grid gap-4 md:grid-cols-2" },
-                h('label', { className: "text-sm font-semibold text-brand-100" },
-                  "Cidade",
-                  h('input', {
-                    type: "text",
-                    name: "cidade",
-                    required: true,
-                    value: demoForm.cidade,
-                    onChange: (e) => setDemoForm((prev) => ({ ...prev, cidade: e.target.value })),
-                    className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
-                    placeholder: "Sua cidade"
-                  })
-                ),
-                h('label', { className: "text-sm font-semibold text-brand-100" },
-                  "Estado",
-                  h('input', {
-                    type: "text",
-                    name: "estado",
-                    required: true,
-                    value: demoForm.estado,
-                    onChange: (e) => setDemoForm((prev) => ({ ...prev, estado: e.target.value })),
-                    className: "mt-2 w-full rounded-2xl border border-white/25 bg-white/95 px-4 py-3 text-base text-slate-900 focus:border-brand-200 focus:ring-4 focus:ring-brand-300/30 outline-none",
-                    placeholder: "UF"
-                  })
-                )
-              ),
-              h('button', {
-                type: "submit",
-                disabled: demoFormSubmitting,
-                className: "mt-2 w-full rounded-2xl py-3 text-base font-black bg-white text-brand-900 border border-white shadow-lg hover:bg-brand-50 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-              }, demoFormSubmitting ? "Enviando..." : "Enviar"),
-              demoFormError && h('p', { className: "text-sm text-rose-200 font-semibold" }, demoFormError),
-              demoFormSent && h('p', { className: "text-sm text-brand-100 font-semibold" }, "Recebemos suas informações. Em breve entraremos em contato.")
-            )
-          )
-        ),
-
-        // Modal Missão
-        selectedMission && h('div', {
-          className: "fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm"
-        },
-          h('div', { className: "bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden" },
-            h('div', { className: "p-6 flex justify-between items-center border-b" },
-              h('div', { className: "flex items-center gap-3" },
-                (() => {
-                  const Icon = selectedMission.icon;
-                  return h(Icon, { className: "w-6 h-6 text-brand-600" });
-                })(),
-                h('h3', { className: "font-black text-xl" }, selectedMission.title)
-              ),
-              h('button', {
-                onClick: () => setSelectedMission(null),
-                className: "p-2 hover:bg-slate-100 rounded-full"
-              },
-                h(X, { className: "w-5 h-5" })
-              )
+            h('h3', { id: "demo-modal-title", className: "text-3xl font-black leading-tight text-slate-900" }, "Visualização demo"),
+            h('p', { id: "demo-modal-desc", className: "text-slate-600 mt-2" },
+              "Esta é uma visualização demo da",
+              h('img', {
+                src: "imagens/logo_anuncio.png",
+                alt: "Talhão.ai",
+                className: "inline-block h-10 w-auto align-middle ml-2"
+              })
             ),
-            h('div', { className: "p-8 space-y-6" },
-              h('p', { className: "text-slate-500 leading-relaxed" }, selectedMission.description),
-              h('div', { className: "space-y-3" },
-                selectedMission.kpis.map((k, i) =>
-                  h('div', { key: i, className: "flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100" },
-                    h('span', { className: "text-sm font-bold text-slate-700" }, k),
-                    h(CheckCircle2, { className: "w-4 h-4 text-brand-500" })
-                  )
-                )
-              ),
-              h('button', { onClick: openLeadCaptureModal, className: "w-full py-4 bg-brand-50 text-brand-700 font-black rounded-xl text-sm uppercase tracking-widest hover:bg-brand-100 transition-colors" },
-                "Solicitar Laudo Completo"
-              )
-            )
+            h('div', { className: "mt-5 rounded-2xl border border-brand-100 bg-brand-50/80 p-4" },
+              h('p', { className: "text-sm leading-relaxed text-slate-700" }, "Alguns recursos e informações podem estar limitados nesta versão")
+            ),
+            h('button', {
+              type: "button",
+              onClick: closeDemoVersionModal,
+              className: "mt-6 w-full rounded-2xl py-3 text-base font-black bg-gradient-to-r from-black via-[#052e16] to-[#166534] text-white border border-slate-900 shadow-lg hover:brightness-110 transition-all"
+            }, "Entendi")
           )
         ),
 
@@ -1561,7 +3493,7 @@
               className: "absolute bottom-16 sm:bottom-20 right-4 sm:right-6 z-10 max-w-[280px] rounded-lg border border-brand-200 bg-brand-700/95 px-3 py-2 shadow-lg backdrop-blur-sm"
             },
               h('p', { className: "text-[10px] sm:text-[11px] font-bold text-white leading-snug" },
-                "Legendas detalhadas disponíveis apenas no relatório técnico completo."
+                "Legendas detalhadas disponíveis apenas no relatório técnico completo"
               )
             ),
             h('div', { className: "absolute bottom-4 left-1/2 -translate-x-1/2 max-w-[calc(100%-1rem)] overflow-x-auto whitespace-nowrap flex items-center gap-1 p-1 bg-slate-900/40 backdrop-blur-md rounded-xl border border-white/20" },
@@ -1621,22 +3553,22 @@
             },
               h(X, { className: "w-5 h-5" })
             ),
-            h('h3', { id: "lead-modal-title", className: "text-3xl font-bold text-slate-900" }, "Quero conhecer mais"),
-            h('p', { id: "lead-modal-desc", className: "text-slate-600 mt-2" }, "Preencha seus dados e entraremos em contato rapidamente."),
+            h('h3', { id: "lead-modal-title", className: "text-3xl font-bold text-slate-900" }, "Quero acessar o relatório"),
+            h('p', { id: "lead-modal-desc", className: "text-slate-600 mt-2" }, "Preencha seus dados para que você recebe o relatório desta propriedade"),
             h('div', { className: "mt-5 rounded-2xl border border-brand-100 bg-brand-50/80 p-4" },
               leadDownloadReady
                 ? h('div', { className: "space-y-3" },
                     h('p', { className: "text-sm leading-relaxed text-brand-900 font-semibold" }, "Dados validados com sucesso. O relatório está disponível para download:"),
-                    h('a', {
-                      href: reportPdfPath,
-                      download: "relatorio_MG_000105467.pdf",
+                    h('button', {
+                      type: "button",
+                      onClick: downloadReportPdf,
                       className: "inline-flex items-center gap-2 rounded-xl bg-brand-700 px-4 py-2 text-xs font-black uppercase tracking-widest text-white hover:bg-brand-800 transition-colors"
                     },
                       "Baixar relatório PDF ",
                       h(ChevronRight, { className: "w-4 h-4" })
                     )
                   )
-                : h('p', { className: "text-sm leading-relaxed text-slate-700" }, "Preencha os dados abaixo para liberar o relatório.")
+                : h('p', { className: "text-sm leading-relaxed text-slate-700" }, "Preencha seus dados para acessar o relatório completo desta propriedade")
             ),
             h('form', {
               className: "mt-6 grid gap-4",
@@ -1675,7 +3607,7 @@
                   setLeadDownloadReady(true);
                 } catch (error) {
                   setLeadDownloadReady(false);
-                  setLeadFormError(error && error.message ? error.message : 'Não foi possível enviar seus dados. Tente novamente.');
+                  setLeadFormError(getLeadErrorMessage(error));
                 } finally {
                   setLeadFormSubmitting(false);
                 }
@@ -1690,7 +3622,7 @@
                   value: leadForm.nome,
                   onChange: (e) => setLeadForm((prev) => ({ ...prev, nome: e.target.value })),
                   className: "mt-2 w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-base text-slate-900 focus:border-brand-700 focus:ring-4 focus:ring-brand-700/15 outline-none",
-                  placeholder: "Seu nome completo"
+                  placeholder: "Seu nome"
                 })
               ),
               h('label', { className: "text-sm font-semibold text-slate-700" },
@@ -1749,3 +3681,4 @@
   </script>
 </body>
 </html>
+
