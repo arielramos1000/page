@@ -82,6 +82,16 @@
       letter-spacing: -0.01em;
     }
 
+    .layout-zoom-shell {
+      width: 100%;
+    }
+
+    @media (min-width: 1280px) {
+      .layout-zoom-shell {
+        zoom: 0.9;
+      }
+    }
+
     .font-mono {
       font-family: 'Space Grotesk';
     }
@@ -2097,9 +2107,10 @@
         : -1;
 
       return h('div', { className: "min-h-screen font-sans text-slate-900 selection:bg-brand-100 antialiased relative" },
-        // Header
-            h('header', { className: "sticky top-0 z-40 pt-3 sm:pt-4" },
-          h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] relative", ref: headerMenuRef },
+        h('div', { className: "layout-zoom-shell" },
+          // Header
+          h('header', { className: "sticky top-0 z-40 pt-3 sm:pt-4" },
+            h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] relative", ref: headerMenuRef },
             h('div', { className: "h-14 xl:h-20 rounded-2xl xl:rounded-full border border-slate-200 bg-slate-100/95 shadow-sm px-3 sm:px-4 xl:px-6 grid grid-cols-[auto_1fr_auto] items-center gap-3 xl:gap-6" },
               h('div', { className: "flex h-full items-center gap-2" },
                 h('img', {
@@ -2174,12 +2185,12 @@
                 )
               )
             )
-          )
-        ),
+            )
+          ),
 
-        // Page Wrapper
-        h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] py-6 xl:py-10" },
-          h('div', { className: "space-y-14 xl:space-y-24" },
+          // Page Wrapper
+          h('div', { className: "w-full max-w-none mx-auto px-4 sm:px-6 xl:px-[160px] py-6 xl:py-10" },
+            h('div', { className: "space-y-14 xl:space-y-24" },
           // Hero Section
           h('section', { className: "ambient-section ambient-section--default grid grid-cols-1 gap-6 xl:gap-8 items-start xl:flex xl:items-center" },
             h('div', { className: "ambient-content space-y-6 xl:flex-[1]" },
@@ -3248,6 +3259,7 @@
                 h('span', {}, "Dados Sentinel-2, INCRA e SIGEF • Atualizado em Jan/2026"),
                 h('span', {}, "© 2026 talhão.ai | Todos os direitos reservados")
               )
+            )
             )
           )
         )
