@@ -1267,58 +1267,6 @@
       }, text);
     };
 
-    const TopicMiniChart = ({ series = [] }) => {
-      const values = Array.isArray(series) && series.length > 0 ? series : [42, 56, 49, 63, 58, 67, 74];
-      const maxValue = Math.max(...values, 1);
-      const minValue = Math.min(...values, 0);
-      const range = Math.max(maxValue - minValue, 1);
-      const xStep = values.length > 1 ? 240 / (values.length - 1) : 0;
-      const points = values.map((value, idx) => {
-        const normalized = (value - minValue) / range;
-        const x = 10 + (idx * xStep);
-        const y = 68 - (normalized * 50);
-        return `${x},${y}`;
-      }).join(' ');
-      const lastX = 10 + ((values.length - 1) * xStep);
-      const areaPoints = `10,68 ${points} ${lastX},68`;
-
-      return h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50/90 px-3 py-3" },
-        h('div', { className: "flex items-center justify-between mb-2" },
-          h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500" }, "Série técnica"),
-          h('p', { className: "text-[11px] font-black uppercase tracking-widest text-brand-700" }, "Tendência")
-        ),
-        h('svg', { viewBox: "0 0 260 80", className: "w-full h-20" },
-          h('line', { x1: "10", y1: "68", x2: "250", y2: "68", stroke: "#cbd5e1", strokeWidth: "1" }),
-          h('line', { x1: "10", y1: "43", x2: "250", y2: "43", stroke: "#e2e8f0", strokeWidth: "1", strokeDasharray: "3 3" }),
-          h('line', { x1: "10", y1: "18", x2: "250", y2: "18", stroke: "#e2e8f0", strokeWidth: "1", strokeDasharray: "3 3" }),
-          h('polygon', {
-            points: areaPoints,
-            fill: "rgba(34,197,94,0.12)"
-          }),
-          h('polyline', {
-            points,
-            fill: "none",
-            stroke: "#166534",
-            strokeWidth: "2.4",
-            strokeLinecap: "round",
-            strokeLinejoin: "round"
-          }),
-          values.map((value, idx) => {
-            const normalized = (value - minValue) / range;
-            const x = 10 + (idx * xStep);
-            const y = 68 - (normalized * 50);
-            return h('circle', {
-              key: `topic-mini-chart-point-${idx}`,
-              cx: x,
-              cy: y,
-              r: "2.5",
-              fill: "#166534"
-            });
-          })
-        )
-      );
-    };
-
     // Componente Principal
     function App() {
       const [activeLayer, setActiveLayer] = useState('perimetro');
@@ -1370,32 +1318,16 @@
         return previewUrl.toString();
       })();
       const aiPromptInputRef = useRef(null);
+      const chatAnalysisSectionRef = useRef(null);
       const reportPdfPath = "arquivos/relatorio_MG_000105467.pdf";
-      const reportPdfFilename = "relatorio_MG_000105467.pdf";
       const isLocalRuntime = window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
       const isNetworkFetchError = (error) => {
         const message = error && error.message ? String(error.message).toLowerCase() : '';
         return message.includes('failed to fetch') || message.includes('networkerror') || message.includes('load failed');
       };
-      const downloadReportPdf = async () => {
-        try {
-          const response = await fetch(reportPdfPath);
-          if (!response.ok) {
-            throw new Error(`Falha ao baixar PDF: ${response.status}`);
-          }
-
-          const blob = await response.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.download = reportPdfFilename;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-          console.error('[farm-page] Não foi possível baixar o relatório sem navegação.', error);
-        }
+      const downloadReportPdf = () => {
+        const absolutePdfUrl = new URL(reportPdfPath, window.location.href).toString();
+        window.open(absolutePdfUrl, '_blank', 'noopener,noreferrer');
       };
       const queueLeadLocally = (payload) => {
         try {
@@ -1639,9 +1571,12 @@
           ],
           miniSeries: [63, 65, 66, 68, 69, 71, 73],
           highlights: [
-            "Ativo com perfil agrícola consolidado e vocação produtiva clara.",
-            "Conjunto técnico e fundiário favorece análise de compra objetiva.",
-            "Boa relação entre potencial operacional e preço por hectare."
+            "Topografia excepcional - 100% mecanizável, máxima eficiência operacional e menor custo produtivo.",
+            "Altitude privilegiada - Condições climáticas ideais para culturas de alto valor agregado.",
+            "Vocação comprovada para culturas perenes - Alta rentabilidade e performance agronômica.",
+            "Documentação 100% regularizada - Inscrita no SIGEF com georreferenciamento validado.",
+            "Região de alta aptidão agrícola - Indicada para projetos intensivos e principais culturas nacionais.",
+            "Preço por hectare atrativo - Oportunidade diferenciada com forte potencial de valorização no longo prazo."
           ]
         },
         {
@@ -1661,9 +1596,9 @@
           ],
           miniSeries: [64, 68, 72, 74, 77, 79, 82],
           highlights: [
-            "Predomínio de inclinações baixas, com boa trafegabilidade.",
-            "Topografia favorece ganho operacional em ciclos mecanizados.",
-            "Intervenções conservacionistas são pontuais e previsíveis."
+            "Fazenda é 100% mecanizável.",
+            "Altitude acima de 1.200 proporciona implantação de culturas tanto temporárias quanto perenes.",
+            "Aproveitamento da área superior a 70% é um excelente aproveitamento comparado com outras regiões."
           ]
         },
         {
@@ -1683,9 +1618,9 @@
           ],
           miniSeries: [58, 60, 61, 63, 65, 66, 68],
           highlights: [
-            "Região com mercado rural ativo e liquidez recorrente.",
-            "Boa conexão com centros de serviço e suporte agrícola.",
-            "Localização contribui para resiliência comercial do ativo."
+            "Fazenda localizada ne região vulcânica entre Poços de Caldas, Caldas e Andradas.",
+            "Região conhecida pela diversidade de cultivos, com forte expansão de cultivos de maior valor agregado como frutas e flores.",
+            "Região conhecida também pelas terras raras, com empresas como Meteoric operando próximo à fazenda."
           ]
         },
         {
@@ -1705,9 +1640,9 @@
           ],
           miniSeries: [49, 51, 54, 56, 57, 59, 61],
           highlights: [
-            "Cadastro ambiental coerente com o perímetro declarado.",
-            "Sem restrição crítica imediata para continuidade de negociação.",
-            "Recomenda-se validação final em diligência documental."
+            "Fazenda não possui nenhum embargo ambiental.",
+            "Não foi identificada nenhuma área degradada ou com desmatamento ilegal.",
+            "CAR disponível para download."
           ]
         },
         {
@@ -1728,9 +1663,8 @@
           ],
           miniSeries: [56, 58, 60, 61, 63, 65, 66],
           highlights: [
-            "Base fundiária com boa aderência aos registros oficiais.",
-            "Baixa incidência de conflito de limites em área produtiva.",
-            "Estrutura documental apta para diligência jurídica final."
+            "Fazenda está georreferenciada, agilizando todo o processo de transferência de posse.",
+            "Arquivos como matrícula, CCIR e ITR estão disponíveis para download."
           ]
         },
         {
@@ -1750,9 +1684,8 @@
           ],
           miniSeries: [55, 58, 63, 66, 62, 68, 72],
           highlights: [
-            "Regime de chuvas consistente para o perfil produtivo local.",
-            "Pontos de captação mapeados para suporte operacional.",
-            "Bom nível de segurança hídrica para planejamento anual."
+            "Fazenda tem vazão disponível para obter outorga de irrigação para 100% da área aproveitável.",
+            "Vazão a ser outorgada varia de acordo com a cultura implantada pelo comprador."
           ]
         },
         {
@@ -1772,9 +1705,8 @@
           ],
           miniSeries: [57, 60, 63, 62, 65, 67, 70],
           highlights: [
-            "Perfil físico-químico compatível com produção intensiva.",
-            "Correções localizadas tendem a aumentar uniformidade.",
-            "Base técnica favorável para ganho de produtividade."
+            "Fazenda tem forte aptidão para lavouras em grãos ou cultivos de maior valor agregado.",
+            "Atualmente está com plantação de milho no formato de arrendamento, mas com possibilidade de implantação de outras culturas perenes e temporárias."
           ]
         },
         {
@@ -1794,9 +1726,9 @@
           ],
           miniSeries: [54, 56, 59, 61, 63, 65, 67],
           highlights: [
-            "Fluxo de entrada e saída com boa previsibilidade operacional.",
-            "Posicionamento reduz custo indireto de transporte no ciclo.",
-            "Acesso favorece visitas técnicas e diligência presencial."
+            "Fazenda está há 3:30 minutos de São Paulo.",
+            "Acesso por dois caminhos diferentes, sem estrada de terra.",
+            "Andradas e Caldas são duas cidades que ficam 25 minutos da fazenda."
           ]
         },
         {
@@ -1816,9 +1748,8 @@
           ],
           miniSeries: [60, 62, 64, 66, 65, 68, 70],
           highlights: [
-            "Comportamento climático compatível com manejo regional.",
-            "Risco moderado controlável com planejamento agronômico.",
-            "Boa previsibilidade para definição de janela operacional."
+            "Fazenda com média de chuva anual entre 1.650 mm proporciona plantio de culturas sem irrigação.",
+            "Região de grande amplitude térmica é propícia para cultivos de maior valor agregado."
           ]
         },
         {
@@ -1838,9 +1769,8 @@
           ],
           miniSeries: [52, 55, 57, 60, 62, 64, 66],
           highlights: [
-            "Benfeitorias existentes suportam início de operação rápida.",
-            "Infraestrutura reduz necessidade de CAPEX imediato.",
-            "Conjunto físico contribui para eficiência de implantação."
+            "Fazenda não conta com nenhuma benfeitoria.",
+            "Ideal para compradores que já possuam operação próxima à fazenda, ou para compradores que desejam iniciar projeto do zero."
           ]
         }
       ];
@@ -2033,7 +1963,9 @@
         setMarketListingIndex((prev) => (prev + 1) % marketListings.length);
       };
       const activeFarmTopic = farmTopics.find((topic) => topic.id === activeFarmTopicId) || farmTopics[0];
-      const activeFarmTopicIndex = farmTopics.findIndex((topic) => topic.id === activeFarmTopic.id);
+      const isOverviewTopic = activeFarmTopic.id === 'descricao';
+      const isTechnicalVisualLocked = !isOverviewTopic;
+      const technicalPanelImageSrc = "imagens/landing_page2.png";
       const getFarmTopTabLines = (label) => {
         const text = String(label || '').trim();
         if (!text) return ['', '\u00A0'];
@@ -2107,6 +2039,32 @@
       const contactPartnershipOnWhatsApp = () => {
         const partnershipMessage = "Quero ser um parceiro da talhão.ai";
         sendWhatsAppMessage({ message: partnershipMessage, whatsappNumber: brokerWhatsappNumber });
+      };
+      const openFarmQuestionBox = () => {
+        const targetSection =
+          chatAnalysisSectionRef.current ||
+          document.getElementById('analise-tecnica-chat');
+
+        if (targetSection) {
+          const stickyHeader = document.querySelector('header.sticky');
+          const headerOffset = stickyHeader
+            ? stickyHeader.getBoundingClientRect().height + 12
+            : 12;
+          const targetTop = targetSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+          window.setTimeout(() => {
+            if (aiPromptInputRef.current) {
+              try {
+                aiPromptInputRef.current.focus({ preventScroll: true });
+              } catch (error) {
+                aiPromptInputRef.current.focus();
+              }
+            }
+          }, 500);
+          return;
+        }
+        openDemoVersionModal();
       };
       const journeyTopicMap = new Map(farmTopics.map((topic) => [topic.id, topic]));
       const journeyTopicImageMap = {
@@ -2503,8 +2461,8 @@
             ),
             h('div', { className: "ambient-content ambient-main-box ambient-float ambient-float--slow rounded-[32px] border border-slate-200 bg-slate-100/80 p-4 sm:p-6 xl:p-8 shadow-2xl" },
               h('div', { className: "mb-5 sm:mb-6 space-y-2" },
-                h('h3', { className: "text-2xl sm:text-3xl font-black tracking-tight text-slate-900" }, `Visão técnica em ${farmTopics.length} tópicos da fazenda anunciada`),
-                h('p', { className: "text-sm sm:text-base text-slate-600 max-w-4xl" }, "Use a barra ativa superior ou a navegação lateral para alternar entre os eixos técnicos com conteúdo sincronizado.")
+                h('h3', { className: "text-2xl sm:text-3xl font-black tracking-tight text-slate-900" }, "Conheça a fazenda como ninguém"),
+                h('p', { className: "text-sm sm:text-base text-slate-600 max-w-4xl" }, "Use a barra de navegação lateral para compreender todos os tópicos mais importantes desta fazenda.")
               ),
 
               h('div', {
@@ -2572,37 +2530,26 @@
                 )
               ),
 
-              h('div', { className: "grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 lg:gap-6" },
-                h('aside', { className: "rounded-2xl border border-slate-200 bg-slate-100/80 p-3 sm:p-4" },
-                  h('div', { className: "flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[700px] pb-1 lg:pb-0 lg:pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" },
+              h('div', { className: "grid grid-cols-1 gap-4 lg:grid-cols-[92px_1fr] lg:items-stretch lg:gap-5" },
+                h('aside', { className: "rounded-2xl border border-slate-200 bg-slate-100/80 px-2 py-2.5 sm:px-2.5 sm:py-3 lg:h-full" },
+                  h('div', { className: "flex lg:flex-col items-center gap-1.5 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" },
                     farmTopics.map((topic) => {
                       const isActive = activeFarmTopic.id === topic.id;
                       const TopicIcon = topic.icon;
-                      const [sideLineOne, sideLineTwo] = getFarmTopTabLines(topic.sideLabel);
-                      const sideLineTwoIsPlaceholder = sideLineTwo === '\u00A0';
                       return h('button', {
                         key: `farm-topic-side-${topic.id}`,
                         type: "button",
                         onClick: () => setActiveFarmTopicId(topic.id),
-                        className: `group flex min-w-[220px] lg:min-w-0 items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition-all ${
+                        className: `group inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all ${
                           isActive
-                            ? 'border-brand-200 bg-slate-100/90 text-brand-900'
-                            : 'border-slate-200 bg-slate-100/90 text-slate-700 hover:border-slate-300 hover:bg-slate-100'
-                        }`
+                            ? 'border-brand-200 bg-slate-100/90'
+                            : 'border-slate-200 bg-slate-100/90 hover:border-slate-300 hover:bg-slate-100'
+                        }`,
+                        'aria-label': topic.sideLabel
                       },
-                        h('div', { className: "flex items-center gap-2.5 min-w-0" },
-                          h('div', { className: `topic-icon-chip ${isActive ? 'is-active' : ''}` },
-                            h(TopicIcon, { className: "w-4 h-4" })
-                          ),
-                          h('span', { className: "grid leading-[1.05] text-[10px] sm:text-[11px] font-medium tracking-normal font-sans" },
-                            h('span', { className: "whitespace-nowrap" }, sideLineOne),
-                            h('span', {
-                              className: `whitespace-nowrap ${sideLineTwoIsPlaceholder ? 'opacity-0 select-none' : ''}`,
-                              'aria-hidden': sideLineTwoIsPlaceholder ? "true" : "false"
-                            }, sideLineTwo)
-                          )
-                        ),
-                        h('div', { className: `hidden lg:block h-5 w-1 rounded-full ${isActive ? 'bg-brand-700' : 'bg-transparent'}` })
+                        h('div', { className: `topic-icon-chip ${isActive ? 'is-active' : ''}` },
+                          h(TopicIcon, { className: "w-4 h-4" })
+                        )
                       );
                     })
                   )
@@ -2616,64 +2563,66 @@
                 },
                   h('div', { className: "flex flex-wrap items-start justify-between gap-3" },
                     h('div', { className: "space-y-1" },
-                      h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500" }, `Tópico ${activeFarmTopicIndex + 1} de ${farmTopics.length}`),
                       h('h4', { className: "text-2xl font-black tracking-tight text-slate-900" }, activeFarmTopic.title),
                       h('p', { className: "text-sm text-slate-600 max-w-2xl" }, activeFarmTopic.subtitle)
                     ),
                     h(Badge, {
-                      status: activeFarmTopic.statusTone === 'yellow' ? 'yellow' : activeFarmTopic.statusTone === 'red' ? 'red' : activeFarmTopic.statusTone === 'green' ? 'green' : 'neutral',
-                      text: activeFarmTopic.statusBadge
+                      status: 'green',
+                      text: 'Visão geral'
                     })
                   ),
 
-                  h('div', { className: "mt-4 grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-4" },
-                    h('div', { className: "space-y-4" },
-                      h('div', { className: "relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-900" },
+                  h('div', { className: "mt-4 grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-4 xl:items-stretch" },
+                    h('div', { className: "space-y-4 h-full flex flex-col" },
+                      h('div', { className: "relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 h-[280px] sm:h-[320px] xl:h-[360px]" },
                         h('img', {
-                          src: activeFarmTopic.image,
-                          alt: activeFarmTopic.title,
-                          className: "h-[260px] sm:h-[320px] w-full object-cover"
+                          src: technicalPanelImageSrc,
+                          alt: isTechnicalVisualLocked ? "Prévia bloqueada do painel técnico" : activeFarmTopic.title,
+                          className: `h-full w-full object-cover transition duration-300 ${isTechnicalVisualLocked ? "blur-[3px] scale-[1.02] brightness-75" : ""}`
                         }),
+                        isTechnicalVisualLocked && h('div', { className: "absolute inset-0 bg-slate-900/35 backdrop-blur-[1px] flex items-center justify-center px-6 text-center" },
+                          h('p', { className: "max-w-md text-sm sm:text-base font-bold text-white leading-relaxed" },
+                            "Para acessar novos mapas, imagens e gráficos acesse o relatório completo"
+                          )
+                        ),
                         h('div', { className: "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-4 py-3" },
                           h('p', { className: "text-[10px] font-black uppercase tracking-widest text-white/75" }, "Visual principal"),
                           h('p', { className: "text-sm font-bold text-white" }, activeFarmTopic.sideLabel)
                         )
-                      ),
-                      activeFarmTopic.secondaryImage && h('div', { className: "rounded-xl border border-slate-200 bg-slate-50 p-2.5" },
-                        h('p', { className: "text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2" }, "Camada complementar (CAR)"),
-                        h('img', {
-                          src: activeFarmTopic.secondaryImage,
-                          alt: "Camada complementar CAR",
-                          className: "h-28 w-full rounded-lg object-cover border border-slate-200"
-                        })
                       )
                     ),
 
-                    h('div', { className: "space-y-4" },
-                      h('div', { className: "grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3 gap-2.5" },
-                        activeFarmTopic.kpis.map((kpi, idx) =>
-                          h('div', {
-                            key: `farm-topic-kpi-${activeFarmTopic.id}-${idx}`,
-                            className: "rounded-xl border border-slate-200 bg-slate-50 px-3 py-3"
-                          },
-                            h('p', { className: "text-[10px] font-black uppercase tracking-wider text-slate-500" }, kpi.label),
-                            h('p', { className: "text-base font-black text-slate-900 mt-1" }, kpi.value)
-                          )
-                        )
-                      ),
-
-                      h(TopicMiniChart, { series: activeFarmTopic.miniSeries }),
-
-                      h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4" },
+                    h('div', { className: "h-full flex flex-col gap-3" },
+                      h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 flex-1" },
                         h('p', { className: "text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2" }, "Destaques técnicos"),
                         h('ul', { className: "space-y-2" },
-                          activeFarmTopic.highlights.map((item, idx) =>
-                            h('li', { key: `farm-topic-highlight-${activeFarmTopic.id}-${idx}`, className: "text-sm text-slate-700 flex items-start gap-2" },
+                          activeFarmTopic.highlights.map((item, idx) => {
+                            const highlightText = String(item || '').trim();
+                            const dashMatch = highlightText.match(/^(.+?)\s([-–—])\s(.+)$/);
+                            const leadingText = dashMatch ? dashMatch[1].trim() : highlightText;
+                            const separator = dashMatch ? dashMatch[2] : '';
+                            const trailingText = dashMatch ? dashMatch[3].trim() : '';
+
+                            return h('li', { key: `farm-topic-highlight-${activeFarmTopic.id}-${idx}`, className: "text-sm text-slate-700 flex items-start gap-2" },
                               h('div', { className: "mt-2 h-1.5 w-1.5 rounded-full bg-brand-600 shrink-0" }),
-                              h('span', {}, item)
-                            )
-                          )
+                              h('span', {},
+                                dashMatch
+                                  ? [
+                                      h('strong', { className: "font-bold text-slate-800", key: `farm-topic-highlight-strong-${activeFarmTopic.id}-${idx}` }, leadingText),
+                                      ` ${separator} ${trailingText}`
+                                    ]
+                                  : highlightText
+                              )
+                            );
+                          })
                         )
+                      ),
+                      h('div', { className: "rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3" },
+                        h('button', {
+                          type: "button",
+                          onClick: openFarmQuestionBox,
+                          className: "w-full inline-flex items-center justify-center rounded-xl border border-slate-200 bg-slate-100/90 px-4 py-3 text-sm font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/35"
+                        }, "Pergunte o que quiser sobre a fazenda")
                       )
                     )
                   )
@@ -2977,6 +2926,8 @@
 
           // Quebra de Página (Fundo Escuro + Chat)
           h('section', {
+            id: "analise-tecnica-chat",
+            ref: chatAnalysisSectionRef,
             className: "ambient-section ambient-section--harmonized chat-mist-green-section w-screen overflow-hidden",
             style: { marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)" }
           },
