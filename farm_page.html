@@ -1933,6 +1933,7 @@
         };
       }, []);
       const brokerWhatsappNumber = "5535999149427";
+      const partnershipWhatsappNumber = "5519981150397";
       const brokerFarmContactMessage = "Olá! Quero conhecer mais essa fazenda da talhão.ai que você anunciou.\n\nhttps://talhao.vercel.app/";
       const brokerFarmContactUrl = `https://wa.me/${brokerWhatsappNumber}?text=${encodeURIComponent(brokerFarmContactMessage)}`;
       const socialLinks = [
@@ -2050,7 +2051,7 @@
       };
       const contactPartnershipOnWhatsApp = () => {
         const partnershipMessage = "Quero ser um parceiro da talhão.ai";
-        sendWhatsAppMessage({ message: partnershipMessage, whatsappNumber: brokerWhatsappNumber });
+        sendWhatsAppMessage({ message: partnershipMessage, whatsappNumber: partnershipWhatsappNumber });
       };
       const openFarmQuestionBox = () => {
         const targetSection =
