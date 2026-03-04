@@ -1932,12 +1932,15 @@
           }
         };
       }, []);
+      const brokerWhatsappNumber = "5535999149427";
+      const brokerFarmContactMessage = "Olá! Quero conhecer mais essa fazenda da talhão.ai que você anunciou.\n\nhttps://talhao.vercel.app/";
+      const brokerFarmContactUrl = `https://wa.me/${brokerWhatsappNumber}?text=${encodeURIComponent(brokerFarmContactMessage)}`;
       const socialLinks = [
-        { label: "Instagram", href: "https://wa.me/5535999149427", icon: InstagramIcon },
-        { label: "TikTok", href: "https://wa.me/5535999149427", icon: TikTokIcon },
-        { label: "LinkedIn", href: "https://wa.me/5535999149427", icon: LinkedInIcon },
-        { label: "YouTube", href: "https://wa.me/5535999149427", icon: YouTubeIcon },
-        { label: "Email", href: "https://wa.me/5535999149427", icon: MailIcon },
+        { label: "Instagram", href: brokerFarmContactUrl, icon: InstagramIcon },
+        { label: "TikTok", href: brokerFarmContactUrl, icon: TikTokIcon },
+        { label: "LinkedIn", href: brokerFarmContactUrl, icon: LinkedInIcon },
+        { label: "YouTube", href: brokerFarmContactUrl, icon: YouTubeIcon },
+        { label: "Email", href: brokerFarmContactUrl, icon: MailIcon },
       ];
       const marketListings = [
         {
@@ -2029,7 +2032,6 @@
       const scoreLevel = getScoreLevel(selectedAptidaoData.score);
       const scoreCircleRadius = 42;
       const scoreCircleCircumference = 2 * Math.PI * scoreCircleRadius;
-      const brokerWhatsappNumber = "5535999149427";
       const sendWhatsAppMessage = ({ message, whatsappNumber = "" }) => {
         const messageText = String(message || '').trim();
         if (!messageText) return;
@@ -2039,11 +2041,11 @@
         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       };
       const shareFarmOnWhatsApp = () => {
-        const shareMessage = "Olá! Estou compartilhando uma fazenda da talhão.ai com você.";
+        const shareMessage = "Olá! Quero compartilhar essa fazenda que vi na talhão.ai com você.\n\nhttps://talhao.vercel.app/";
         sendWhatsAppMessage({ message: shareMessage });
       };
       const contactBrokerOnWhatsApp = () => {
-        const contactMessage = "Olá! Tenho interesse nesta fazenda da talhão.ai e gostaria de mais informações.";
+        const contactMessage = brokerFarmContactMessage;
         sendWhatsAppMessage({ message: contactMessage, whatsappNumber: brokerWhatsappNumber });
       };
       const contactPartnershipOnWhatsApp = () => {
@@ -3162,14 +3164,14 @@
             h('div', { className: "ready-start-bottom-haze" }),
             h('div', { className: "ambient-content relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12" },
               h('div', { className: "space-y-4" },
-                h('h3', { className: "text-[clamp(2.2rem,5vw,5rem)] leading-[1.03] font-black tracking-tight text-slate-900" }, "Quer ser um parceiro?"),
-                h('p', { className: "text-[clamp(1.4rem,2.7vw,3rem)] leading-tight font-medium text-slate-700" }, "Entre em contato no link ao lado")
+                h('h3', { className: "text-[clamp(2.2rem,5vw,5rem)] leading-[1.03] font-black tracking-tight text-slate-900" }, "Quero testar a solução da talhão"),
+                h('p', { className: "text-[clamp(1.4rem,2.7vw,3rem)] leading-tight font-medium text-slate-700" }, "Entre em contato no botão ao lado")
               ),
               h('button', {
                 onClick: contactPartnershipOnWhatsApp,
                 className: "self-start lg:self-center inline-flex items-center justify-center gap-2 rounded-full bg-brand-800 hover:bg-brand-900 text-white px-4 xl:px-8 h-9 xl:h-12 text-sm xl:text-lg font-black transition-colors"
               },
-                "Agendar uma conversa ",
+                "Entrar em contato ",
                 h(Phone, { className: "w-4 h-4" })
               )
             )
