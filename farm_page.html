@@ -1329,7 +1329,7 @@
       })();
       const aiPromptInputRef = useRef(null);
       const chatAnalysisSectionRef = useRef(null);
-      const reportPdfPath = "arquivos/relatorio_MG_000105467.pdf";
+      const reportPdfPath = "arquivos/relatorio_MG_000105467_joao.pdf";
       const isLocalRuntime = window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
       const isNetworkFetchError = (error) => {
         const message = error && error.message ? String(error.message).toLowerCase() : '';
@@ -1933,11 +1933,11 @@
         };
       }, []);
       const socialLinks = [
-        { label: "Instagram", href: "https://www.instagram.com/rodrigomouraportinhola?igshid=Y2IzZGU1MTFhOQ%3D%3D", icon: InstagramIcon },
-        { label: "TikTok", href: "https://www.tiktok.com/", icon: TikTokIcon },
-        { label: "LinkedIn", href: "https://www.linkedin.com/in/romoura/?locale=en_US", icon: LinkedInIcon },
-        { label: "YouTube", href: "https://www.youtube.com/", icon: YouTubeIcon },
-        { label: "Email", href: "mailto:contato@talhao.ai", icon: MailIcon },
+        { label: "Instagram", href: "https://wa.me/5535999149427", icon: InstagramIcon },
+        { label: "TikTok", href: "https://wa.me/5535999149427", icon: TikTokIcon },
+        { label: "LinkedIn", href: "https://wa.me/5535999149427", icon: LinkedInIcon },
+        { label: "YouTube", href: "https://wa.me/5535999149427", icon: YouTubeIcon },
+        { label: "Email", href: "https://wa.me/5535999149427", icon: MailIcon },
       ];
       const marketListings = [
         {
@@ -2029,7 +2029,7 @@
       const scoreLevel = getScoreLevel(selectedAptidaoData.score);
       const scoreCircleRadius = 42;
       const scoreCircleCircumference = 2 * Math.PI * scoreCircleRadius;
-      const brokerWhatsappNumber = "5519981150397";
+      const brokerWhatsappNumber = "5535999149427";
       const sendWhatsAppMessage = ({ message, whatsappNumber = "" }) => {
         const messageText = String(message || '').trim();
         if (!messageText) return;
@@ -2812,7 +2812,7 @@
                 onClick: openDemoVersionModal,
                 className: "self-end lg:self-start inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-100/90 px-4 py-2 text-[11px] font-black text-slate-900 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-slate-900 hover:bg-gradient-to-r hover:from-black hover:via-[#052e16] hover:to-[#166534] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-700/30 sm:text-xs"
               },
-                "Conhecer portfolio de fazendas do Rodrigo"
+                "Conhecer portfolio de fazendas do João Luiz"
               )
             ),
 
@@ -2820,13 +2820,13 @@
               h('div', { className: "bg-white rounded-3xl border border-slate-200 p-6 md:p-7 space-y-6 shadow-sm" },
                 h('div', { className: "flex flex-col sm:flex-row sm:items-center gap-5" },
                   h('img', {
-                    src: "imagens/rodrigo_moura.png",
+                    src: "imagens/joao_luiz.png",
                     alt: "Corretor especialista em fazendas",
                     className: "w-48 h-48 rounded-2xl object-cover border border-slate-200 shadow-sm shrink-0"
                   }),
                   h('div', { className: "space-y-4" },
-                    h('h3', { className: "text-2xl font-black text-slate-900 leading-tight" }, "Rodrigo Portinhola"),
-                    h('p', { className: "text-sm text-slate-500" }, "Especialista em compra e venda de propriedades rurais produtivas, com atuação focada em Minas Gerais, Goiás e MATOPIBA."),
+                    h('h3', { className: "text-2xl font-black text-slate-900 leading-tight" }, "João Luiz"),
+                    h('p', { className: "text-sm text-slate-500" }, "Especialista em compra e venda de propriedades rurais, com atuação focada em Minas Gerais, podendo atuar em outras regiões."),
                     h('div', { className: "flex flex-wrap items-center gap-2 pt-1" },
                       socialLinks.map((item) =>
                         h('a', {
@@ -3002,7 +3002,9 @@
           // Jornada técnica (estilo Discover)
           h('section', { className: "ambient-section ambient-section--default journey-section-balanced-ambient space-y-6" },
             h('div', { className: "px-5 pt-3 pb-4 sm:px-8 sm:pt-4 sm:pb-5 xl:px-10 xl:pt-5 xl:pb-6 text-center max-w-6xl mx-auto space-y-3" },
-              h('span', { className: "journey-tech-kicker" }, "Entenda os tópicos analisados")
+              h('span', { className: "aptidao-pill-neutral" },
+                h('span', {}, "Entenda os tópicos analisados")
+              )
             ),
             h('div', { className: "mx-auto w-full max-w-[1240px] grid grid-cols-1 items-start gap-4 xl:grid-cols-[0.95fr_1.05fr] xl:gap-4" },
               h('div', { className: "ambient-main-box card-surface w-full max-w-[580px] mx-auto xl:mx-0 xl:justify-self-end rounded-3xl border border-slate-200 p-4 sm:p-6 xl:p-7 space-y-2 sm:space-y-3" },
@@ -3082,12 +3084,12 @@
                   h('p', { className: "mt-3 text-sm sm:text-base text-slate-600 leading-relaxed" }, activeMarketListing.summary),
                   h('div', { className: "mt-6 flex flex-col sm:flex-row sm:items-center gap-4" },
                     h('img', {
-                      src: "imagens/rodrigo_moura.png",
-                      alt: "Rodrigo Portinhola",
+                      src: "imagens/joao_luiz.png",
+                      alt: "João Luiz",
                       className: "h-[132px] w-[132px] rounded-full object-cover border border-brand-200 shadow-sm shrink-0"
                     }),
                     h('div', { className: "space-y-3" },
-                      h('p', { className: "text-base font-bold text-slate-900 leading-tight" }, "Rodrigo Portinhola"),
+                      h('p', { className: "text-base font-bold text-slate-900 leading-tight" }, "João Luiz"),
                       h('div', { className: "flex flex-wrap items-center gap-2" },
                         socialLinks.map((item) =>
                           h('a', {
@@ -3135,27 +3137,20 @@
                   className: "h-10 w-10 rounded-full border border-white/40 bg-white/85 text-slate-700 shadow"
                 }, h(ChevronRight, { className: "w-4 h-4 mx-auto" }))
               ),
-              h('div', { className: "w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5" },
-                h(StatCard, {
-                  label: "Preço total",
-                  value: activeMarketListing.priceTotal,
-                  className: "market-glass-stat",
-                  labelClassName: "text-[10px]",
-                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
-                }),
+              h('div', { className: "w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5" },
                 h(StatCard, {
                   label: "Preço por hectare",
                   value: activeMarketListing.pricePerHa,
                   className: "market-glass-stat",
                   labelClassName: "text-[10px]",
-                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
+                  valueClassName: "text-[clamp(0.82rem,1vw,1rem)] leading-tight break-words"
                 }),
                 h(StatCard, {
                   label: "Área total",
                   value: activeMarketListing.area,
                   className: "market-glass-stat",
                   labelClassName: "text-[10px]",
-                  valueClassName: "text-[clamp(1.2rem,1.65vw,1.5rem)]"
+                  valueClassName: "text-[clamp(0.82rem,1vw,1rem)] leading-tight break-words"
                 })
               )
             )
